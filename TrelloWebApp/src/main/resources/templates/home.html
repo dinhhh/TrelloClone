@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>Trello</title>
 
-  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="/css/home.css">
 </head>
 
 <body data-track-group="Landing-Marquee" data-analytics-screen="homeScreen">
@@ -34,8 +34,8 @@
         </svg>
       </a>
       <div class="float-right buttons">
-        <a href="login.html" class="btn btn-sm btn-link text-primary">Log in</a>
-        <a href="signup.html" data-analytics-button="whiteSignupHeroButton" class="btn btn-sm bg-primary text-white font-weight-bold">Sign up</a>
+        <a th:href="@{/signin}" class="btn btn-sm btn-link text-primary">Log in</a>
+        <a th:href="@{/signup}" data-analytics-button="whiteSignupHeroButton" class="btn btn-sm bg-primary text-white font-weight-bold">Sign up</a>
       </div>
     </nav>
   </header>

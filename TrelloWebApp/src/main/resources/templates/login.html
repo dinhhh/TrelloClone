@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Log in to Trello</title>
-  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="/css/login.css">
 </head>
 
 <body class="atlassian-brand">
@@ -27,7 +27,7 @@
           
           <ul class="bottom-form-link">
             <li><a class="forgotLink" href="forgot.html" data-analytics-link="forgotPasswordLink">Can't log in?</a></li>
-            <li><a class="signupLink" href="signup.html" data-analytics-link="signUpLoginLink">Sign up for an account</a></li>
+            <li><a class="signupLink" th:href="@{/signup}" data-analytics-link="signUpLoginLink">Sign up for an account</a></li>
           </ul>
         </div>
 

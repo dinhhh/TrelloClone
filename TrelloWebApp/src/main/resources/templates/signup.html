@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Create a Trello Account</title>
-  <link rel="stylesheet" href="signup.css">
+  <link rel="stylesheet" href="/css/signup.css">
 </head>
 
 <body class="page-signup atlassian-brand" data-analytics-screen="signUpCreateAccountScreen">
@@ -15,17 +15,17 @@
         <div id="signup-form" class="account-form">
 
           <h1>Sign up for your account</h1>
-          <form action="/" id="signup" method="POST"> 
+          <form th:action="@{/process_signup}" th:object="${user}" id="signup" method="POST"> 
             <div class="name-user" style="display: flex;">
-              <input type="text" name="first-name" id="email" class="form-field" placeholder="First name" autocomplete="username email">
-              <input type="text" name="last-name" id="email" class="form-field" placeholder="Last name" autocomplete="username email">
+              <input type="text" name="first-name" id="email" class="form-field" th:field="*{firstName}" placeholder="First name" autocomplete="username email">
+              <input type="text" name="last-name" id="email" class="form-field" th:field="*{lastName}" placeholder="Last name" autocomplete="username email">
             </div>
             
-            <input type="text" name="email" id="email" class="form-field" placeholder="Email" autocomplete="username email">
-            <input type="text" name="password" id="password" class="form-field" placeholder="Password" autocomplete="username email">
-            <input type="text" name="confirm-password" id="confirm-password" class="form-field" placeholder="Confirm password" autocomplete="username email">
+            <input type="text" name="email" id="email" class="form-field" th:field="*{email}" placeholder="Email" autocomplete="username email">
+            <input type="password" name="password" id="password" class="form-field" th:field="*{password}" placeholder="Password" autocomplete="username email">
+            <input type="password" name="confirm-password" id="confirm-password" class="form-field" placeholder="Confirm password" autocomplete="username email">
             
-            <input type="date" id="birthday" name="birthday" class="form-field" value="Birthday">
+            <input type="date" id="birthday" name="birthday" th:field="*{dateOfBirth}" class="form-field" value="Birthday">
               <br>
             <input type="radio" id="male" name="male"><label for="male"> Male</label>
             <input type="radio" id="female" name="female"><label for="female"> Female</label>
