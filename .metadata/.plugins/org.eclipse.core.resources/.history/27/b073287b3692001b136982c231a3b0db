@@ -10,3 +10,4 @@ public class TrelloWebAppApplication {
 		SpringApplication.run(TrelloWebAppApplication.class, args);
 	}
 }
+
