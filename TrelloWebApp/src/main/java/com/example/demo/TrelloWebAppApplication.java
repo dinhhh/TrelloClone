@@ -9,5 +9,4 @@ public class TrelloWebAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TrelloWebAppApplication.class, args);
 	}
-
 }
