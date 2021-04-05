@@ -1,0 +1,8 @@
+package com.example.demo.ConfirmationToken;
+
+
+@Service
+@AllArgsConstructor
+public class ConfirmationTokenService {
+
+}

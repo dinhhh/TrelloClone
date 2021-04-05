@@ -1,0 +1,22 @@
+package com.example.demo.User;
+
+import org.springframework.stereotype.Controller;
+
+import com.example.demo.ConfirmationToken.ConfirmationTokenService;
+
+@Controller
+public class UserController {
+	
+	private final UserService userService;
+
+    private final ConfirmationTokenService confirmationTokenService;
+
+	public UserController(UserService userService, ConfirmationTokenService confirmationTokenService) {
+		super();
+		this.userService = userService;
+		this.confirmationTokenService = confirmationTokenService;
+	}
+    
+    
+    
+}

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<span>Your account is created successful</span>
+	<a th:href="@{/signin}">Click here to login</a>
+</body>
+</html>

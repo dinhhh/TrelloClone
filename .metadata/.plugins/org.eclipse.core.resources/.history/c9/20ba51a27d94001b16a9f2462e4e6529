@@ -1,0 +1,25 @@
+package com.example.demo.ConfirmationToken;
+
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
+
+@Service
+public class ConfirmationTokenService {
+	private ConfirmationTokenRepository confirmationTokenRepository;
+
+	void saveConfirmationToken(ConfirmationToken confirmationToken) {
+		confirmationTokenRepository.save(confirmationToken);
+	}
+
+	void deleteConfirmationToken(Long id) {
+		confirmationTokenRepository.deleteById(id);
+	}
+
+
+	Optional<ConfirmationToken> findConfirmationTokenByToken(String token) {
+		return confirmationTokenRepository.findConfirmationTokenByConfirmationToken(token);
+	}
+}

@@ -1,0 +1,14 @@
+package com.example.demo.ConfirmationToken;
+
+import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
+
+@Service
+public class ConfirmationTokenService {
+	private ConfirmationTokenRepository confirmationTokenRepository;
+
+    public void saveConfirmationToken(ConfirmationToken confirmationToken) {
+        confirmationTokenRepository.save(confirmationToken);
+    }
+}

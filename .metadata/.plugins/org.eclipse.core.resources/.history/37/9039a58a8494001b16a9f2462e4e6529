@@ -1,0 +1,38 @@
+//package com.example.demo.Security;
+//
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//
+//import com.example.demo.User.User;
+//import com.example.demo.User.UserRepository;
+//
+//public class CustomUserDetailService implements UserDetailsService{
+//
+//	@Autowired
+//	private UserRepository userRepo;
+//
+//	@Autowired
+//	private BCryptPasswordEncoder bCryptPasswordEncoder;
+//	
+//	@Override
+//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//		// TODO Auto-generated method stub
+//		User user = userRepo.findByEmail(username);
+//		if(user == null) {
+//			throw new UsernameNotFoundException("User not found");
+//		}
+//		return new CustomUserDetail(user);
+//	}
+//	
+//	public User findUserByEmail(String email) {
+//		return userRepo.findByEmail(email);
+//	}
+//	
+//	public void saveUser(User user) {
+//		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+//        userRepo.save(user);
+//	}
+//}

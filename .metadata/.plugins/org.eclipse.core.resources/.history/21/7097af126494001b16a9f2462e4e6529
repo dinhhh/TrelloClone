@@ -1,0 +1,11 @@
+package com.example.demo.ConfirmationToken;
+
+import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
+
+@Service
+@AllArgsConstructor
+public class ConfirmationTokenService {
+
+}

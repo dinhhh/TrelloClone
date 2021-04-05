@@ -1,0 +1,54 @@
+package com.example.demo.User;
+
+import java.util.Optional;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.demo.ConfirmationToken.ConfirmationToken;
+import com.example.demo.ConfirmationToken.ConfirmationTokenService;
+
+@Controller
+public class UserController {
+	
+	private final UserService userService;
+
+    private final ConfirmationTokenService confirmationTokenService;
+
+	public UserController(UserService userService, ConfirmationTokenService confirmationTokenService) {
+		super();
+		this.userService = userService;
+		this.confirmationTokenService = confirmationTokenService;
+	}
+    
+    @GetMapping("/sign-in")
+    public String signin() {
+    	return "login";
+    }
+    
+    @GetMapping("/sign-up")
+    String signUp() {
+
+        return "sign-up";
+    }
+
+    @PostMapping("/sign-up")
+    String signUp(User user) {
+
+        userService.signUpUser(user);
+
+        return "redirect:/sign-in";
+    }
+
+    @GetMapping("/confirm")
+    String confirmMail(@RequestParam("token") String token) {
+
+        Optional<ConfirmationToken> optionalConfirmationToken = confirmationTokenService.findConfirmationTokenByToken(token);
+
+        optionalConfirmationToken.ifPresent(userService::confirmUser);
+
+        return "/sign-in";
+    }
+}
