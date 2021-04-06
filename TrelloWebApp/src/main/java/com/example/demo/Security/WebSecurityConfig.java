@@ -29,6 +29,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 //	public WebSecurityConfig(CustomOAuth2UserService customOAuth2UserService, UserService userService) {
 //		super();
 //		this.customOAuth2UserService = customOAuth2UserService;
@@ -41,10 +44,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 //		return new UserService();
 //	}
 	
-	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+//	@Bean
+//	public BCryptPasswordEncoder passwordEncoder() {
+//		return new BCryptPasswordEncoder();
+//	}
 	
 //	@Bean
 //	public DaoAuthenticationProvider authenticationProvider() {
@@ -59,10 +62,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 //		auth.authenticationProvider(authenticationProvider());
 //	}
 	
-	@Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService)
-                .passwordEncoder(passwordEncoder());
+//	@Autowired
+//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userService)
+//                .passwordEncoder(passwordEncoder());
+//    }
+	
+	@Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+                auth
+                    .userDetailsService(userService)
+                    .passwordEncoder(bCryptPasswordEncoder);
     }
 	
 	@Override
@@ -73,28 +83,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/boards/*").authenticated()
 			.antMatchers("/login_sucess").authenticated()
 			.and()
-			.formLogin().loginPage("/sign-in").permitAll();
-			
-			
-			
-//		http.authorizeRequests()
-//        .antMatchers("/oauth2/**").permitAll()
-//        // change to /board/**
-//		.antMatchers("/login_sucess").authenticated()
-//        .anyRequest().permitAll()
-//        .and()
-//        .formLogin()
-//        	.loginPage("/login")
-//            .usernameParameter("email")
-//            .defaultSuccessUrl("/login_sucess")
-//            .permitAll()
-//        .and()
-//        	.oauth2Login()
-//        		.loginPage("/login")
-//        		.userInfoEndpoint().userService(customOAuth2UserService)
-//        	.and()
-//        .and()
-//        .logout().logoutSuccessUrl("/").permitAll();
+			.formLogin()
+				.loginPage("/sign-in")
+				.usernameParameter("user")
+				.passwordParameter("password")
+				.defaultSuccessUrl("/login_sucess")
+				.permitAll();
 	}
 }
 
