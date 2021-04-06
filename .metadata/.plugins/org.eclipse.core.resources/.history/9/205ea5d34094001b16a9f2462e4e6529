@@ -1,5 +1,0 @@
-package com.example.demo.Security.OAuth;
-
-public class CustomOAuth2Service {
-
-}
