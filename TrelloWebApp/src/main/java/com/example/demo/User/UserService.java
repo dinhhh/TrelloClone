@@ -68,5 +68,6 @@ public class UserService implements UserDetailsService {
 		user.setEnabled(1);
 		userRepo.save(user);
 		confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
+	
 	}
 }
