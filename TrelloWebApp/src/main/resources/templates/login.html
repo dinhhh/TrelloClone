@@ -22,6 +22,9 @@
                 <input type="password" name="password" id="password" class="form-field" placeholder="Enter password">
                 <input id="login" type="submit" class="button account-button button-green" value="Log In">
               </div>
+              <div align="center" th:if="${param.error}">
+	            <p style="font-size: 20; color: #FF1C19;">User Name or Password invalid, please verify</p>
+	        </div>
             </form>
 
           

@@ -1,10 +1,14 @@
 package com.example.demo.User;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -30,7 +34,11 @@ public class UserService implements UserDetailsService {
 		// TODO Auto-generated method stub
 		final Optional<User> optionalUser = userRepo.findByEmail(username);
 		if (optionalUser.isPresent()) {
-            return (UserDetails) optionalUser.get();
+			User user = optionalUser.get();
+			String au = user.getUserRole().name();
+			List<GrantedAuthority> authorities = new ArrayList<>();
+			authorities.add(new SimpleGrantedAuthority(au));
+			return new MyUserDetails(user.getEmail(), user.getPassword(), authorities);
         }
         else {
             throw new UsernameNotFoundException(MessageFormat.format("User with email {0} cannot be found.", username));
