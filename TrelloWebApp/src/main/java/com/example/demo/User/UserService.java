@@ -44,17 +44,30 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException(MessageFormat.format("User with email {0} cannot be found.", username));
         }	
 	}
-
-	public void signUpUser(User user) {
+	
+	public boolean checkEmailExist(String email) {
+		Optional<User> user = userRepo.findByEmail(email);
+		if(user.isEmpty())
+			return false;
+		else
+			return true;
+	}
+	
+	public String signUpUser(User user) {
+		if(!checkEmailExist(user.getEmail())) {
 		// check user email exist in database ???
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-	    final String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());  
-	    user.setPassword(encryptedPassword);
-	    user.setAuthProvider(AuthenticationProvider.GMAIL);
-	    userRepo.save(user);
-	    final ConfirmationToken confirmationToken = new ConfirmationToken(user);
-	    confirmationTokenService.saveConfirmationToken(confirmationToken);
-	    sendConfirmationMail(user.getEmail(), confirmationToken.getConfirmationToken());
+			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		    final String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());  
+		    user.setPassword(encryptedPassword);
+		    user.setAuthProvider(AuthenticationProvider.GMAIL);
+		    userRepo.save(user);
+		    final ConfirmationToken confirmationToken = new ConfirmationToken(user);
+		    confirmationTokenService.saveConfirmationToken(confirmationToken);
+		    sendConfirmationMail(user.getEmail(), confirmationToken.getConfirmationToken());
+		    return "Your new account has been created. Please check your email to activate it.";
+		}else {
+			return "That username is taken. Try another";
+		}
 	}
 	
 	void sendConfirmationMail(String userMail, String token) {

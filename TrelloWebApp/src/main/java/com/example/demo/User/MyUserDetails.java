@@ -2,12 +2,13 @@ package com.example.demo.User;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class MyUserDetails implements UserDetails{
-
 	private String userName;  
     private String password;  
     private List<GrantedAuthority> authorities;  
@@ -16,7 +17,7 @@ public class MyUserDetails implements UserDetails{
          this.password = password;  
          this.authorities = authorities;  
     }  
-    @Override  
+	@Override  
     public Collection<? extends GrantedAuthority> getAuthorities() {  
          return authorities;  
     }  
@@ -42,7 +43,7 @@ public class MyUserDetails implements UserDetails{
     }  
     @Override  
     public boolean isEnabled() {  
-         return true;  
+    	return true;
     }  
 
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.ConfirmationToken.ConfirmationToken;
 import com.example.demo.ConfirmationToken.ConfirmationTokenService;
@@ -39,11 +40,15 @@ public class UserController {
     }
 
     @PostMapping("/sign-up")
-    public String signUp(User user) {
+    public String signUp(User user, Model model) {
 
-        userService.signUpUser(user);
-        // chuyen sang trang yeu cau nguoi dung check confirmation token
-        return "redirect:/sign-in";
+        String result = userService.signUpUser(user);
+//        return "redirect:/sign-in";
+//        ModelAndView mav = new ModelAndView();
+//        mav.setViewName("redirect:/sign-up");
+//        mav.addObject("result", result);
+        model.addAttribute("result", result);
+        return "signup";
     }
 
     @GetMapping("/sign-up/confirm")
