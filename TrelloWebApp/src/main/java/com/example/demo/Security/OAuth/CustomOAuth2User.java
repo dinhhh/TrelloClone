@@ -33,7 +33,7 @@ public class CustomOAuth2User implements OAuth2User{
 	}
 	
 	public String getFullName() {
-//		[[${request.userPrincipal.principal.fullName}]] thymleaf 
+//		[[${request.userPrincipal.principal.fullName}]] thymeleaf 
 		return user.getAttribute("name");
 	}
 

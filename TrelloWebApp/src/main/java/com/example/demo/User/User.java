@@ -33,7 +33,7 @@ public class User {
     private String lastName;
     
     @Column(name = "gender", nullable = true, length = 10)
-    private String gender;
+    private String gender = "UNKNOWN";
     
     @Enumerated(EnumType.STRING)
     @Column(name = "auth_provider")
@@ -44,7 +44,7 @@ public class User {
     private UserRole userRole = UserRole.USER;
     
 	@Column(name = "date_of_birth")
-    private String dateOfBirth;
+    private String dateOfBirth = "UNKNOWN";
     
     @Column(columnDefinition = "tinyint(1) default 0")
     private int locked;

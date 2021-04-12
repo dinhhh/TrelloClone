@@ -38,8 +38,8 @@ public class UserService implements UserDetailsService {
 			String au = user.getUserRole().name();
 			List<GrantedAuthority> authorities = new ArrayList<>();
 			authorities.add(new SimpleGrantedAuthority(au));
-			return new MyUserDetails(user.getEmail(), user.getPassword(), authorities);
-        }
+			return new MyUserDetails(user.getEmail(), user.getPassword(), user.getEnabled(), authorities);
+		}
         else {
             throw new UsernameNotFoundException(MessageFormat.format("User with email {0} cannot be found.", username));
         }	
@@ -55,7 +55,6 @@ public class UserService implements UserDetailsService {
 	
 	public String signUpUser(User user) {
 		if(!checkEmailExist(user.getEmail())) {
-		// check user email exist in database ???
 			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		    final String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());  
 		    user.setPassword(encryptedPassword);
@@ -82,6 +81,41 @@ public class UserService implements UserDetailsService {
 						+ token);
 
 		emailSenderService.sendEmail(mailMessage);
+	}
+	
+	void sendForgotMail(String userMail, String token) {
+		final SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setTo(userMail);
+		mailMessage.setSubject("Mail Reset Link!");
+		mailMessage.setFrom("<MAIL>");
+		mailMessage.setText(
+				"Please click on the below link to reset your account." 
+						+ "http://localhost:8080/forgot/confirm?token="
+						+ token);
+
+		emailSenderService.sendEmail(mailMessage);
+	}
+	
+	void generateToken4Forgot(String userMail) {
+		Optional<User> user = userRepo.findByEmail(userMail);
+		if(user.isPresent()) {
+			User u = user.get();
+			final ConfirmationToken confirmationToken = new ConfirmationToken(u);
+		    confirmationTokenService.saveConfirmationToken(confirmationToken);
+		    sendForgotMail(u.getEmail(), confirmationToken.getConfirmationToken());
+		}else {
+			System.out.println("ERRORRRR");
+		}
+	}
+	
+	void updatePassword(String password, String token) {
+		Optional<ConfirmationToken> optionalConfirmationToken = confirmationTokenService.findConfirmationTokenByToken(token);
+		User user = optionalConfirmationToken.get().getUser();
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+	    final String encryptedPassword = bCryptPasswordEncoder.encode(password);  
+	    user.setPassword(encryptedPassword);
+	    userRepo.save(user);
+	    confirmationTokenService.deleteConfirmationToken(optionalConfirmationToken.get().getId());
 	}
 	
 	void confirmUser(ConfirmationToken confirmationToken) {
