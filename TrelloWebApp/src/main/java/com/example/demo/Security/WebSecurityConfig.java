@@ -2,6 +2,7 @@ package com.example.demo.Security;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -77,9 +78,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
-		http.authorizeRequests()
+		http.cors().and().csrf().disable()
+			.authorizeRequests()
 			.antMatchers("/sign-up/*", "/sign-in").permitAll()
-		
+			.antMatchers("/oauth2/*").permitAll()
 			.antMatchers("/boards/*").authenticated()
 			.antMatchers("/login_sucess").authenticated()
 			.and()
@@ -88,7 +90,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 				.usernameParameter("user")
 				.passwordParameter("password")
 				.defaultSuccessUrl("/login_sucess")
-				.permitAll();
+				.permitAll()
+			.and()
+			.logout()
+			.logoutSuccessUrl("/sign-in")
+			.and()
+			.oauth2Login()
+				.loginPage("/sign-in")
+//				.userInfoEndpoint()
+//				.userService(customOAuth2UserService)
+					
+			;
 	}
 }
 

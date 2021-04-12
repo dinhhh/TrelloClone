@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Forgot Password</title>
+<style type="text/css">
+
+	body {
+		background-color: #ebedf0; 
+		font-family: Helvetica, Arial, sans-serif;
+	}
+
+	div {
+		text-align: center;
+		justify-content: center;
+	}
+	p {
+		text-align: center;
+	}
+	img {
+		width: 100px;
+		height: 100px;
+	}
+	form {
+		display: inline-block;
+	}
+
+	button{
+		margin-top: 15px;
+
+	}
+
+	.input-text{
+		border: 2px solid rgb(168, 165, 165);
+		border-radius: 5px;
+		font-size: large;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+
+	.my-button {
+		background-color: gray;
+		-webkit-border-top-left-radius:28px;
+		-moz-border-radius-topleft:28px;
+		border-top-left-radius:28px;
+		-webkit-border-top-right-radius:28px;
+		-moz-border-radius-topright:28px;
+		border-top-right-radius:28px;
+		-webkit-border-bottom-right-radius:28px;
+		-moz-border-radius-bottomright:28px;
+		border-bottom-right-radius:28px;
+		-webkit-border-bottom-left-radius:28px;
+		-moz-border-radius-bottomleft:28px;
+		border-bottom-left-radius:28px;
+		text-indent:0;
+		border:1px solid grey;
+		display:inline-block;
+		color:#ffffff;
+		font-family:arial;
+		font-size:15px;
+		font-weight:bold;
+		font-style:normal;
+		height:40px;
+		line-height:30px;
+		width:120px;
+		text-decoration:none;
+		text-align:center;
+		text-shadow:1px 1px 0px black;
+	}
+	.my-button:hover {
+		background-color: #989494;
+	}
+	.my-button:active {
+		position:relative;
+		top:1px;
+	}
+</style>
+</head>
+<body>
+	<div style="margin-top: 15px;">
+		
+		<div style="margin: auto; background-color: white; width: fit-content; box-shadow: 7px 6px 3px rgb(197 197 197);
+		border-radius: 5px; padding: 15px;">
+			<div style="display: flex; justify-content: center;">
+				<!-- <img src="../static/image/img_398183.png" alt="Reset password"> -->
+				<img src="../static/image/Screenshot from 2021-04-12 15-19-43.png" alt="Reset password logo" th:src="@{image/Screenshot from 2021-04-12 15-19-43.png}">
+			</div>
+			<p>Can't log in?</p>
+			<p>We'll send a recovery link to</p>
+			<form th:action="@{/forgot}" method="POST" id="fp-form">
+				<input type="text" name="email" placeholder="Your email" class="input-text">
+				<br>
+				<!-- <input type="submit" value="Send recovery link" style="margin-top: 15px;"> -->
+			</form>
+			<br>
+			<button form="fp-form" type="submit" value="Get recovery link" class="my-button">Get link</button>
+			<div style="padding-top: 15px;" th:if="@{message != null}">
+				<div th:text="${message}"></div>
+			</div>
+		</div>
+		
+	</div>
+</body>
+</html>

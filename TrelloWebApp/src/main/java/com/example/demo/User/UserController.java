@@ -43,10 +43,6 @@ public class UserController {
     public String signUp(User user, Model model) {
 
         String result = userService.signUpUser(user);
-//        return "redirect:/sign-in";
-//        ModelAndView mav = new ModelAndView();
-//        mav.setViewName("redirect:/sign-up");
-//        mav.addObject("result", result);
         model.addAttribute("result", result);
         return "signup";
     }
@@ -60,4 +56,51 @@ public class UserController {
         
         return "redirect:/sign-in";
     }
+    
+    @GetMapping("/forgot")
+    public String displayForgotPassword() {
+    	return "forgot";
+    }
+    
+    @PostMapping("/forgot")
+    public ModelAndView forgotPassword(@RequestParam("email") String email) {
+    	ModelAndView mav = new ModelAndView();
+    	mav.setViewName("forgot");
+    	if(!userService.checkEmailExist(email)) {
+    		mav.addObject("message", "This wasn't an account for that email!");
+    	}else {
+    		mav.addObject("message", "Check email to change your password!");
+    		userService.generateToken4Forgot(email);
+    	}
+    	return mav;
+    }   
+    
+    @GetMapping("/forgot/confirm")
+    public ModelAndView confirmReset(@RequestParam("token") String token) {
+    	ModelAndView mav = new ModelAndView();
+    	mav.setViewName("set-new-password");
+    	Optional<ConfirmationToken> optionalConfirmationToken = confirmationTokenService.findConfirmationTokenByToken(token);
+         if(optionalConfirmationToken.isPresent()) {
+        	 mav.addObject("token", token);
+        	 return mav;
+         }else {
+        	 mav.addObject("message", "Your token is invalid!!!");
+        	 return mav;
+         }
+    }
+    
+    @GetMapping("/set-new-password")
+    public String displaySetNewPassword() {
+    	return "set-new-password";
+    }
+    
+    @PostMapping("/set-new-password")
+    public ModelAndView setNewPassword(@RequestParam("password") String password, @RequestParam("token") String token) {
+    	ModelAndView mav = new ModelAndView();
+    	userService.updatePassword(password, token);
+    	mav.setViewName("set-new-password");
+    	mav.addObject("message", "Your password is updated!");
+    	return mav;
+    }
+    
 }
