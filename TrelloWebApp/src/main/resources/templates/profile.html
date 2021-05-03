@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="home.css">
+    <script src="https://kit.fontawesome.com/9d54f43127.js" crossorigin="anonymous"></script>
+
+    <title>Document</title>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-left">
+          <div class="nav-box">
+            <a href="#"><i class="fas fa-home"></i></a>
+            
+          </div>
+          <div class="board nav-box">
+            <a href="#">
+              <i class="fas fa-clipboard-list"></i>
+              <text>Bảng</text>
+            </a>
+          </div>
+          <div class="search nav-box">
+            <text>Tìm kiếm ....</text>
+            <i class="fas fa-search"></i>
+          </div>
+        </div>
+        
+        <div class="nav-right">
+          <div class="nav-box">
+            <i class="fas fa-plus"></i>
+          </div>
+          <div class="nav-box">
+            <i class="fas fa-exclamation"></i>
+          </div>
+
+          <!--notification-->
+          <div class="notification nav-box">
+            <div id="notification-click">
+              <i class="far fa-bell"></i>
+            </div>
+            <div id="modal-notification" class="modal-notification open-modal-notification">
+              <div class="modal-user-title flex-flex-center">
+                <span>Thông báo</span>
+              </div>
+              <div>
+                ---------------------------------------------------------
+              </div>
+              <div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div>
+
+              </div>
+              <div>
+                ---------------------------------------------------------
+              </div>
+              <div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Xem tất cả thông báo</span></div>
+              </div>
+            <!-- </div> -->
+            </div>
+          </div>
+
+          <!--user-->
+          <div class="user-info nav-box">
+            <div id="user-avatar">
+              <img class="avatar" src="1.jpg" alt="#">
+            </div>
+            <div id="modal-user-info" class="modal-user-info open-modal-user-info">
+              <div class="modal-user-title flex-flex-center">
+                <span>Tài khoản</span>
+              </div>
+              <div>
+                ---------------------------------------------------------
+              </div>
+              <div>
+                <div class="flex-flex-start modal-user-button"><a href="profile.html">Hồ sơ và hiển thị</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Hoạt động</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Thẻ</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Cài đặt</a></div>
+              </div>
+              <div>
+                ---------------------------------------------------------
+              </div>
+              <div>
+                <div class="flex-flex-start modal-user-button"><a href="">Trợ giúp</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="">Đăng xuất</a></div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </nav>
+    <div class="background-header">
+        <div class="wrapper-header profile-flex-flex-center">
+            <div class="profile-header profile-flex">
+                <div class="profile-avatar">
+                    <img src="1.jpg" alt="">
+                </div>
+                <h2>&nbsp Nguyen van A </h2>
+                <strong> &nbsp @nguyenvana</strong>
+
+            </div>
+           
+        </div>
+    </div>
+    <div class="profile-body">
+        <div class="profile-show">
+            <div class="profile-display">
+            <div class="profile-title">
+                <h3>Hồ sơ và hiển thị</h3>
+            </div>
+            <div class="">
+                <form action="/" id="login-form" method="POST">
+                    <div class="">
+                        <div>
+                            <label>Họ Và tên</label>
+                      <input type="text" name="username" id="user" class="form-field" placeholder="Nguyễn Văn A" inputmode="email">
+                        </div>
+                        <div>
+                            <label>Tên đăng nhập</label>
+                      <input type="text" name="password" id="password" class="form-field" placeholder="@nguyenvana">
+                        </div>
+                      <div>
+                          <label>ngày sinh</label>
+                      <input type="text" name="password" id="password" class="form-field" placeholder="12/2/2021">
+
+                      </div>
+                      <div>
+                          <label>Giới tính</label>
+                        <input type="text" name="password" id="password" class="form-field" placeholder="nữ">
+                      </div>
+                        
+                        <input id="login" type="submit" class="button account-button button-green" value="Cập nhật">
+                    </div>
+                  </form>
+                <!-- <div class="grid-columns">
+                    <text>Họ và tên</text>
+                    <text>Nguyen Van A</text>
+
+                </div>
+                <div class="grid-columns">
+                    <text>Tên đăng nhập</text>
+                    <text>nguyenvana</text>
+
+                </div>
+                <div class="grid-columns">
+                    <text>Ngày sinh</text>
+                    <text>12/2/2021</text>
+
+                </div>
+                <div class="grid-columns">
+                    <text>Giới tính</text>
+                    <text>Nam</text>
+
+                </div> -->
+
+            </div>
+
+        </div>
+        <div class="security">
+            <div class="email">
+                <div class="profile-title">
+                    <h3>Địa chỉ email</h3>
+                </div>
+                <div>
+                    <p>Địa chỉ email hiện tại của bạn là <i>nguyenvana@gmail.com</i></p> 
+                    
+                    <div>
+                        <h4>Địa chỉ email mới</h4>
+                        <form action="/" id="login-form" method="POST">
+                            <div class="">
+                              <input type="text" name="password" id="password" class="form-field" placeholder="Nhập địa chỉ email mới">
+        
+                              <input id="login" type="submit" class="button account-button button-green" value="Cập nhật">
+                            </div>
+                          </form>
+                    </div>
+                    
+                </div>
+
+            </div>
+            <div class="password">
+                <div class="profile-title">
+                    <h3>Mật khẩu</h3>
+                </div>
+                <div>
+                    <form action="/" id="login-form" method="POST">
+                    <div class="">
+                      <input type="text" name="username" id="user" class="form-field" placeholder="Enter password" inputmode="email">
+                      <input type="text" name="password" id="password" class="form-field" placeholder="Enter new password">
+                      <input type="text" name="password" id="password" class="form-field" placeholder="Confirm new password">
+
+                      <input id="login" type="submit" class="button account-button button-green" value="Cập nhật">
+                    </div>
+                  </form>
+                </div>
+            </div>
+            
+
+        </div>
+        </div>
+        
+    </div>
+    <script src="home.js"></script>
+</body>
+</html>

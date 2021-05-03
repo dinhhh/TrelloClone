@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="https://www.thymeleaf.org">
 
 <head>
   <meta charset="utf-8">
@@ -8,6 +8,11 @@
 </head>
 
 <body class="atlassian-brand">
+	<script type="text/javascript">
+		function hiddenErrorMessage(){
+			document.getElementById("error").remove();
+		}
+	</script>
   <div> 
     <img alt="Trello" class="trello-main-logo" src="https://d2k1ftgv7pobq7.cloudfront.net/meta/c/p/res/images/trello-header-logos/167dc7b9900a5b241b15ba21f8037cf8/trello-logo-blue.svg" />
     <section class="inner-section">
@@ -16,18 +21,26 @@
 
           <h1>Log in to Trello</h1>
           
-            <form action="/" id="login-form" method="POST">
+            <form th:action="@{/sign-in}" id="login-form" method="POST">
               <div class="email-password">
-                <input type="text" name="user" id="user" class="form-field" placeholder="Enter email" inputmode="email">
-                <input type="password" name="password" id="password" class="form-field" placeholder="Enter password">
+                <input type="text" name="user" id="user" class="form-field" placeholder="Enter email" inputmode="email" onclick="hiddenErrorMessage()">
+                <input type="password" name="password" id="password" class="form-field" placeholder="Enter password" onclick="hiddenErrorMessage()">
                 <input id="login" type="submit" class="button account-button button-green" value="Log In">
               </div>
+              <div align="center" th:if="${param.error}" id="error">
+	            <p style="font-size: 20; color: #FF1C19;">User Name or Password invalid, please verify!</p>
+	            <p style="font-size: 20; color: #FF1C19;"> Make sure you have activated your account</p>
+	        </div>
             </form>
 
           
           <ul class="bottom-form-link">
-            <li><a class="forgotLink" href="forgot.html" data-analytics-link="forgotPasswordLink">Can't log in?</a></li>
-            <li><a class="signupLink" th:href="@{/signup}" data-analytics-link="signUpLoginLink">Sign up for an account</a></li>
+            <li><a class="forgotLink" href="/forgot" data-analytics-link="forgotPasswordLink">Can't log in?</a></li>
+            <li><a class="signupLink" th:href="@{/sign-up}" data-analytics-link="signUpLoginLink">Sign up for an account</a></li>
+          </ul>
+          
+          <ul>
+          	<li><a th:href="@{/oauth2/authorization/github}">Log in with GitHub</a></li>
           </ul>
         </div>
 
