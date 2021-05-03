@@ -20,26 +20,31 @@ public class HomeController {
 		return "home";
 	}
 	
-	@GetMapping("/signup")
-	public String signUp(Model model) {
-		model.addAttribute("user", new User());
-		return "signup";
-	}
+//	@GetMapping("/signup")
+//	public String signUp(Model model) {
+//		model.addAttribute("user", new User());
+//		return "signup";
+//	}
 	
-	@GetMapping("/signin")
-	public String login() {
-		return "login";
-	}
+//	@GetMapping("/login")
+//	public String login() {
+//		return "login";
+//	}
 	
-	@PostMapping("/process_signup")
-	public String process(User user) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-	    String encodedPassword = passwordEncoder.encode(user.getPassword());
-	    user.setPassword(encodedPassword);
-	     
-	    userRepo.save(user);
-	     
-	    return "register_success";
+//	@PostMapping("/process_signup")
+//	public String process(User user) {
+//		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//	    String encodedPassword = passwordEncoder.encode(user.getPassword());
+//	    user.setPassword(encodedPassword);
+//	     
+//	    userRepo.save(user);
+//	     
+//	    return "register_success";
+//	}
+	
+	@GetMapping("/login_sucess")
+	public String loginSucess() {
+		return "login_sucess";
 	}
 	
 }

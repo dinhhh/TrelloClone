@@ -1,18 +1,20 @@
-package com.example.demo.User;
 
-import java.util.Date;
+package com.example.demo.User;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
+
 @Entity
 @Table(name="users")
 public class User {
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true, length = 45)
@@ -31,18 +33,64 @@ public class User {
     private String lastName;
     
     @Column(name = "gender", nullable = true, length = 10)
-    private String gender;
+    private String gender = "UNKNOWN";
     
-    public String getGender() {
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider")
+    private AuthenticationProvider authProvider = AuthenticationProvider.UNKNOWN;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role")
+    private UserRole userRole = UserRole.USER;
+    
+	@Column(name = "date_of_birth")
+    private String dateOfBirth = "UNKNOWN";
+    
+    @Column(columnDefinition = "tinyint(1) default 0")
+    private int locked;
+    
+    @Column(columnDefinition = "tinyint(1) default 0")
+    private int enabled;
+    
+    public UserRole getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(UserRole userRole) {
+		this.userRole = userRole;
+	}
+	
+    public int getLocked() {
+		return locked;
+	}
+
+	public void setLocked(int locked) {
+		this.locked = locked;
+	}
+
+	public int getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(int enabled) {
+		this.enabled = enabled;
+	}
+
+	public AuthenticationProvider getAuthProvider() {
+		return authProvider;
+	}
+    
+	public void setAuthProvider(AuthenticationProvider authProvider) {
+		this.authProvider = authProvider;
+	}
+
+	public String getGender() {
 		return gender;
 	}
 
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
-
-	@Column(name = "date_of_birth")
-    private String dateOfBirth;
 
 	public Long getId() {
 		return id;
@@ -92,4 +140,25 @@ public class User {
 		this.dateOfBirth = dateOfBirth;
 	}
 
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

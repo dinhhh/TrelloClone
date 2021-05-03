@@ -37,5 +37,6 @@ public class UserRepositoryTest {
         assertThat(user.getEmail()).isEqualTo(existUser.getEmail());
          
     }
+   
 
 }
