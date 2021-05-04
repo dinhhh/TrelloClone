@@ -17,7 +17,7 @@ public class HomeController {
 	
 	@GetMapping("")
 	public String viewHome() {
-		return "home";
+		return "welcome";
 	}
 	
 //	@GetMapping("/signup")
@@ -45,6 +45,16 @@ public class HomeController {
 	@GetMapping("/login_sucess")
 	public String loginSucess() {
 		return "login_sucess";
+	}
+	
+	@GetMapping("/home")
+	public String goToHome() {
+		return "home";
+	}
+	
+	@GetMapping("/updateInfo")
+	public String goToProfile() {
+		return "profile";
 	}
 	
 }
