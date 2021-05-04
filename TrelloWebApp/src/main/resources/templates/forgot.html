@@ -94,10 +94,15 @@
 			</form>
 			<br>
 			<button form="fp-form" type="submit" value="Get recovery link" class="my-button">Get link</button>
+			<br>
+			
 			<div style="padding-top: 15px;" th:if="@{message != null}">
 				<div th:text="${message}"></div>
 			</div>
 		</div>
+		<!-- <div>
+			<a href="/sign-in">Log in</a>
+		</div> -->
 		
 	</div>
 </body>
