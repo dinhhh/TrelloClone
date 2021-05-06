@@ -57,4 +57,9 @@ public class HomeController {
 		return "profile";
 	}
 	
+	@GetMapping("/board")
+	public String getBoard() {
+		return "board";
+	}
+	
 }
