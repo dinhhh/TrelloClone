@@ -1,6 +1,8 @@
 
 package com.example.demo.User;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,7 +10,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.example.demo.Board.Board;
 
 
 
@@ -52,7 +59,18 @@ public class User {
     @Column(columnDefinition = "tinyint(1) default 0")
     private int enabled;
     
-    public UserRole getUserRole() {
+    @ManyToMany
+    private Set<Board> boards;
+    
+    public Set<Board> getBoards() {
+		return boards;
+	}
+
+	public void setBoards(Set<Board> boards) {
+		this.boards = boards;
+	}
+
+	public UserRole getUserRole() {
 		return userRole;
 	}
 
