@@ -1,8 +1,13 @@
 package com.example.demo.Controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.example.demo.User.User;
 
 @Controller
 public class MainController {
@@ -16,8 +21,16 @@ public class MainController {
 		return "login_sucess";
 	}
 	
+	@GetMapping("/sign-up")
+	public String signUp(Model model) {
+		model.addAttribute("user", new User());
+		return "signup";
+	}
+
+	
 	@GetMapping("/home")
 	public String goToHome() {
+		System.out.println("get mapping /home");
 		return "home";
 	}
 	
@@ -35,5 +48,7 @@ public class MainController {
 	public String testAPI() {
 		return "test";
 	}
+	
+	
 	
 }
