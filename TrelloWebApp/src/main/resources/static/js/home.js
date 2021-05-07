@@ -25,26 +25,29 @@ list_item_team_click.addEventListener('click',function(){
     list_item_extend.classList.toggle('ul-extend');
 });
 
-
-const api_url = "http://localhost:8080/home/1";
-var listTile = "";
+var gmailOfUser = document.getElementById("gmail").textContent;
 
 async function getTitle(){
-    const resp = await fetch(api_url);
+
+    var path = "http://localhost:8080/board/title/";
+    var apiURL = path.concat(gmailOfUser);
+    const resp = await fetch(apiURL);
     const data = await resp.json();
     var count = Object.keys(data).length;
     var i;
     
-    for(i = 0; i < count; i++){    
-        const li1 = document.createElement("li");
-        li1.setAttribute("class", "each-board");
-        const a1 = document.createElement("a");
-        a1.setAttribute("class", "title-each-board");
-        a1.setAttribute("href", "#");
-        a1.appendChild(document.createTextNode(data[i]));
-        li1.appendChild(a1);
+    if(count > 0){
+        for(i = 0; i < count; i++){    
+            const li1 = document.createElement("li");
+            li1.setAttribute("class", "each-board");
+            const a1 = document.createElement("a");
+            a1.setAttribute("class", "title-each-board");
+            a1.setAttribute("href", "#");
+            a1.appendChild(document.createTextNode(data[i]));
+            li1.appendChild(a1);
 
-        document.getElementById("owned-board").appendChild(li1);
+            document.getElementById("owned-board").appendChild(li1);
+        }
     }
 
     const lastItem = document.createElement("li");
@@ -58,5 +61,4 @@ async function getTitle(){
     console.log(data)
 }
 getTitle();
-
-
+console.log(gmailOfUser)
