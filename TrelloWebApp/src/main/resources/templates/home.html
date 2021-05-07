@@ -5,36 +5,11 @@
   <title>Trello</title>
   <link rel="stylesheet" href="/css/home.css">
   <script src="https://kit.fontawesome.com/9d54f43127.js" crossorigin="anonymous"></script>
-	<script type="text/javascript" th:src="@{/js/home.js}"></script>
+  
 </head>
 
 <body>
-	<script type="text/javascript">
-		var notification_click = document.getElementById("notification-click")
-		console.log(notification_click)
-		notification_click.addEventListener('click',function(){
-		    var modal_notification = document.getElementById("modal-notification")
-		    // console.log(notification_click)
-		    modal_notification.classList.toggle('open-modal-notification');
-		})
-		
-		var avatar_click = document.getElementById("user-avatar")
-		console.log(avatar_click)
-		avatar_click.addEventListener('click',function(){
-		    var modal_notification = document.getElementById("modal-user-info")
-		    // console.log(notification_click)
-		    modal_notification.classList.toggle('open-modal-user-info');
-		})
-		
-		var list_item_team_click = document.getElementById("menu-extend");
-		console.log(list_item_team_click)
-		list_item_team_click.addEventListener('click',function(){
-		    var list_item_extend = document.querySelector("#list-iteam-team > ul:nth-child(2)");
-		    // console.log(list_item_team_click)
-		    // list_item_extend.style.backgroundColor = "red";
-		    list_item_extend.classList.toggle('ul-extend');
-		})
-	</script>
+	
    
   
       <nav class="nav">
@@ -92,7 +67,7 @@
           <!--user-->
           <div class="user-info nav-box">
             <div id="user-avatar">
-              <img class="avatar" src="1.jpg" alt="#">
+              <!-- <img class="avatar" src="1.jpg" alt="#"> -->
             </div>
             <div id="modal-user-info" class="modal-user-info open-modal-user-info">
               <div class="modal-user-title flex-flex-center">
@@ -218,15 +193,22 @@
                 
               </div>
               <div>
-                <ul class="ul-grid">
-                  <li class="each-board">
-                    <a href="" class="title-each-board">
+                <ul class="ul-grid" id="owned-board">
+                  <!-- change here to get JSON file -->
+                  <!-- <li class="each-board">
+                    <a href="" class="title-each-board" id="test-title">
                       Team 1
                     </a>
                   </li>
-                  <li class="add-board">
+
+                  <li class="each-board">
+                    demo
+                  </li> -->
+
+                  <!-- <li class="add-board">
                     <span>Tạo bảng mới</span>
-                  </li>
+                  </li> -->
+                
                 </ul>
               </div>
             </div>
@@ -241,8 +223,8 @@
       </div>
       </div>
       
-<script src="home.js"></script>
-<script src="test-ajax.js"></script>
-</body>
+<!-- <script src="test-ajax.js"></script> -->
 
+</body>
+<script type="text/javascript" src="/js/home.js"></script>
 </html>
