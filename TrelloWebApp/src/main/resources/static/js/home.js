@@ -28,7 +28,6 @@ list_item_team_click.addEventListener('click',function(){
 var gmailOfUser = document.getElementById("gmail").textContent;
 
 async function getTitle(){
-
     var path = "http://localhost:8080/board/title/";
     var apiURL = path.concat(gmailOfUser);
     const resp = await fetch(apiURL);
@@ -50,15 +49,46 @@ async function getTitle(){
         }
     }
 
-    const lastItem = document.createElement("li");
-    lastItem.setAttribute("class", "add-board");
-    const a1 = document.createElement("span");
-    a1.appendChild(document.createTextNode("Tạo bảng mới"));
-    lastItem.appendChild(a1);
+    // const lastItem = document.createElement("li");
+    // lastItem.setAttribute("class", "add-board");
+    // const a1 = document.createElement("span");
+    // a1.appendChild(document.createTextNode("Tạo bảng mới"));
+    // lastItem.appendChild(a1);
 
-    document.getElementById("owned-board").appendChild(lastItem);
+    // document.getElementById("owned-board").appendChild(lastItem);
     
     console.log(data)
 }
 getTitle();
 console.log(gmailOfUser)
+
+
+function check(event) {
+    event.preventDefault();
+
+    const url = "http://localhost:8080/board/title/".concat(document.getElementById("new-board-title").value).concat("/").concat(gmailOfUser);
+    const other_params = {
+        headers : { "content-type" : "application/json; charset=UTF-8"},
+        method : "POST",
+        mode : "cors"
+    };
+
+    fetch(url, other_params)
+        .then(function(response) {
+        if (response.ok) {
+            document.getElementById('message').innerHTML = "success";
+            location.reload()
+            return response.json();
+        } else {
+	        document.getElementById('message').innerHTML = "Tên bảng không được để trống";
+            throw new Error("Could not reach the API: " + response.statusText);        
+        }
+    })
+    // .then(function(data) {
+    //     document.getElementById("message").innerHTML = data.encoded;
+    // }).catch(function(error) {
+    //     document.getElementById("message").innerHTML = error.message;
+    // });
+    return true;
+}
+

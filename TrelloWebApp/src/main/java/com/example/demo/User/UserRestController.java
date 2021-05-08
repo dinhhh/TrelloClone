@@ -26,14 +26,4 @@ public class UserRestController {
 		}
 		return val;
 	}
-//	public List<Long> getUserIDByEmail(@PathVariable String gmail) {
-//		Optional<User> user = userRepo.findByEmail(gmail);
-//		List<Long> res = new ArrayList<>();
-//		if(user.isEmpty()) {
-//			System.out.println("gmail does not exist in database");
-//		} else {
-//			res.add(user.get().getId());
-//		}
-//		return res;
-//	}
 }
