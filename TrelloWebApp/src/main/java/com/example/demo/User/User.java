@@ -14,6 +14,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.example.demo.Board.Board;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 
 
@@ -29,6 +31,7 @@ public class User {
     private String email;
      
     @Column(nullable = false, length = 64)
+    @JsonProperty(access = Access.WRITE_ONLY)
     private String password;
      
     @Column(name = "first_name", nullable = false, length = 20)
