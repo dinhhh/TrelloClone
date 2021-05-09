@@ -4,12 +4,12 @@
 <head>
   <title>Trello</title>
   <link rel="stylesheet" href="/css/home.css">
-  <script src="https://kit.fontawesome.com/9d54f43127.js" crossorigin="anonymous">
+  <script src="https://kit.fontawesome.com/9d54f43127.js" crossorigin="anonymous"></script>
   
-  </script>
 </head>
 
 <body>
+	
    
   
       <nav class="nav">
@@ -28,6 +28,7 @@
             <text>Tìm kiếm ....</text>
             <i class="fas fa-search"></i>
           </div>
+          
         </div>
         
         <div class="nav-right">
@@ -67,7 +68,7 @@
           <!--user-->
           <div class="user-info nav-box">
             <div id="user-avatar">
-              <img class="avatar" src="1.jpg" alt="#">
+              <!-- <img class="avatar" src="1.jpg" alt="#"> -->
             </div>
             <div id="modal-user-info" class="modal-user-info open-modal-user-info">
               <div class="modal-user-title flex-flex-center">
@@ -193,16 +194,34 @@
                 
               </div>
               <div>
-                <ul class="ul-grid">
-                  <li class="each-board">
-                    <a href="" class="title-each-board">
+                <ul class="ul-grid" id="owned-board">
+                  <!-- change here to get JSON file -->
+                  <!-- <li class="each-board">
+                    <a href="" class="title-each-board" id="test-title">
                       Team 1
                     </a>
                   </li>
+
+                  <li class="each-board">
+                    demo
+                  </li> -->
+
                   <li class="add-board">
-                    <span>Tạo bảng mới</span>
+                    <form style="padding-left: 80px;" method="POST" onsubmit="return check();">
+                      <button type="submit" onclick="check(event)" name="Submit" style="background-color: rgb(173, 173, 173); color: white;"><b>Tao bang moi</b></button>
+                      <br>
+                      <input type="text" id="new-board-title" name="new-board-title" style="background-color: rgba(187, 187, 192, 0.479); text-decoration: none;
+                      color: inherit; font-size: large;" placeholder="Ten bang">
+                      <br>
+                      <span id="message"></span>
+                    </form>
+                  </li>
+                  
+                  <li class="each-board" style="display: none;">
+                    <a class="title-each-board" id="gmail">[[${#request.remoteUser}]]</a>
                   </li>
                 </ul>
+                
               </div>
             </div>
             <div class="see-all-closed-board button"><span>Xem tất cả các bảng đã đóng</span></div>
@@ -216,8 +235,8 @@
       </div>
       </div>
       
-<script src="home.js"></script>
-<script src="test-ajax.js"></script>
-</body>
+<!-- <script src="test-ajax.js"></script> -->
 
+</body>
+<script type="text/javascript" src="/js/home.js"></script>
 </html>

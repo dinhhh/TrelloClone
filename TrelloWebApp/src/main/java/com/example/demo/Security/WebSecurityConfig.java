@@ -21,8 +21,6 @@ import com.example.demo.User.UserService;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
-//	@Autowired
-//	private DataSource dataSource;
 	
 	@Autowired
 	private	CustomOAuth2UserService customOAuth2UserService;
@@ -33,41 +31,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-//	public WebSecurityConfig(CustomOAuth2UserService customOAuth2UserService, UserService userService) {
-//		super();
-//		this.customOAuth2UserService = customOAuth2UserService;
-//		this.userService = userService;
-//	}
-
-//	@Bean
-//	public UserDetailsService userDetailsService() {
-//		return new CustomUserDetailService();
-//		return new UserService();
-//	}
-	
-//	@Bean
-//	public BCryptPasswordEncoder passwordEncoder() {
-//		return new BCryptPasswordEncoder();
-//	}
-	
-//	@Bean
-//	public DaoAuthenticationProvider authenticationProvider() {
-//		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-//		authProvider.setUserDetailsService(userDetailsService());
-//		authProvider.setPasswordEncoder(passwordEncoder());
-//		return authProvider;
-//	}
-	
-//	@Override
-//	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
-//		auth.authenticationProvider(authenticationProvider());
-//	}
-	
-//	@Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userService)
-//                .passwordEncoder(passwordEncoder());
-//    }
 	
 	@Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -82,14 +45,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 			.authorizeRequests()
 			.antMatchers("/sign-up/*", "/sign-in").permitAll()
 			.antMatchers("/oauth2/*").permitAll()
-			.antMatchers("/boards/*").authenticated()
+			.antMatchers("/board").authenticated()
+			.antMatchers("/home").authenticated()
 			.antMatchers("/login_sucess").authenticated()
 			.and()
 			.formLogin()
 				.loginPage("/sign-in")
 				.usernameParameter("user")
 				.passwordParameter("password")
-				.defaultSuccessUrl("/login_sucess")
+				.defaultSuccessUrl("/home")
 				.permitAll()
 			.and()
 			.logout()
@@ -97,8 +61,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 			.and()
 			.oauth2Login()
 				.loginPage("/sign-in")
-//				.userInfoEndpoint()
-//				.userService(customOAuth2UserService)
 					
 			;
 	}
