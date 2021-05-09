@@ -36,21 +36,22 @@ public class BoardRepositoryTest {
 	
 	@Test
 	public void createBoard() {
+		User user = new User();
+		user.setEmail("test gmail");
+		user.setPassword("test password");
+		user.setLastName("test last name");
+		user.setFirstName("test first name");
+		userRepo.save(user);
+		
 		Board board = new Board();
 		board.setTitle("my second board");
 		board.setVisiable(Visiable.PUBLIC);
+		Set<User> users = new HashSet<User>();
+		users.add(user);
+		board.setUsers(users);
+		boardRepo.save(board);
 		
-		Set<User> setUser = new HashSet<User>();
-		Optional<User> user = userRepo.findById((long) 1);
-		if (user.isEmpty()) {
-			System.out.println("not exist");
-			return;
-		}else {
-			setUser.add(user.get());
-			board.setUsers(setUser);
-			Board b = boardRepo.save(board);
-			System.out.println("added new board");
-		}
+		System.out.println("saved board!!!");
 	}
 	
 	@Test

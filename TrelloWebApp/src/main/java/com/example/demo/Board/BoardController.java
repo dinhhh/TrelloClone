@@ -25,33 +25,52 @@ public class BoardController {
 	@Autowired
 	private UserRepository userRepo;
 	
+//	@GetMapping("/api/board/{id}")
+//	public ResponseEntity<Board> getAllBoard(@PathVariable Long id){
+//		Optional<Board> boards = boardRepo.findById(id);
+//		if(boards.isEmpty()) {
+//			System.out.println("no users email title");
+//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//		}else {
+//			return new ResponseEntity<>(boards.get(), HttpStatus.OK);
+//		}
+//	}
+	
+	@GetMapping("/api/board/{idString}")
+	public ResponseEntity<Board> getAllBoard(@PathVariable String idString){
+		Long id = Long.valueOf(idString);
+		Optional<Board> boards = boardRepo.findById(id);
+		if(boards.isEmpty()) {
+			System.out.println("no users email title");
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<>(boards.get(), HttpStatus.OK);
+		}
+	}
+	
 	@GetMapping("/board/title/{email}")
-	public List<String> getAllBoardTitleByUserGmail(@PathVariable String email){
-		List<String> res = new ArrayList<String>();
+	public ResponseEntity<List<Board>> getAllBoardTitleByUserGmail(@PathVariable String email){
 		List<Board> boards = boardRepo.findByUserGmail(email);
 		if(boards.isEmpty()) {
 			System.out.println("no users email title");
-			return res;
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {
-			for(Board b : boards) {
-				res.add(b.getTitle());
-			}
-			return res;
+			return new ResponseEntity<>(boards, HttpStatus.OK);
 		}
 	}
 	
 	@PostMapping("/board/title/{title}/{gmailOfUser}")
 	public ResponseEntity<Board> addNewBoardTitle(@PathVariable String title, @PathVariable String gmailOfUser){
-		// get user by gmail
 		Optional<User> user = userRepo.findByEmail(gmailOfUser);
 		if(user.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		Set<User> setOfUser = new HashSet<User>();
 		setOfUser.add(user.get());
-		Board newBoard = new Board();
+		Board newBoard = new Board();	
 		newBoard.setTitle(title);
 		newBoard.setUsers(setOfUser);
 		return new ResponseEntity<>(boardRepo.save(newBoard), HttpStatus.OK);
 	}
+	
 }
