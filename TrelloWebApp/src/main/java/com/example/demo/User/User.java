@@ -1,6 +1,8 @@
 
 package com.example.demo.User;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,7 +10,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import com.example.demo.Board.Board;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 
 
@@ -24,6 +31,7 @@ public class User {
     private String email;
      
     @Column(nullable = false, length = 64)
+    @JsonProperty(access = Access.WRITE_ONLY)
     private String password;
      
     @Column(name = "first_name", nullable = false, length = 20)
@@ -52,7 +60,18 @@ public class User {
     @Column(columnDefinition = "tinyint(1) default 0")
     private int enabled;
     
-    public UserRole getUserRole() {
+    @ManyToMany
+    private Set<Board> boards;
+    
+    public Set<Board> getBoards() {
+		return boards;
+	}
+
+	public void setBoards(Set<Board> boards) {
+		this.boards = boards;
+	}
+
+	public UserRole getUserRole() {
 		return userRole;
 	}
 

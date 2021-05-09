@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+
+    <script>
+        const api_url = "http://time.jsontest.com";
+
+        async function getTitle(){
+            const resp = await fetch(api_url);
+            const data = await resp.json();
+            document.getElementById("test-title").innerHTML = data.date;
+            console.log(data)
+        }
+
+        getTitle();
+        
+    </script>
+
+    <body>
+        
+        <p id="test-title">THIS IS TEST PAGE</p>
+
+    </body>
+</html>
