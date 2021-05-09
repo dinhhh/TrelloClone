@@ -12,6 +12,10 @@ const onHoldListEl = document.getElementById('on-hold-list');
 // Items
 let updatedOnLoad = false;
 
+// board infor
+const currentURL = window.location.href;
+const boardID = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+
 // Initialize Arrays
 let backlogListArray = [];
 let progressListArray = [];
@@ -25,17 +29,44 @@ let dragging = false;
 let currentColumn;
 
 // Get Arrays from localStorage if available, set default values if not
-function getSavedColumns() {
-  if (localStorage.getItem('backlogItems')) {
-    backlogListArray = JSON.parse(localStorage.backlogItems);
-    progressListArray = JSON.parse(localStorage.progressItems);
-    completeListArray = JSON.parse(localStorage.completeItems);
-    onHoldListArray = JSON.parse(localStorage.onHoldItems);
-  } else {
-    backlogListArray = ['Release the course', 'Sit back and relax'];
-    progressListArray = ['Work on projects', 'Listen to music'];
-    completeListArray = ['Being cool', 'Getting stuff done'];
-    onHoldListArray = ['Being uncool'];
+async function getSavedColumns() {
+  // use local storage
+  // if (localStorage.getItem('backlogItems')) {
+  //   backlogListArray = JSON.parse(localStorage.backlogItems);
+  //   progressListArray = JSON.parse(localStorage.progressItems);
+  //   completeListArray = JSON.parse(localStorage.completeItems);
+  //   onHoldListArray = JSON.parse(localStorage.onHoldItems);
+  // } else {
+  //   backlogListArray = ['Release the course', 'Sit back and relax'];
+  //   progressListArray = ['Work on projects', 'Listen to music'];
+  //   completeListArray = ['Being cool', 'Getting stuff done'];
+  //   onHoldListArray = ['Being uncool'];
+  // }
+
+  // fetch data from database
+  const apiURL = "http://localhost:8080/api/card/board/".concat(boardID.toString());
+  const resp = await fetch(apiURL);
+  const data = await resp.json();
+  const numOfCards = Object.keys(data).length;
+  console.log(data);
+  if(numOfCards > 0){
+    var i;
+    for(i = 0; i < numOfCards; i++){
+      switch (data[i].category){
+        case "backlog":
+          backlogListArray.push(data[i].title);
+          break;
+        case "progress":
+          progressListArray.push(data[i].title);
+          break;
+        case "complete":
+          completeListArray.push(data[i].title);
+          break;  
+        case "onHold":
+          onHoldListArray.push(data[i].title);
+          break;
+      }
+    }
   }
 }
 
@@ -73,6 +104,7 @@ function createItemEl(columnEl, column, item, index) {
 function updateDOM() {
   // Check localStorage once
   if (!updatedOnLoad) {
+    console.log("get saved column !");
     getSavedColumns();
   }
   // Backlog Column
@@ -119,11 +151,65 @@ function updateItem(id, column) {
 }
 
 // Add to Column List, Reset Textbox
-function addToColumn(column) {
+async function addToColumn(column) {
+  const arrayNames = ['backlog', 'progress', 'complete', 'onHold'];
   const itemText = addItems[column].textContent;
   const selectedArray = listArrays[column];
   selectedArray.push(itemText);
   addItems[column].textContent = '';
+
+  // get board information
+  var boardApiPath = "http://localhost:8080/api/board/".concat(boardID);
+  const resp = await fetch(boardApiPath);
+  const boardData = await resp.json();
+  console.log(boardData);
+  // send new card data to database
+  var cardApiPath = "http://localhost:8080/api/card/add";
+  const otherDataOfCard = {
+    "title" : itemText,
+    "dueDate": "",
+    "description": "",
+    "color": "blue",
+    "category": arrayNames[column],
+    "board" : {
+      "id": boardData.id,
+      "title": boardData.title,
+      "backGroundImage": boardData.backGroundImage,
+      "visiable": boardData.visiable,
+      "user" : [
+        {
+          "id": boardData.users[0].id,
+          "email": boardData.users[0].email,
+          "firstName": boardData.users[0].firstName,
+          "lastName": boardData.users[0].lastName,
+          "gender": boardData.users[0].gender,
+          "authProvider": boardData.users[0].authProvider,
+          "userRole": boardData.users[0].userRole,
+          "dateOfBirth": boardData.users[0].dateOfBirth,
+          "locked": boardData.users[0].locked,
+          "enabled": boardData.users[0].enabled,
+          "boards": []
+        }
+      ]
+    }
+  };
+  const otherParams = {
+    headers : { "content-type" : "application/json; charset=UTF-8"},
+    method : "POST",
+    body : JSON.stringify(otherDataOfCard),
+  }
+  console.log(otherParams);
+  fetch(cardApiPath, otherParams)
+    .then(function(response){
+      if(response.ok){
+        document.getElementById("message").innerHTML = "success";
+        return response.json();
+      }else{
+        document.getElementById("message").innerHTML = "something error!!!";
+        throw new Error("Could not reach the API" + response.statusText);
+      }
+    })
+
   updateDOM(column);
 }
 

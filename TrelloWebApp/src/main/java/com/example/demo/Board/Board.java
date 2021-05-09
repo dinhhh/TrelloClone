@@ -10,8 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import com.example.demo.Card.Card;
 import com.example.demo.Card.Visiable;
 import com.example.demo.User.User;
 
@@ -36,6 +40,9 @@ public class Board {
 	@ManyToMany
 	private Set<User> users;
 	
+	@OneToMany(mappedBy = "board")
+	private Set<Card> cards;
+
 	public Long getId() {
 		return id;
 	}

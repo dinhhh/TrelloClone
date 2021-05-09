@@ -41,8 +41,8 @@ async function getTitle(){
             li1.setAttribute("class", "each-board");
             const a1 = document.createElement("a");
             a1.setAttribute("class", "title-each-board");
-            a1.setAttribute("href", "#");
-            a1.appendChild(document.createTextNode(data[i]));
+            a1.setAttribute("href", "http://localhost:8080/board/".concat(data[i].id.toString()));
+            a1.appendChild(document.createTextNode(data[i].title));
             li1.appendChild(a1);
 
             document.getElementById("owned-board").appendChild(li1);
