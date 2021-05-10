@@ -23,10 +23,19 @@ let completeListArray = [];
 let onHoldListArray = [];
 let listArrays = [];
 
+// ID of card in database
+let backlogIdArray = [];
+let progressIdArray = [];
+let completeIdArray = [];
+let ohHoldIdArray = [];
+let idListArray = [backlogIdArray, progressIdArray, completeIdArray, ohHoldIdArray];
+
 // Drag Functionality
 let draggedItem;
 let dragging = false;
 let currentColumn;
+let indexItem;
+let sourceColumn;
 
 // Get Arrays from localStorage if available, set default values if not
 async function getSavedColumns() {
@@ -55,19 +64,24 @@ async function getSavedColumns() {
       switch (data[i].category){
         case "backlog":
           backlogListArray.push(data[i].title);
+          backlogIdArray.push(data[i].id);
           break;
         case "progress":
           progressListArray.push(data[i].title);
+          progressIdArray.push(data[i].id);
           break;
         case "complete":
           completeListArray.push(data[i].title);
+          completeIdArray.push(data[i].id);
           break;  
         case "onHold":
           onHoldListArray.push(data[i].title);
+          ohHoldIdArray.push(data[i].id);
           break;
       }
     }
   }
+  updateDOM();
 }
 
 // Set localStorage Arrays
@@ -101,7 +115,8 @@ function createItemEl(columnEl, column, item, index) {
 }
 
 // Update Columns in DOM - Reset HTML, Filter Array, Update localStorage
-function updateDOM() {
+async function updateDOM() {
+  console.log("update DOM");
   // Check localStorage once
   if (!updatedOnLoad) {
     console.log("get saved column !");
@@ -134,17 +149,55 @@ function updateDOM() {
   // Don't run more than once, Update Local Storage
   updatedOnLoad = true;
   updateSavedColumns();
+
+  console.log(backlogIdArray);
+  console.log(progressIdArray);
+  console.log(completeIdArray);
+  console.log(ohHoldIdArray);
 }
 
 // Update Item - Delete if necessary, or update Array value
 function updateItem(id, column) {
   const selectedArray = listArrays[column];
   const selectedColumn = listColumns[column].children;
+  const idArray = idListArray[column];
+  const idOfCard = idArray[id];
   if (!dragging) {
+    // delete item
     if (!selectedColumn[id].textContent) {
-      delete selectedArray[id];
+      delete selectedArray[id]; // !!!
+      // delete card in database
+      var deleteApiUrl = "http://localhost:8080/api/card/".concat(idOfCard.toString());
+      const otherParams = {
+        headers : { "content-type" : "application/json; charset=UTF-8"},
+        method : "DELETE",
+      };
+      fetch(deleteApiUrl, otherParams)
+        .then(function(response){
+          if(response.ok){
+            console.log("deleted card !!!");
+          }else{
+            throw new Error(response.statusText);
+          }
+        })
+      
     } else {
+      // modify item title
       selectedArray[id] = selectedColumn[id].textContent;
+      const newTitle = selectedColumn[id].textContent;
+      var modifyApiUrl = "http://localhost:8080/api/card/title/".concat(idOfCard.toString()).concat("/").concat(newTitle);
+      const otherParams = {
+        headers : { "content-type" : "application/json; charset=UTF-8"},
+        method : "PUT",
+      };
+      fetch(modifyApiUrl, otherParams)
+        .then(function(response){
+          if(response.ok){
+            console.log("update title success");
+          }else{
+            throw new Error(response.statusText);
+          }
+        })
     }
     updateDOM();
   }
@@ -162,7 +215,7 @@ async function addToColumn(column) {
   var boardApiPath = "http://localhost:8080/api/board/".concat(boardID);
   const resp = await fetch(boardApiPath);
   const boardData = await resp.json();
-  console.log(boardData);
+  // console.log(boardData);
   // send new card data to database
   var cardApiPath = "http://localhost:8080/api/card/add";
   const otherDataOfCard = {
@@ -198,18 +251,27 @@ async function addToColumn(column) {
     method : "POST",
     body : JSON.stringify(otherDataOfCard),
   }
-  console.log(otherParams);
-  fetch(cardApiPath, otherParams)
+  // console.log(otherParams);
+  let idOfNewCard;
+  await fetch(cardApiPath, otherParams)
     .then(function(response){
       if(response.ok){
         document.getElementById("message").innerHTML = "success";
-        return response.json();
+        console.log("fetched api !");
+
+        // get id of new card
+        response.json().then(data => {
+          idOfNewCard = data.id;
+          // console.log(idOfNewCard);
+          idListArray[column].push(idOfNewCard);
+        })
+        
       }else{
         document.getElementById("message").innerHTML = "something error!!!";
         throw new Error("Could not reach the API" + response.statusText);
       }
     })
-
+  
   updateDOM(column);
 }
 
@@ -258,6 +320,25 @@ function dragEnter(column) {
 // When Item Starts Dragging
 function drag(e) {
   draggedItem = e.target;
+  indexItem = e.target.id;
+  console.log(draggedItem.parentNode.parentNode.id);
+  switch (draggedItem.parentNode.parentNode.id) {
+    case "backlog-content":
+      sourceColumn = 0;      
+      break;
+    case "progress-content":
+      sourceColumn = 1;
+      break;
+    case "complete-content":
+      sourceColumn = 2;
+      break;
+    case "on-hold-content":
+      sourceColumn = 3;
+      break;
+    default:
+      sourceColumn = -1;
+      break;
+  }
   dragging = true;
 }
 
@@ -278,8 +359,48 @@ function drop(e) {
   parent.appendChild(draggedItem);
   // Dragging complete
   dragging = false;
+
+  // update list of ID
+  const idCardInDB = idListArray[sourceColumn][indexItem];
+  idListArray[sourceColumn].splice(indexItem, 1);
+  idListArray[currentColumn].push(idCardInDB);
+  let nameOfCurrentColumn;
+  switch (currentColumn) {
+    case 0:
+      nameOfCurrentColumn = "backlog";
+      break;
+    case 1:
+      nameOfCurrentColumn = "progress";
+      break;
+    case 2:
+      nameOfCurrentColumn = "complete";
+      break;
+    case 3:
+      nameOfCurrentColumn = "onHold";
+      break;
+    default:
+      console.log("name of current column is invalid");
+      break;
+  }
+  // update category of card in db
+  var putApiUrl = "http://localhost:8080/api/card/category/".concat(idCardInDB.toString())
+    .concat("/").concat(nameOfCurrentColumn);
+  const otherParams = {
+    headers : { "content-type" : "application/json; charset=UTF-8"},
+    method : "PUT",
+  }
+  fetch(putApiUrl, otherParams)
+    .then(function(response){
+      if(response.ok){
+        console.log("update category success");
+      }else{
+        throw new Error(response.statusText);
+      }
+    })
   rebuildArrays();
 }
 
 // On Load
 updateDOM();
+
+
