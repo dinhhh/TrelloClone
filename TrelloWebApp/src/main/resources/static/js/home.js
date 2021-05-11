@@ -25,17 +25,6 @@ list_item_team_click.addEventListener('click',function(){
     list_item_extend.classList.toggle('ul-extend');
 });
 
-function cancle(){
-    var cancle_form_create_board = document.getElementById("form-add-board");
-    console.log(cancle_form_create_board);
-    cancle_form_create_board.classList.toggle('display-none');
-    console.log("ok");
-}
-function create(){
-    var form_create_board = document.getElementById("form-add-board");
-    form_create_board.classList.toggle('display-none');
-}
-
 var gmailOfUser = document.getElementById("gmail").textContent;
 
 async function getTitle(){
