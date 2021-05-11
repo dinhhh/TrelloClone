@@ -3,68 +3,46 @@
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <head>
   <title>Trello</title>
-  <link rel="stylesheet" href="/static/css/home.css">
+  <link rel="stylesheet" href="/css/home.css">
   <script src="https://kit.fontawesome.com/9d54f43127.js" crossorigin="anonymous"></script>
   
 </head>
 
 <body>
-  <div id="form-add-board" class="template-gray display-none">
-    <div>
-       <!-- <div class="text-center"> -->
-      <div class="add-board-form">
-        <form id="add-board" method="POST" onsubmit="return check();">
-          <input class="form-field" type="text" id="new-board-title" name="new-board-title" style="background-color: rgba(187, 187, 192, 0.479); text-decoration: none;
-          color: inherit; font-size: large; width: 100%;" placeholder="Ten bang">
-          <div style="display: flex; justify-content: space-between; padding-top: 20px;">
-            <div class="btn btn-purple" onclick="cancle()"><b>Hủy</b></div>
-            <button class="btn btn-purple" type="submit" onclick="check(event)" name="Submit" ><b>Tao bang moi</b></button>
-
-          </div>
-          <br>
-          
-          <br>
-          <span id="message"></span>
-        </form>
-      <!-- </div> -->
-    </div>
-    </div>
+	
    
-  </div>
-  <header class="header">
-    <div class="container">
+  
       <nav class="nav">
         <div class="nav-left">
           <div class="nav-box">
-            <a href="#"><i class="fas fa-home icon"></i></a>
+            <a href="#"><i class="fas fa-home"></i></a>
             
           </div>
-          <div class="nav-box">
-            <a href="#" class="board">
-              <i class="fas fa-clipboard-list icon"></i>
-              <p>Bảng</p>
+          <div class="board nav-box">
+            <a href="#">
+              <i class="fas fa-clipboard-list"></i>
+              <text>Bảng</text>
             </a>
           </div>
-          <div class=" nav-box">
-            <input class="nav-box search" type="text" name="search" class="form-field u" placeholder="Search..." >
-
-            <i class="fas fa-search icon"></i>
+          <div class="search nav-box">
+            <text>Tìm kiếm ....</text>
+            <i class="fas fa-search"></i>
           </div>
           
         </div>
         
         <div class="nav-right">
           <div class="nav-box">
-            <i class="fas fa-plus icon"></i>
+            <i class="fas fa-plus"></i>
           </div>
           <div class="nav-box">
-            <i class="fas fa-exclamation icon"></i>
+            <i class="fas fa-exclamation"></i>
           </div>
 
           <!--notification-->
           <div class="notification nav-box">
             <div id="notification-click">
-              <i class="far fa-bell icon"></i>
+              <i class="far fa-bell"></i>
             </div>
             <div id="modal-notification" class="modal-notification open-modal-notification">
               <div class="modal-user-title flex-flex-center">
@@ -90,11 +68,8 @@
           <!--user-->
           <div class="user-info nav-box">
             <div id="user-avatar">
-              <img class="avatar" src="intro-photo.png" alt="#">
+              <!-- <img class="avatar" src="1.jpg" alt="#"> -->
             </div>
-            <!-- <div id="user-avatar">
-              
-            </div> -->
             <div id="modal-user-info" class="modal-user-info open-modal-user-info">
               <div class="modal-user-title flex-flex-center">
                 <span>Tài khoản</span>
@@ -120,140 +95,148 @@
           </div>
         </div>
       </nav>
-    </div>
-  </header>
-
-  <div class="container"> 
-    <div class="grid">
-      <div class="menu">
-        <div class="in-menu">
-          <div class="board-botton">
-            <ul>
-              <li class="button font-weight"><span>Bảng</span></li>
-              <li class="button font-weight"><span>Mẫu</span></li>
-            </ul>
-            
-          </div>
-          <div>
-            <div class="add-team">
-              <text>Các không gian làm việc</text>
-              <i class="fas fa-plus"></i>
-            </div>
-            <ul>
+     <div class="container"> 
+        
+      <div class="grid">
+        
+        <div class="menu">
+          <div class="in-menu">
+            <div class="board-botton">
+              <ul>
+                <li class="button font-weight"><span>Bảng</span></li>
+                <li class="button font-weight"><span>Mẫu</span></li>
+              </ul>
               
-              <li id="list-iteam-team">
+            </div>
+            <div>
+              <div class="add-team">
+                <span>Các không gian làm việc </span>
+                <i class="fas fa-plus"></i>
+              </div>
+              <ul>
                 
-                <div id="menu-extend"class=" button font-weight flex-space-between">
-                  <span>Team1</span>
-                  <i class="fas fa-chevron-up"></i>  
-                </div>
-                <ul class="ul-extend">
-                  <li class="button buton-small" >
-                    <i class="fas fa-clipboard-list"></i>
-                    <span> &nbsp Bảng</span>
-                  </li>
-                  <li class="button buton-small">
-                    <i class="far fa-heart"></i>
-                    <span> &nbsp Điểm nổi bật</span>
-                  </li>
-                  <li class="button buton-small">
-                    <i class="fas fa-user-friends"></i>
-                    <span> &nbsp Thành viên</span>
-                  </li>
-                  <li class="button buton-small">
-                    <i class="fas fa-cog"></i>
-                    <span> &nbsp Cài đặt</span>
-                  </li>
-                </ul>
-              </li>
-            </ul>
+                <li id="list-iteam-team">
+                  
+                  <div id="menu-extend"class=" button font-weight flex-space-between">
+                    <span>Team1</span>
+                    <i class="fas fa-chevron-up"></i>  
+                  </div>
+                  <ul class="ul-extend">
+                    <li class="button buton-small" >
+                      <i class="fas fa-clipboard-list"></i>
+                      <span> &nbsp Bảng</span>
+                    </li>
+                    <li class="button buton-small">
+                      <i class="far fa-heart"></i>
+                      <span> &nbsp Điểm nổi bật</span>
+                    </li>
+                    <li class="button buton-small">
+                      <i class="fas fa-user-friends"></i>
+                      <span> &nbsp Thành viên</span>
+                    </li>
+                    <li class="button buton-small">
+                      <i class="fas fa-cog"></i>
+                      <span> &nbsp Cài đặt</span>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
           </div>
+          
+
+
+
         </div>
         
-
-      </div>
-      
-      <div class="all-board">
-        <div class="in-all-board">
-          <div>
-            <div class="flex-flex-start font-weight detail-title">
-              <i class="far fa-clock"></i>
+        <div class="all-board">
+          <div class="in-all-board">
+            <div>
+              <div class="flex-flex-start font-weight detail-title">
+                <i class="far fa-clock"></i>
+                <div>
+                  <span> &nbsp Đã xem gần đây</span>
+                </div>
+                
+              </div>
               <div>
-                <span> &nbsp Đã xem gần đây</span>
+                <ul class="ul-grid">
+                  <li class="each-board">
+                    <a href="" class="title-each-board">
+                      Team 1
+                    </a>
+                  </li>
+                  <li class="each-board">
+                    <a href="" class="title-each-board">
+                      Team 1
+                    </a>
+                  </li>
+                  <li class="each-board">
+                    <a href="" class="title-each-board">
+                      Team 1
+                    </a>
+                  </li>
+                  <li class="each-board">
+                    <a href="" class="title-each-board">
+                      Team 1
+                    </a>
+                  </li>
+                  
+                </ul>
               </div>
-              
             </div>
             <div>
-              <ul class="ul-grid">
-                <li class="each-board">
-                  <a href="" class="title-each-board">
-                    Team 1
-                  </a>
-                </li>
-                <li class="each-board">
-                  <a href="" class="title-each-board">
-                    Team 1
-                  </a>
-                </li>
-                <li class="each-board">
-                  <a href="" class="title-each-board">
-                    Team 1
-                  </a>
-                </li>
-                <li class="each-board">
-                  <a href="" class="title-each-board">
-                    Team 1
-                  </a>
-                </li>
+              <div class="flex-flex-start font-weight detail-title">
+                <i class="far fa-clock"></i>
+                <div >
+                  <span> &nbsp Bảng cá nhân</span>
+                </div>
                 
-              </ul>
-            </div>
-          </div>
-          <div>
-            <div class="flex-flex-start font-weight detail-title">
-              <i class="far fa-clock"></i>
-              <div >
-                <span> &nbsp Bảng cá nhân</span>
               </div>
-              
-            </div>
-            <div>
-              <ul class="ul-grid" id="owned-board">
-                <!-- change here to get JSON file -->
-                <!-- <li class="each-board">
-                  <a href="" class="title-each-board" id="test-title">
-                    Team 1
-                  </a>
-                </li>
+              <div>
+                <ul class="ul-grid" id="owned-board">
+                  <!-- change here to get JSON file -->
+                  <!-- <li class="each-board">
+                    <a href="" class="title-each-board" id="test-title">
+                      Team 1
+                    </a>
+                  </li>
 
-                <li class="each-board">
-                  demo
-                </li> -->
+                  <li class="each-board">
+                    demo
+                  </li> -->
 
-                <li class="add-board" onclick="create()">
-                  <div >
-                    <i class="fas fa-plus icon"></i>
-                  </div>
+                  <li class="add-board">
+                    <form style="padding-left: 80px;" method="POST" onsubmit="return check();">
+                      <button type="submit" onclick="check(event)" name="Submit" style="background-color: rgb(173, 173, 173); color: white;"><b>Tao bang moi</b></button>
+                      <br>
+                      <input type="text" id="new-board-title" name="new-board-title" style="background-color: rgba(187, 187, 192, 0.479); text-decoration: none;
+                      color: inherit; font-size: large;" placeholder="Ten bang">
+                      <br>
+                      <span id="message"></span>
+                    </form>
+                  </li>
+                  
+                  <li class="each-board" style="display: none;">
+                    <a class="title-each-board" id="gmail">[[${#request.remoteUser}]]</a>
+                  </li>
+                </ul>
                 
-                </li>
-                
-                <li class="each-board" style="display: none;">
-                  <a class="title-each-board" id="gmail">[[${#request.remoteUser}]]</a>
-                </li>
-              </ul>
-              
+              </div>
             </div>
+            <div class="see-all-closed-board button"><span>Xem tất cả các bảng đã đóng</span></div>
           </div>
-          <div class="see-all-closed-board button"><span>Xem tất cả các bảng đã đóng</span></div>
+          
+
+
         </div>
 
+
       </div>
+      </div>
+      
+<!-- <script src="test-ajax.js"></script> -->
 
-
-    </div>
-  </div>
-
-  
 </body>
-<script type="text/javascript" src="/static/js/home.js"></script>
+<script type="text/javascript" src="/js/home.js"></script>
 </html>
