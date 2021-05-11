@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Log in to Trello</title>
-  <link rel="stylesheet" href="/css/login.css">
+  <link rel="stylesheet" href="../static/css/login.css">
 </head>
 
 <body class="atlassian-brand">
@@ -13,46 +13,56 @@
 			document.getElementById("error").remove();
 		}
 	</script>
-  <div> 
-    <img alt="Trello" class="trello-main-logo" src="https://d2k1ftgv7pobq7.cloudfront.net/meta/c/p/res/images/trello-header-logos/167dc7b9900a5b241b15ba21f8037cf8/trello-logo-blue.svg" />
-    <section class="inner-section">
-      <div class="section-wrapper">
-        <div class="account-form">
 
-          <h1>Log in to Trello</h1>
-          
-            <form th:action="@{/sign-in}" id="login-form" method="POST">
-              <div class="email-password">
-                <input type="text" name="user" id="user" class="form-field" placeholder="Enter email" inputmode="email" onclick="hiddenErrorMessage()">
-                <input type="password" name="password" id="password" class="form-field" placeholder="Enter password" onclick="hiddenErrorMessage()">
-                <input id="login" type="submit" class="button account-button button-green" value="Log In">
-              </div>
-              <div align="center" th:if="${param.error}" id="error">
-	            <p style="font-size: 20; color: #FF1C19;">User Name or Password invalid, please verify!</p>
-	            <p style="font-size: 20; color: #FF1C19;"> Make sure you have activated your account</p>
-	        </div>
-            </form>
-
-          
-          <ul class="bottom-form-link">
-            <li><a class="forgotLink" href="/forgot" data-analytics-link="forgotPasswordLink">Can't log in?</a></li>
-            <li><a class="signupLink" th:href="@{/sign-up}" data-analytics-link="signUpLoginLink">Sign up for an account</a></li>
-          </ul>
-          
-          <!-- 
-          <ul>
-          	<li><a th:href="@{/oauth2/authorization/github}">Log in with GitHub</a></li>
-          </ul>
-           --> 
-        </div>
-
-        <ul class="bottom-form-link smaller-links">
-          <li><a href="privacy.html" target="_blank" data-analytics-event="clickedLogInPrivacyLink">Privacy Policy</a></li>
-          <li><a href="legal.html" target="_blank" data-analytics-event="clickedLogInTOSLink">Terms of Service</a></li>
-        </ul>
+  <header class="header">
+    <div class="container">
+      <div class="nav">
+        <a href="index.html" class="logo">
+          <h2 class="logo">Team-13</h2>
+        </a>
       </div>
-    </section>
-  </div>
+    </div>
+  </header>
+
+  <section class="sign-up">
+    <div class="container">
+      <div class="sign-up-center">
+        <div class="text-center">
+          <div class="signup-form boder-gray">
+
+            <h1 class="sub-heading">Log in to your account</h1>
+            
+              <form th:action="@{/sign-in}" id="login-form" method="POST">
+                <div class="email-password">
+                  <input type="text" name="user" id="user" class="form-field u" placeholder="Enter email" inputmode="email" onclick="hiddenErrorMessage()">
+                  <input type="password" name="password" id="password" class="form-field u" placeholder="Enter password" onclick="hiddenErrorMessage()">
+                  <div class="text-center">
+                    <input id="login" type="submit" class="btn btn-purple form-btn" value="Log In">
+                  </div>
+                </div>
+                <div align="center" th:if="${param.error}" id="error">
+                  <p style="font-size: 20; color: #FF1C19;">User Name or Password invalid, please verify!</p>
+                  <p style="font-size: 20; color: #FF1C19;">Make sure you have activated your account</p>
+                </div>
+              </form>
+            <hr>
+            
+            <div class="bottom-form-link">
+              <span><a class="forgotLink link" href="/forgot" data-analytics-link="forgotPasswordLink">Can't log in?</a></span>
+              <span><a class="signupLink link" th:href="@{/sign-up}" data-analytics-link="signUpLoginLink">Sign up for an account</a></span>
+            </div>
+          </div>
+          <div class="bottom-form-link smaller-links">
+            <span><a class="link" href="privacy.html" target="_blank" data-analytics-event="clickedLogInPrivacyLink">Privacy Policy</a></span>
+            <span><a  class="link"  href="legal.html" target="_blank" data-analytics-event="clickedLogInTOSLink">Terms of Service</a></span>
+          </div>
+        </div>
+        
+
+      </div>
+      
+    </div>
+  </section>
   <footer class="global-footer">
   </footer>
 </body>
