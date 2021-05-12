@@ -1,18 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Courgette|Open+Sans:400,800&display=swap');
 
-  html {
-    font-family: sans-serif;
-    -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%
-  }
-
-  body {
-    margin: 0
-  }
-
-  a {
-    background: transparent
-  }
 
   :root{
     --dark-color:#2d2c2c;
