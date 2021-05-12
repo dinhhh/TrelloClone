@@ -5,126 +5,312 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trello clone</title>
-    <link rel="stylesheet" href="/static/css/board.css">
-    
+    <link rel="stylesheet" href="../static/css/board.css">
+    <script src="https://kit.fontawesome.com/9d54f43127.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
-    <h1 class="main-title">Your board title</h1>
-
-    <div class="drag-container">
-        <ul class="drag-list">
-
-            <!-- Backlog Column -->
-            <li class="drag-column backlog-column">
-                <span class="header">
-                    <h1>Backlog</h1>
-                </span>
-                <!-- Backlog Content -->
-                <div id="backlog-content" class="custom-scroll">
-                    <ul class="drag-item-list" id="backlog-list" th:ondrop="drop(event)" th:ondragover="allowDrop(event)"
-                        ondragenter="dragEnter(0)"></ul>
-                </div>
-                <!-- Add Button Group -->
-                <div class="add-btn-group">
-                    <div class="add-btn" th:onclick="showInputBox(0)">
-                        <span class="plus-sign">+</span>
-                        <span>Add Item</span>
-                    </div>
-                    <div class="add-btn solid" th:onclick="hideInputBox(0)">
-                        <span>Save Item</span>
-                    </div>
-                </div>
-                <div class="add-container">
-                    <div class="add-item" contenteditable="true"></div>
-                </div>
-            </li>
-            <!-- Progress Column -->
-
-            <li class="drag-column progress-column">
-                <span class="header">
-                    <h1>In Progress</h1>
-                </span>
-                <!-- Progress Content -->
-                <div id="progress-content" class="custom-scroll">
-                    <ul class="drag-item-list" id="progress-list" th:ondrop="drop(event)" th:ondragover="allowDrop(event)"
-                        ondragenter="dragEnter(1)"></ul>
-                </div>
-                <!-- Add Button Group -->
-                <div class="add-btn-group">
-                    <div class="add-btn" th:onclick="showInputBox(1)">
-                        <span class="plus-sign">+</span>
-                        <span>Add Item</span>
-                    </div>
-                    <div class="add-btn solid" th:onclick="hideInputBox(1)">
-                        <span>Save Item</span>
-                    </div>
-                </div>
-                <div class="add-container">
-                    <div class="add-item" contenteditable="true"></div>
-                </div>
-            </li>
-
-            <!-- Complete Column -->
-            <li class="drag-column complete-column">
-                <span class="header">
-                    <h1>Complete</h1>
-                </span>
-                <!-- Complete Content -->
-                <div id="complete-content" class="custom-scroll">
-                    <ul class="drag-item-list" id="complete-list" th:ondrop="drop(event)" th:ondragover="allowDrop(event)"
-                        ondragenter="dragEnter(2)"></ul>
-                </div>
-                <!-- Add Button Group -->
-                <div class="add-btn-group">
-                    <div class="add-btn" th:onclick="showInputBox(2)">
-                        <span class="plus-sign">+</span>
-                        <span>Add Item</span>
-                    </div>
-                    <div class="add-btn solid" th:onclick="hideInputBox(2)">
-                        <span>Save Item</span>
-                    </div>
-                </div>
-                <div class="add-container">
-                    <div class="add-item" contenteditable="true"></div>
-                </div>
-            </li>
-
-            <!-- On Hold Column -->
-            <li class="drag-column on-hold-column">
-                <span class="header">
-                    <h1>On Hold</h1>
-                </span>
-                <!-- On Hold Content -->
-                <div id="on-hold-content" class="custom-scroll">
-                    <ul class="drag-item-list" id="on-hold-list" th:ondrop="drop(event)" th:ondragover="allowDrop(event)"
-                        ondragenter="dragEnter(3)"></ul>
-                </div>
-                <!-- Add Button Group -->
-                <div class="add-btn-group">
-                    <div class="add-btn" th:onclick="showInputBox(3)">
-                        <span class="plus-sign">+</span>
-                        <span>Add Item</span>
-                    </div>
-                    <div class="add-btn solid" th:onclick="hideInputBox(3)">
-                        <span>Save Item</span>
-                    </div>
-                </div>
-                <div class="add-container">
-                    <div class="add-item" contenteditable="true"></div>
-                </div>
-            </li>
-
-
-            <li>
-                <span class="header">
-                    <h1 id="message">New list</h1>
-                </span>
-            </li>
-        </ul>
-    </div>
+    <!--nav-->
+    <header class="header">
+        <div class="container">
+          <nav class="nav">
+            <div class="nav-left">
+              <div class="nav-box">
+                <a href="#"><i class="fas fa-home icon"></i></a>
+                
+              </div>
+              <div class="nav-box">
+                <a href="#" class="board">
+                  <i class="fas fa-clipboard-list icon"></i>
+                  <p>Bảng</p>
+                </a>
+              </div>
+              <div class=" nav-box">
+                <input class="nav-box search" type="text" name="search" class="form-field u" placeholder="Search..." >
     
-    <script type="text/javascript" src="/js/board.js"></script>
+                <i class="fas fa-search icon"></i>
+              </div>
+              
+            </div>
+            
+            <div class="nav-right">
+              <div class="nav-box">
+                <i class="fas fa-plus icon"></i>
+              </div>
+              <div class="nav-box">
+                <i class="fas fa-exclamation icon"></i>
+              </div>
+    
+              <!--notification-->
+              <div class="notification nav-box">
+                <div id="notification-click">
+                  <i class="far fa-bell icon"></i>
+                </div>
+                <div id="modal-notification" class="modal-notification open-modal-notification">
+                  <div class="modal-user-title flex-flex-center">
+                    <span>Thông báo</span>
+                  </div>
+                  <div>
+                    ---------------------------------------------------------
+                  </div>
+                  <div>
+                    <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div>
+    
+                  </div>
+                  <div>
+                    ---------------------------------------------------------
+                  </div>
+                  <div>
+                    <div class="flex-flex-start modal-user-button"><a href="#">Xem tất cả thông báo</span></div>
+                  </div>
+                <!-- </div> -->
+                </div>
+              </div>
+    
+              <!--user-->
+              <div class="user-info nav-box">
+                <div id="user-avatar">
+                  <img class="avatar" src="intro-photo.png" alt="#">
+                </div>
+                <!-- <div id="user-avatar">
+                  
+                </div> -->
+                <div id="modal-user-info" class="modal-user-info open-modal-user-info">
+                  <div class="modal-user-title flex-flex-center">
+                    <span>Tài khoản</span>
+                  </div>
+                  <div>
+                    ---------------------------------------------------------
+                  </div>
+                  <div>
+                    <div class="flex-flex-start modal-user-button"><a href="profile.html">Hồ sơ và hiển thị</a></div>
+                    <div class="flex-flex-start modal-user-button"><a href="#">Hoạt động</a></div>
+                    <div class="flex-flex-start modal-user-button"><a href="#">Thẻ</a></div>
+                    <div class="flex-flex-start modal-user-button"><a href="#">Cài đặt</a></div>
+                  </div>
+                  <div>
+                    ---------------------------------------------------------
+                  </div>
+                  <div>
+                    <div class="flex-flex-start modal-user-button"><a href="">Trợ giúp</a></div>
+                    <div class="flex-flex-start modal-user-button"><a href="">Đăng xuất</a></div>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </nav>
+        </div>
+    </header>
+    
+    <!--modal edit-->
+    <div id="form-edit-board" class="template-gray display-none">
+
+      <div class="add-board-form">
+        <div class="form-edit-head">
+          <span class="heading-title sub-heading">
+            Title
+          </span>
+          <span class="close" onclick="closeEditForm()">X</span>
+        </div>
+        <div class="form-edit-body">
+          <div class="form-edit-body-left">
+            <div>
+              <p class="body-title">Mô tả</p>
+              <textarea name="" id="" cols="30" rows="10">At w3schools.com you will learn how to make a website.
+                 They offer free tutorials
+                 in all web development technologies.</textarea>
+            </div>
+            <div>
+              <p class="body-title">Hoạt động</p>
+            </div>
+
+          </div>
+          <div class="form-edit-body-right">
+            <div>
+              <p class="body-title">Thêm vào thẻ</p>
+              <form class="form-inline" action="">
+                <input class="form-field" placeholder="Thêm thành viên"/>
+                <button class=" btn-purple small-btn" type="submit" name="Submit" ><b>OK</b></button>
+
+              </form>
+              <form class="form-inline" action="">
+                <input class="form-field" placeholder="Việc cần làm"/>
+                <button class=" btn-purple small-btn" type="submit" name="Submit" ><b>OK</b></button>
+
+              </form>
+              <label for="">Ngày hết hạn</label>
+              <form class="form-inline" action="">
+
+                <input class="form-field" type="date"/>
+                <button class=" btn-purple small-btn" type="submit" name="Submit" ><b>OK</b></button>
+
+              </form>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+     
+   
+    <!--body-->
+    <section class="hero">
+        <div class="container">
+            <div class="main-title sub-heading">
+                <h1>Your board title</h1>
+            </div>
+
+            <div class="drag-container">
+                <ul class="drag-list">
+        
+                    <!-- Backlog Column -->
+                    <li class="drag-column backlog-column">
+                        <span class="drag-header">
+                            <h1 class="sub-heading">Backlog</h1>
+                        </span>
+                        <!-- Backlog Content -->
+                        <div id="backlog-content" class="custom-scroll">
+                            <ul class="drag-item-list" id="backlog-list" th:ondrop="drop(event)" th:ondragover="allowDrop(event)"
+                                ondragenter="dragEnter(0)"></ul>
+                        </div>
+                        <!-- Add Button Group -->
+                        <div class="add-btn-group">
+                          <div>
+                            <div class="add-btn" th:onclick="showInputBox(0)">
+                              <span class="plus-sign">+</span>
+                              <span>Add Item</span>
+                            </div>
+                            <div class="add-btn solid" th:onclick="hideInputBox(0)">
+                                <span>Save Item</span>
+                            </div>
+                          </div>
+                          <div>
+                            <div class="add-btn" onclick="openEditForm()">
+                              <span>Edit</span>
+                            </div>
+                          </div>
+                            
+                        </div>
+                        <div class="add-container">
+                            <div class="add-item" contenteditable="true"></div>
+                        </div>
+                    </li>
+                    <!-- Progress Column -->
+        
+                    <li class="drag-column progress-column">
+                      
+                        <span class="drag-header">
+                            <h1 class="sub-heading">In Progress</h1>
+                        </span>
+                        <!-- Progress Content -->
+                        <div id="progress-content" class="custom-scroll">
+                            <ul class="drag-item-list" id="progress-list" th:ondrop="drop(event)" th:ondragover="allowDrop(event)"
+                                ondragenter="dragEnter(1)"></ul>
+                        </div>
+                        <!-- Add Button Group -->
+                        <div class="add-btn-group">
+                          <div>
+                            <div class="add-btn" th:onclick="showInputBox(1)">
+                                <span class="plus-sign">+</span>
+                                <span>Add Item</span>
+                            </div>
+                            <div class="add-btn solid" th:onclick="hideInputBox(1)">
+                                <span>Save Item</span>
+                            </div>
+                          </div>
+                          <div>
+                            <div class="add-btn" onclick="openEditForm()">
+                              <span>Edit</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="add-container">
+                            <div class="add-item" contenteditable="true"></div>
+                        </div>
+                    </li>
+        
+                    <!-- Complete Column -->
+                    <li class="drag-column complete-column">
+                        <span class="drag-header">
+                            <h1 class="sub-heading">Complete</h1>
+                        </span>
+                        <!-- Complete Content -->
+                        <div id="complete-content" class="custom-scroll">
+                            <ul class="drag-item-list" id="complete-list" th:ondrop="drop(event)" th:ondragover="allowDrop(event)"
+                                ondragenter="dragEnter(2)"></ul>
+                        </div>
+                        <!-- Add Button Group -->
+                        <div class="add-btn-group">
+                          <div>
+                            <div class="add-btn" th:onclick="showInputBox(2)">
+                                <span class="plus-sign">+</span>
+                                <span>Add Item</span>
+                            </div>
+                            <div class="add-btn solid" th:onclick="hideInputBox(2)">
+                                <span>Save Item</span>
+                            </div>
+                          </div> 
+                          <div>
+                            <div class="add-btn" onclick="openEditForm()">
+                              <span>Edit</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="add-container">
+                            <div class="add-item" contenteditable="true"></div>
+                        </div>
+                    </li>
+        
+                    <!-- On Hold Column -->
+                    <li class="drag-column on-hold-column">
+                        <span class="drag-header">
+                            <h1 class="sub-heading">On Hold</h1>
+                        </span>
+                        <!-- On Hold Content -->
+                        <div id="on-hold-content" class="custom-scroll">
+                            <ul class="drag-item-list" id="on-hold-list" th:ondrop="drop(event)" th:ondragover="allowDrop(event)"
+                                ondragenter="dragEnter(3)"></ul>
+                        </div>
+                        <!-- Add Button Group -->
+                        <div class="add-btn-group">
+                          <div>
+                            <div class="add-btn" th:onclick="showInputBox(3)">
+                                <span class="plus-sign">+</span>
+                                <span>Add Item</span>
+                            </div>
+                            <div class="add-btn solid" th:onclick="hideInputBox(3)">
+                                <span>Save Item</span>
+                            </div>
+                          </div>
+                          <div>
+                            <div class="add-btn" onclick="openEditForm()">
+                              <span>Edit</span>
+                            </div>
+                          </div>  
+                        </div>
+                        <div class="add-container">
+                            <div class="add-item" contenteditable="true"></div>
+                        </div>
+                    </li>
+        
+        
+                    <li>
+                        <span class="drag-header">
+                            <h1 id="message">New list</h1>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+    </section>
+    
+    
+    <script type="text/javascript" src="../static/js/board.js"></script>
 </body>
 
 </html>
