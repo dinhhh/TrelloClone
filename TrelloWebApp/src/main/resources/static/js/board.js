@@ -15,6 +15,7 @@ let updatedOnLoad = false;
 // board infor
 const currentURL = window.location.href;
 const boardID = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+let boardTitle;
 
 // Initialize Arrays
 let backlogListArray = [];
@@ -119,9 +120,14 @@ async function updateDOM() {
   console.log("update DOM");
   // Check localStorage once
   if (!updatedOnLoad) {
-    console.log("get saved column !");
+    var boardApiPath = "http://localhost:8080/api/board/".concat(boardID);
+    const resp = await fetch(boardApiPath);
+    const boardData = await resp.json();
+    boardTitle = boardData.title;
+    document.getElementById("board-title").innerHTML = boardTitle;
     getSavedColumns();
   }
+
   // Backlog Column
   backlogListEl.textContent = '';
   backlogListArray.forEach((backlogItem, index) => {
@@ -215,7 +221,9 @@ async function addToColumn(column) {
   var boardApiPath = "http://localhost:8080/api/board/".concat(boardID);
   const resp = await fetch(boardApiPath);
   const boardData = await resp.json();
-  // console.log(boardData);
+  boardTitle = boardData.title;
+  document.getElementById("board-title").innerHTML = boardTitle;
+
   // send new card data to database
   var cardApiPath = "http://localhost:8080/api/card/add";
   const otherDataOfCard = {
