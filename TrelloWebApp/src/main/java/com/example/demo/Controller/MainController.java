@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.User.User;
@@ -15,6 +16,16 @@ public class MainController {
 	@GetMapping("")
 	public String viewHome() {
 		return "welcome";
+	}
+	
+	@GetMapping("/welcome")
+	public String viewHome2() {
+		return "welcome";
+	}
+	
+	@GetMapping("profile")
+	public String viewProfile() {
+		return "profile";
 	}
 	
 	@GetMapping("/login_sucess")
@@ -33,6 +44,11 @@ public class MainController {
 	public String goToHome() {
 		System.out.println("get mapping /home");
 		return "home";
+	}
+	
+	@GetMapping("/board/home")
+	public String reGoToHome() {
+		return "redirect:/home";
 	}
 	
 	@GetMapping("/updateInfo")
