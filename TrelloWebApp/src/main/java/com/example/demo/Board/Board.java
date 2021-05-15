@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,7 +41,7 @@ public class Board {
 	@ManyToMany
 	private Set<User> users;
 	
-	@OneToMany(mappedBy = "board")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "board")
 	private Set<Card> cards;
 
 	public Long getId() {
