@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trello clone</title>
-    <link rel="stylesheet" href="/css/board.css">
+    <link rel="stylesheet" href="../static/css/board.css">
     <script src="https://kit.fontawesome.com/9d54f43127.js" crossorigin="anonymous"></script>
 
 </head>
@@ -176,9 +176,33 @@
                         </span>
                         <!-- Backlog Content -->
                         <div id="backlog-content" class="custom-scroll">
-                            <ul class="drag-item-list" id="backlog-list" th:ondrop="drop(event)" th:ondragover="allowDrop(event)"
-                                ondragenter="dragEnter(0)"></ul>
+                          <ul class="drag-item-list" id="backlog-list" th:ondrop="drop(event)" th:ondragover="allowDrop(event)"
+                              ondragenter="dragEnter(0)">
+
+                              <!--list drag-->
+                              <li class="drag-item ">
+                                <div class="title-list-in-drag"> 
+                                  <h1>title</h1>
+                                                                    
+                                  <div class="add-btn" onclick="openEditForm()">
+                                    <span>Edit</span>
+                                  </div>
+                                </div>
+
+                              </li>
+                              <li class="drag-item ">
+                                <div class="title-list-in-drag"> 
+                                  <h1>title</h1>
+                                                                    
+                                  <div class="add-btn" onclick="openEditForm()">
+                                    <span>Edit</span>
+                                  </div>
+                                </div>
+
+                              </li>
+                          </ul>
                         </div>
+
                         <!-- Add Button Group -->
                         <div class="add-btn-group">
                           <div>
@@ -190,12 +214,6 @@
                                 <span>Save Item</span>
                             </div>
                           </div>
-                          <div>
-                            <div class="add-btn" onclick="openEditForm()">
-                              <span>Edit</span>
-                            </div>
-                          </div>
-                            
                         </div>
                         <div class="add-container">
                             <div class="add-item" contenteditable="true"></div>
@@ -224,11 +242,7 @@
                                 <span>Save Item</span>
                             </div>
                           </div>
-                          <div>
-                            <div class="add-btn" onclick="openEditForm()">
-                              <span>Edit</span>
-                            </div>
-                          </div>
+                          
                         </div>
                         <div class="add-container">
                             <div class="add-item" contenteditable="true"></div>
@@ -256,11 +270,7 @@
                                 <span>Save Item</span>
                             </div>
                           </div> 
-                          <div>
-                            <div class="add-btn" onclick="openEditForm()">
-                              <span>Edit</span>
-                            </div>
-                          </div>
+                        
                         </div>
                         <div class="add-container">
                             <div class="add-item" contenteditable="true"></div>
@@ -288,11 +298,7 @@
                                 <span>Save Item</span>
                             </div>
                           </div>
-                          <div>
-                            <div class="add-btn" onclick="openEditForm()">
-                              <span>Edit</span>
-                            </div>
-                          </div>  
+                          
                         </div>
                         <div class="add-container">
                             <div class="add-item" contenteditable="true"></div>
@@ -300,9 +306,9 @@
                     </li>
         
         
-                    <li>
+                    <li class="">
                         <span class="drag-header">
-                            <h1 id="message">New list</h1>
+                            <button id="message" class="btn btn-purple">New list</button>
                         </span>
                     </li>
                 </ul>
@@ -312,7 +318,7 @@
     </section>
     
     
-    <script type="text/javascript" src="/js/board.js"></script>
+    <script type="text/javascript" src="../static/js/board.js"></script>
 </body>
 
 </html>
