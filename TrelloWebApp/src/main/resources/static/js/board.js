@@ -111,6 +111,19 @@ function createItemEl(columnEl, column, item, index) {
   listEl.setAttribute('onfocusout', `updateItem(${index}, ${column})`);
   listEl.setAttribute('ondragstart', 'drag(event)');
   listEl.contentEditable = true;
+
+  // add edit-button
+  const editButton = document.createElement('div');
+  editButton.setAttribute('class', 'add-btn');
+  editButton.setAttribute('onclick', 'openEditForm()');
+  editButton.setAttribute('display', 'inline');
+
+  const spanTag = document.createElement('span');
+  spanTag.textContent = 'Edit';
+  editButton.appendChild(spanTag);
+  
+  listEl.appendChild(editButton);
+
   // Append
   columnEl.appendChild(listEl);
 }
