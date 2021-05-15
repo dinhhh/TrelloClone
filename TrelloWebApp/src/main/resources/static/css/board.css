@@ -288,7 +288,7 @@ object-fit: cover;
   text-align: center; */
   position: relative;
   z-index: 0;
-
+  position: fixed;
 }
 .hero::before{
   content: "";
@@ -334,11 +334,6 @@ object-fit: cover;
   height: 44px;
   transition: background-color .2s ease-in-out 0s, border-color .2s ease-in-out 0s
 }
-.dis
-h1 {
-  /* letter-spacing: 2px;
-  text-shadow: 2px 2px 5px black; */
-}
 
 .main-title {
   font-size: 3rem;
@@ -372,11 +367,11 @@ ul {
   margin: 0 10px;
   position: relative;
   background-color: rgba(0, 0, 0, 0.4);
-  border-radius: 10px;
+  border-radius: 5px;
   overflow-x: hidden;
 }
 
-.backlog-column .header, .backlog-column .solid, .backlog-column .solid:hover, .backlog-column .over {
+/* .backlog-column .header, .backlog-column .solid, .backlog-column .solid:hover, .backlog-column .over {
   background-color: var(--column-1);
 }
 
@@ -390,7 +385,7 @@ ul {
 
 .on-hold-column .header, .on-hold-column .solid, .on-hold-column .solid:hover, .on-hold-column .over {
   background-color: var(--column-4);
-}
+} */
 
 /* Custom Scrollbar */
 
@@ -420,23 +415,26 @@ ul {
 
 .drag-item-list {
   min-height: 50px;
+  /* padding-left: 20px;
+  padding-right: 20px; */
 }
 
 .drag-item {
   margin: 10px;
-  padding: 10px;
+  padding: 10px 0 10px 10px;
   height: fit-content;
-  background-color: rgba(0, 0, 0, 0.8);
-  border-radius: 10px;
+  background-color: white;
+  border-radius: 3px;
+  box-shadow: 3px 3px #888888;
   line-height: 1.5rem;
   letter-spacing: 1px;
   cursor: pointer;
-  color: white;
+  color: black;
 }
 
-.drag-item:focus {
+.drag-item:hover {
   outline: none;
-  background-color: white;
+  background-color: #ece6e6f3;
   color: black;
 }
 
@@ -576,6 +574,13 @@ textarea{
 }
 .form-edit-body-left{
   padding-right: 20px;
+}
+
+.title-list-in-drag{
+  /* color: #c0c0c0; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 /* Media Query: Laptop */
 
