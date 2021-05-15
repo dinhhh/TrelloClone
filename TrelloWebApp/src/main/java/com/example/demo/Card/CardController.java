@@ -59,6 +59,17 @@ public class CardController {
 		}
 	}
 	
+	@GetMapping("/api/card/{boardID}/{category}/{title}")
+	ResponseEntity<Card> getCardByBoardIDCateTitle(@PathVariable String boardID, @PathVariable String category, @PathVariable String title){
+		Long id = Long.valueOf(boardID);
+		Optional<Card> cards = cardRepo.findByBoardIDCateTitle(id, category, title);
+		if(cards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<>(cards.get(), HttpStatus.OK);
+		}
+	}
+	
 	@DeleteMapping("/api/card/{idString}")
 	void deleteCard(@PathVariable String idString) {
 		Long id = Long.valueOf(idString);

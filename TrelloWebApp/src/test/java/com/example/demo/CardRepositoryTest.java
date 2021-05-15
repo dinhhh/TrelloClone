@@ -35,4 +35,10 @@ public class CardRepositoryTest {
 			System.out.println("card is saved!");
 		}
 	}
+	
+	@Test
+	public void getCardByBoardIDCateTitle() {
+		Optional<Card> cards = cardRepo.findByBoardIDCateTitle((long) 3, "onHold", "Web socket");
+		System.out.println(cards.get().toString());
+	}
 }

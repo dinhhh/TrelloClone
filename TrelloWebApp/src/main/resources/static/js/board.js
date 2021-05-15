@@ -38,6 +38,23 @@ let currentColumn;
 let indexItem;
 let sourceColumn;
 
+function getIndexInIDListArray(category){
+  switch (category) {
+    case "backlog":
+      return 0;
+      break;
+    case "progress":
+      return 1;
+      break;
+    case "complete":
+      return 2;
+      break;
+    case "onHold":
+      return 3;
+      break;
+  }
+}
+
 // Get Arrays from localStorage if available, set default values if not
 async function getSavedColumns() {
   // use local storage
@@ -58,7 +75,7 @@ async function getSavedColumns() {
   const resp = await fetch(apiURL);
   const data = await resp.json();
   const numOfCards = Object.keys(data).length;
-  console.log(data);
+  // console.log(data);
   if(numOfCards > 0){
     var i;
     for(i = 0; i < numOfCards; i++){
@@ -105,6 +122,7 @@ function createItemEl(columnEl, column, item, index) {
   // List Item
   const listEl = document.createElement('li');
   listEl.textContent = item;
+
   listEl.id = index;
   listEl.classList.add('drag-item');
   listEl.draggable = true;
@@ -112,18 +130,18 @@ function createItemEl(columnEl, column, item, index) {
   listEl.setAttribute('ondragstart', 'drag(event)');
   listEl.contentEditable = true;
 
+  // bug =)))
   // add edit-button
-  const editButton = document.createElement('div');
-  editButton.setAttribute('class', 'add-btn');
-  editButton.setAttribute('onclick', 'openEditForm()');
-  editButton.setAttribute('display', 'inline');
+  // const editButton = document.createElement('div');
+  // editButton.setAttribute('class', 'add-btn');
+  // editButton.setAttribute('onclick', 'openEditForm()');
+  // editButton.setAttribute('display', 'inline');
 
-  const spanTag = document.createElement('span');
-  spanTag.textContent = 'Edit';
-  editButton.appendChild(spanTag);
+  // const spanTag = document.createElement('span');
+  // spanTag.textContent = 'Chinh';
+  // editButton.appendChild(spanTag);
   
-  listEl.appendChild(editButton);
-
+  // listEl.appendChild(editButton);
   // Append
   columnEl.appendChild(listEl);
 }
@@ -169,10 +187,10 @@ async function updateDOM() {
   updatedOnLoad = true;
   updateSavedColumns();
 
-  console.log(backlogIdArray);
-  console.log(progressIdArray);
-  console.log(completeIdArray);
-  console.log(ohHoldIdArray);
+  // console.log(backlogIdArray);
+  // console.log(progressIdArray);
+  // console.log(completeIdArray);
+  // console.log(ohHoldIdArray);
 }
 
 // Update Item - Delete if necessary, or update Array value
@@ -278,7 +296,7 @@ async function addToColumn(column) {
     .then(function(response){
       if(response.ok){
         document.getElementById("message").innerHTML = "success";
-        console.log("fetched api !");
+        // console.log("fetched api !");
 
         // get id of new card
         response.json().then(data => {
@@ -292,6 +310,15 @@ async function addToColumn(column) {
         throw new Error("Could not reach the API" + response.statusText);
       }
     })
+  
+  // web socket
+  const cardMessage = {
+    "cardID" : 0,
+    "boardID" : boardID,
+    "category" : arrayNames[column],
+    "title" : itemText
+  };
+  stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
   
   updateDOM(column);
 }
@@ -342,7 +369,7 @@ function dragEnter(column) {
 function drag(e) {
   draggedItem = e.target;
   indexItem = e.target.id;
-  console.log(draggedItem.parentNode.parentNode.id);
+  // console.log(draggedItem.parentNode.parentNode.id);
   switch (draggedItem.parentNode.parentNode.id) {
     case "backlog-content":
       sourceColumn = 0;      
@@ -424,39 +451,78 @@ function drop(e) {
 // On Load
 updateDOM();
 
-// onclick button
-var notification_click = document.getElementById("notification-click")
-console.log(notification_click);
-notification_click.addEventListener('click',function(){
-    var modal_notification = document.getElementById("modal-notification")
-    // console.log(notification_click)
-    modal_notification.classList.toggle('open-modal-notification');
-});
+// // onclick button
+// var notification_click = document.getElementById("notification-click")
+// console.log(notification_click);
+// notification_click.addEventListener('click',function(){
+//     var modal_notification = document.getElementById("modal-notification")
+//     // console.log(notification_click)
+//     modal_notification.classList.toggle('open-modal-notification');
+// });
 
-var avatar_click = document.getElementById("user-avatar")
-console.log(avatar_click);
-avatar_click.addEventListener('click',function(){
-    var modal_notification = document.getElementById("modal-user-info")
-    // console.log(notification_click)
-    modal_notification.classList.toggle('open-modal-user-info');
-});
+// var avatar_click = document.getElementById("user-avatar")
+// console.log(avatar_click);
+// avatar_click.addEventListener('click',function(){
+//     var modal_notification = document.getElementById("modal-user-info")
+//     // console.log(notification_click)
+//     modal_notification.classList.toggle('open-modal-user-info');
+// });
 
-var list_item_team_click = document.getElementById("menu-extend");
-console.log(list_item_team_click);
-list_item_team_click.addEventListener('click',function(){
-    var list_item_extend = document.querySelector("#list-iteam-team > ul:nth-child(2)");
-    // console.log(list_item_team_click)
-    // list_item_extend.style.backgroundColor = "red";
-    list_item_extend.classList.toggle('ul-extend');
-});
+// var list_item_team_click = document.getElementById("menu-extend");
+// console.log(list_item_team_click);
+// list_item_team_click.addEventListener('click',function(){
+//     var list_item_extend = document.querySelector("#list-iteam-team > ul:nth-child(2)");
+//     // console.log(list_item_team_click)
+//     // list_item_extend.style.backgroundColor = "red";
+//     list_item_extend.classList.toggle('ul-extend');
+// });
 
-// open edit form
-function openEditForm() {
-  var edit_form = document.getElementById("form-edit-board")
-  edit_form.classList.toggle('display-none');
+// // open edit form
+// function openEditForm() {
+//   var edit_form = document.getElementById("form-edit-board")
+//   edit_form.classList.toggle('display-none');
 
+// }
+// function closeEditForm(){
+//   var edit_form = document.getElementById("form-edit-board")
+//   edit_form.classList.toggle('display-none');
+// }
+
+// implement WebSocket
+var stompClient = null;
+
+function connect(){
+  var socket = new SockJS('/gs-guide-websocket');
+  console.log("Connecting....");
+  stompClient = Stomp.over(socket);
+  stompClient.connect({}, function(frame){
+    console.log('Connected: ' + frame);
+    stompClient.subscribe('/topic/update', function(newCardMessage){
+      // add new card
+      const resp = JSON.parse(newCardMessage.body);
+      const index = getIndexInIDListArray(resp.category);
+      let isSender = idListArray[index].includes(resp.cardID);
+      if(!isSender){
+        idListArray[index].push(resp.cardID);
+        listArrays[index].push(resp.title);
+        updateDOM();
+      }
+      console.log(resp);
+    })  
+  })
 }
-function closeEditForm(){
-  var edit_form = document.getElementById("form-edit-board")
-  edit_form.classList.toggle('display-none');
-}
+
+connect();
+
+
+
+
+
+
+
+
+
+
+
+
+
