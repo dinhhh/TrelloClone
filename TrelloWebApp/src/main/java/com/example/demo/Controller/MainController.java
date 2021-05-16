@@ -23,7 +23,7 @@ public class MainController {
 		return "welcome";
 	}
 	
-	@GetMapping("profile")
+	@GetMapping("/profile")
 	public String viewProfile() {
 		return "profile";
 	}
