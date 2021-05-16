@@ -38,6 +38,23 @@ let currentColumn;
 let indexItem;
 let sourceColumn;
 
+function getIndexInIDListArray(category){
+  switch (category) {
+    case "backlog":
+      return 0;
+      break;
+    case "progress":
+      return 1;
+      break;
+    case "complete":
+      return 2;
+      break;
+    case "onHold":
+      return 3;
+      break;
+  }
+}
+
 // Get Arrays from localStorage if available, set default values if not
 async function getSavedColumns() {
   // use local storage
@@ -58,7 +75,7 @@ async function getSavedColumns() {
   const resp = await fetch(apiURL);
   const data = await resp.json();
   const numOfCards = Object.keys(data).length;
-  console.log(data);
+  // console.log(data);
   if(numOfCards > 0){
     var i;
     for(i = 0; i < numOfCards; i++){
@@ -105,12 +122,26 @@ function createItemEl(columnEl, column, item, index) {
   // List Item
   const listEl = document.createElement('li');
   listEl.textContent = item;
+
   listEl.id = index;
   listEl.classList.add('drag-item');
   listEl.draggable = true;
   listEl.setAttribute('onfocusout', `updateItem(${index}, ${column})`);
   listEl.setAttribute('ondragstart', 'drag(event)');
   listEl.contentEditable = true;
+
+  // bug =)))
+  // add edit-button
+  // const editButton = document.createElement('div');
+  // editButton.setAttribute('class', 'add-btn');
+  // editButton.setAttribute('onclick', 'openEditForm()');
+  // editButton.setAttribute('display', 'inline');
+
+  // const spanTag = document.createElement('span');
+  // spanTag.textContent = 'Chinh';
+  // editButton.appendChild(spanTag);
+  
+  // listEl.appendChild(editButton);
   // Append
   columnEl.appendChild(listEl);
 }
@@ -156,10 +187,10 @@ async function updateDOM() {
   updatedOnLoad = true;
   updateSavedColumns();
 
-  console.log(backlogIdArray);
-  console.log(progressIdArray);
-  console.log(completeIdArray);
-  console.log(ohHoldIdArray);
+  // console.log(backlogIdArray);
+  // console.log(progressIdArray);
+  // console.log(completeIdArray);
+  // console.log(ohHoldIdArray);
 }
 
 // Update Item - Delete if necessary, or update Array value
@@ -178,15 +209,22 @@ function updateItem(id, column) {
         headers : { "content-type" : "application/json; charset=UTF-8"},
         method : "DELETE",
       };
-      fetch(deleteApiUrl, otherParams)
-        .then(function(response){
-          if(response.ok){
-            console.log("deleted card !!!");
-          }else{
-            throw new Error(response.statusText);
-          }
-        })
       
+      // delete in DB
+      fetch(deleteApiUrl, otherParams)
+        .then(response => response.json())
+        .then(data => {
+          // web socket
+          const cardMessage = {
+            "method" : "deleteCard",
+            "cardID" : idOfCard,
+            "boardID" : Number.parseInt(boardID),
+            "cardCategory" : data.cardCategory,
+            "cardTitle" : data.cardTitle,
+          };
+          stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
+        })
+        .catch(error => console.log("error " + error));
     } else {
       // modify item title
       selectedArray[id] = selectedColumn[id].textContent;
@@ -197,12 +235,17 @@ function updateItem(id, column) {
         method : "PUT",
       };
       fetch(modifyApiUrl, otherParams)
-        .then(function(response){
-          if(response.ok){
-            console.log("update title success");
-          }else{
-            throw new Error(response.statusText);
-          }
+        .then(response => response.json())
+        .then(data => {
+          // web socket
+          const cardMessage = {
+            "method" : "changeCardTitle",
+            "cardID" : idOfCard,
+            "boardID" : Number.parseInt(boardID),
+            "cardCategory" : data.category,
+            "cardTitle" : data.title,
+          };
+          stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
         })
     }
     updateDOM();
@@ -265,7 +308,7 @@ async function addToColumn(column) {
     .then(function(response){
       if(response.ok){
         document.getElementById("message").innerHTML = "success";
-        console.log("fetched api !");
+        // console.log("fetched api !");
 
         // get id of new card
         response.json().then(data => {
@@ -279,6 +322,16 @@ async function addToColumn(column) {
         throw new Error("Could not reach the API" + response.statusText);
       }
     })
+  
+  // web socket
+  const cardMessage = {
+    "method" : "create" ,
+    "cardID" : 0,
+    "boardID" : boardID,
+    "cardCategory" : arrayNames[column],
+    "cardTitle" : itemText
+  };
+  stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
   
   updateDOM(column);
 }
@@ -329,7 +382,7 @@ function dragEnter(column) {
 function drag(e) {
   draggedItem = e.target;
   indexItem = e.target.id;
-  console.log(draggedItem.parentNode.parentNode.id);
+  // console.log(draggedItem.parentNode.parentNode.id);
   switch (draggedItem.parentNode.parentNode.id) {
     case "backlog-content":
       sourceColumn = 0;      
@@ -372,6 +425,8 @@ function drop(e) {
   const idCardInDB = idListArray[sourceColumn][indexItem];
   idListArray[sourceColumn].splice(indexItem, 1);
   idListArray[currentColumn].push(idCardInDB);
+
+  // update category of card in db
   let nameOfCurrentColumn;
   switch (currentColumn) {
     case 0:
@@ -390,60 +445,172 @@ function drop(e) {
       console.log("name of current column is invalid");
       break;
   }
-  // update category of card in db
+
   var putApiUrl = "http://localhost:8080/api/card/category/".concat(idCardInDB.toString())
     .concat("/").concat(nameOfCurrentColumn);
   const otherParams = {
     headers : { "content-type" : "application/json; charset=UTF-8"},
     method : "PUT",
-  }
+  };
+  // fetch(putApiUrl, otherParams)
+  //   .then(function(response){
+  //     if(response.ok){
+  //       response.json.then(data => (cardTitle = data.title));
+  //       console.log("update category success");
+  //     }else{
+  //       throw new Error(response.statusText);
+  //     }
+  //   })
+  
+  // web socket
+  var cardTitle;
   fetch(putApiUrl, otherParams)
-    .then(function(response){
-      if(response.ok){
-        console.log("update category success");
-      }else{
-        throw new Error(response.statusText);
-      }
+    .then(response => response.json())
+    .then(response => {
+      cardTitle = response.title;
+      // console.log(cardTitle);
+      const cardMessage = {
+        "method" : "changeCardCategory",
+        "cardID" : idCardInDB,
+        "boardID" : boardID,
+        "cardCategory" : nameOfCurrentColumn,
+        "cardTitle" : cardTitle,
+      };
+      stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
     })
+    .catch(error => console.error("error", error));
+
   rebuildArrays();
 }
 
 // On Load
 updateDOM();
 
-// onclick button
-var notification_click = document.getElementById("notification-click")
-console.log(notification_click);
-notification_click.addEventListener('click',function(){
-    var modal_notification = document.getElementById("modal-notification")
-    // console.log(notification_click)
-    modal_notification.classList.toggle('open-modal-notification');
-});
+// // onclick button
+// var notification_click = document.getElementById("notification-click")
+// console.log(notification_click);
+// notification_click.addEventListener('click',function(){
+//     var modal_notification = document.getElementById("modal-notification")
+//     // console.log(notification_click)
+//     modal_notification.classList.toggle('open-modal-notification');
+// });
 
-var avatar_click = document.getElementById("user-avatar")
-console.log(avatar_click);
-avatar_click.addEventListener('click',function(){
-    var modal_notification = document.getElementById("modal-user-info")
-    // console.log(notification_click)
-    modal_notification.classList.toggle('open-modal-user-info');
-});
+// var avatar_click = document.getElementById("user-avatar")
+// console.log(avatar_click);
+// avatar_click.addEventListener('click',function(){
+//     var modal_notification = document.getElementById("modal-user-info")
+//     // console.log(notification_click)
+//     modal_notification.classList.toggle('open-modal-user-info');
+// });
 
-var list_item_team_click = document.getElementById("menu-extend");
-console.log(list_item_team_click);
-list_item_team_click.addEventListener('click',function(){
-    var list_item_extend = document.querySelector("#list-iteam-team > ul:nth-child(2)");
-    // console.log(list_item_team_click)
-    // list_item_extend.style.backgroundColor = "red";
-    list_item_extend.classList.toggle('ul-extend');
-});
+// var list_item_team_click = document.getElementById("menu-extend");
+// console.log(list_item_team_click);
+// list_item_team_click.addEventListener('click',function(){
+//     var list_item_extend = document.querySelector("#list-iteam-team > ul:nth-child(2)");
+//     // console.log(list_item_team_click)
+//     // list_item_extend.style.backgroundColor = "red";
+//     list_item_extend.classList.toggle('ul-extend');
+// });
 
-// open edit form
-function openEditForm() {
-  var edit_form = document.getElementById("form-edit-board")
-  edit_form.classList.toggle('display-none');
+// // open edit form
+// function openEditForm() {
+//   var edit_form = document.getElementById("form-edit-board")
+//   edit_form.classList.toggle('display-none');
 
+// }
+// function closeEditForm(){
+//   var edit_form = document.getElementById("form-edit-board")
+//   edit_form.classList.toggle('display-none');
+// }
+
+// implement WebSocket
+var stompClient = null;
+
+function connect(){
+  var socket = new SockJS('/gs-guide-websocket');
+  console.log("Connecting....");
+  stompClient = Stomp.over(socket);
+  stompClient.connect({}, function(frame){
+    console.log('Connected: ' + frame);
+    stompClient.subscribe('/topic/update/'.concat(boardID.toString()), function(newCardMessage){
+      // add new card
+      const resp = JSON.parse(newCardMessage.body);
+      const index = getIndexInIDListArray(resp.cardCategory);
+      let isSender = idListArray[index].includes(resp.cardID);
+      if(resp.method == 'create'){
+        // const index = getIndexInIDListArray(resp.cardCategory);
+        // let isSender = idListArray[index].includes(resp.cardID);
+        if(!isSender){
+          idListArray[index].push(resp.cardID);
+          listArrays[index].push(resp.cardTitle);
+          updateDOM();
+        }
+      }
+
+      if(resp.method == 'changeCardCategory'){
+        console.log("change card category method");
+        if(!isSender){
+          // delete old card
+          var i;
+          for(i = 0; i < idListArray.length; i++){
+            const indexOldCard = idListArray[i].indexOf(resp.cardID);
+            if(indexOldCard > -1){
+              idListArray[i].splice(indexOldCard, 1);
+              listArrays[i].splice(indexOldCard, 1);
+              break;
+            } 
+          }
+          // update new card
+          idListArray[index].push(resp.cardID);
+          listArrays[index].push(resp.cardTitle);
+          updateDOM();
+        } 
+      }
+
+      if(resp.method == 'deleteCard'){
+        var i;
+        for(i = 0; i < idListArray.length; i++){
+          const indexOldCard = idListArray[i].indexOf(resp.cardID);
+          if(indexOldCard > -1){
+            idListArray[i].splice(indexOldCard, 1);
+            listArrays[i].splice(indexOldCard, 1);
+            break;
+          } 
+        }
+        if(!isSender){
+          // delete old card
+          console.log("is not sender");
+        }
+        updateDOM();
+      }
+
+      if(resp.method == 'changeCardTitle'){
+        var i;
+        for(i = 0; i < idListArray.length; i++){
+          const indexOldCard = idListArray[i].indexOf(resp.cardID);
+          if(indexOldCard > -1){
+            listArrays[i][indexOldCard] = resp.cardTitle;
+            break;
+          } 
+        }
+        updateDOM();
+      }
+      console.log(resp);
+    })  
+  })
 }
-function closeEditForm(){
-  var edit_form = document.getElementById("form-edit-board")
-  edit_form.classList.toggle('display-none');
-}
+
+connect();
+
+
+
+
+
+
+
+
+
+
+
+
+

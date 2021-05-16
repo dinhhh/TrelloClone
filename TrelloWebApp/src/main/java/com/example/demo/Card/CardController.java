@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Board.Board;
 import com.example.demo.Board.BoardRepository;
+import com.example.demo.WebSocketConfig.CardMessage;
 
 @RestController
 public class CardController {
@@ -59,10 +60,29 @@ public class CardController {
 		}
 	}
 	
+	@GetMapping("/api/card/{boardID}/{category}/{title}")
+	ResponseEntity<Card> getCardByBoardIDCateTitle(@PathVariable String boardID, @PathVariable String category, @PathVariable String title){
+		Long id = Long.valueOf(boardID);
+		Optional<Card> cards = cardRepo.findByBoardIDCateTitle(id, category, title);
+		if(cards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<>(cards.get(), HttpStatus.OK);
+		}
+	}
+	
 	@DeleteMapping("/api/card/{idString}")
-	void deleteCard(@PathVariable String idString) {
+	ResponseEntity<CardMessage> deleteCard(@PathVariable String idString) {
 		Long id = Long.valueOf(idString);
-		cardRepo.deleteById(id);
+		Optional<Card> cards = cardRepo.findById(id);
+		if(cards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			Card card = cards.get();
+			CardMessage cardMessage = new CardMessage("deleteCard", card.getId(), card.getBoard().getId(), card.getCategory(), card.getTitle());
+			cardRepo.deleteById(id);
+			return new ResponseEntity<CardMessage>(cardMessage, HttpStatus.OK);
+		}
 	}
 	
 	@PutMapping("/api/card/category/{idString}/{newCategory}")

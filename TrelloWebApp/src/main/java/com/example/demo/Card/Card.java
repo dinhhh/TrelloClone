@@ -94,4 +94,12 @@ public class Card {
 	public void setBoard(Board board) {
 		this.board = board;
 	}
+
+	@Override
+	public String toString() {
+		return "Card [id=" + id + ", title=" + title + ", dueDate=" + dueDate + ", description=" + description
+				+ ", color=" + color + ", category=" + category + "]";
+	}
+	
+	
 }
