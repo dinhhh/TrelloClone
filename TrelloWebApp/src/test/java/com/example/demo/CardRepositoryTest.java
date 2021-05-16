@@ -12,6 +12,7 @@ import com.example.demo.Board.Board;
 import com.example.demo.Board.BoardRepository;
 import com.example.demo.Card.Card;
 import com.example.demo.Card.CardRepository;
+import com.example.demo.WebSocketConfig.CardMessage;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -38,7 +39,12 @@ public class CardRepositoryTest {
 	
 	@Test
 	public void getCardByBoardIDCateTitle() {
-		Optional<Card> cards = cardRepo.findByBoardIDCateTitle((long) 3, "onHold", "Web socket");
-		System.out.println(cards.get().toString());
+		CardMessage cardMessage = new CardMessage("deleteCard",(long) 0,(long) 3, "complete", "BUG");
+		Optional<Card> cards = cardRepo.findByBoardIDCateTitle(cardMessage.getBoardID(), cardMessage.getCardCategory(), cardMessage.getCardTitle());
+		if(cards.isEmpty()) {
+			System.out.println("?");
+		}else {
+			System.out.println(cards.get().toString());
+		}
 	}
 }

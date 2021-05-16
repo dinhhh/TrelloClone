@@ -24,9 +24,20 @@ public class UpdateBoardController {
 	@SendTo("/topic/update")
 	public CardMessage updateBoard(CardMessage cardMessage) throws Exception{
 		Thread.sleep(1000);
-		Optional<Card> cards = cardRepo.findByBoardIDCateTitle(cardMessage.getBoardID(), cardMessage.getCategory(), cardMessage.getTitle());
-		Card card = cards.get();
-		return new CardMessage(card.getId(), cardMessage.getBoardID(), cardMessage.getCategory(), cardMessage.getTitle());
-//		return "Return tam thoi the nay da =)) " + HtmlUtils.htmlEscape(card.getTitle());
+		System.out.println(cardMessage.toString());
+		if(cardMessage.getMethod().equalsIgnoreCase("deleteCard")) {
+			return cardMessage;
+		}
+		else if(cardMessage.getMethod().equalsIgnoreCase("changeCardTitle")) {
+			return cardMessage;
+		}
+		else {
+			Optional<Card> cards = cardRepo.findByBoardIDCateTitle(cardMessage.getBoardID(), cardMessage.getCardCategory(), cardMessage.getCardTitle());
+			if(cards.isEmpty()) {
+				System.out.println("Update board controller error!!");
+			}
+			Card card = cards.get();
+			return new CardMessage(cardMessage.getMethod(), card.getId(), cardMessage.getBoardID(), cardMessage.getCardCategory(), cardMessage.getCardTitle());
+		}
 	}
 }
