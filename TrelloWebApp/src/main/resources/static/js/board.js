@@ -532,7 +532,7 @@ function connect(){
   stompClient = Stomp.over(socket);
   stompClient.connect({}, function(frame){
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/update', function(newCardMessage){
+    stompClient.subscribe('/topic/update/'.concat(boardID.toString()), function(newCardMessage){
       // add new card
       const resp = JSON.parse(newCardMessage.body);
       const index = getIndexInIDListArray(resp.cardCategory);
