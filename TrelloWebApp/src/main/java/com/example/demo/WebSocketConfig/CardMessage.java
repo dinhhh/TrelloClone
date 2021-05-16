@@ -2,16 +2,25 @@ package com.example.demo.WebSocketConfig;
 
 public class CardMessage {
 	
+	private String method;
 	private Long cardID;
 	private Long boardID;
-	private String category;
-	private String title;
+	private String cardCategory;
+	private String cardTitle;
 	
-	public CardMessage(Long cardID, Long boardID, String category, String title) {
+	public CardMessage(String method, Long cardID, Long boardID, String cardCategory, String cardTitle) {
+		super();
+		this.method = method;
 		this.cardID = cardID;
 		this.boardID = boardID;
-		this.category = category;
-		this.title = title;
+		this.cardCategory = cardCategory;
+		this.cardTitle = cardTitle;
+	}
+	public String getMethod() {
+		return method;
+	}
+	public void setMethod(String method) {
+		this.method = method;
 	}
 	public Long getCardID() {
 		return cardID;
@@ -25,24 +34,21 @@ public class CardMessage {
 	public void setBoardID(Long boardID) {
 		this.boardID = boardID;
 	}
-	public String getCategory() {
-		return category;
+	public String getCardCategory() {
+		return cardCategory;
 	}
-	public void setCategory(String category) {
-		this.category = category;
+	public void setCardCategory(String cardCategory) {
+		this.cardCategory = cardCategory;
 	}
-	public String getTitle() {
-		return title;
+	public String getCardTitle() {
+		return cardTitle;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+	public void setCardTitle(String cardTitle) {
+		this.cardTitle = cardTitle;
 	}
 	@Override
 	public String toString() {
-		return "CardMessage [boardID=" + boardID + ", category=" + category + ", title=" + title + "]";
+		return "CardMessage [method=" + method + ", cardID=" + cardID + ", boardID=" + boardID + ", cardCategory="
+				+ cardCategory + ", cardTitle=" + cardTitle + "]";
 	}
-	
-	
-	
-	
 }

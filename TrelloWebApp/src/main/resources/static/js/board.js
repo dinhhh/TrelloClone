@@ -209,15 +209,22 @@ function updateItem(id, column) {
         headers : { "content-type" : "application/json; charset=UTF-8"},
         method : "DELETE",
       };
-      fetch(deleteApiUrl, otherParams)
-        .then(function(response){
-          if(response.ok){
-            console.log("deleted card !!!");
-          }else{
-            throw new Error(response.statusText);
-          }
-        })
       
+      // delete in DB
+      fetch(deleteApiUrl, otherParams)
+        .then(response => response.json())
+        .then(data => {
+          // web socket
+          const cardMessage = {
+            "method" : "deleteCard",
+            "cardID" : idOfCard,
+            "boardID" : Number.parseInt(boardID),
+            "cardCategory" : data.cardCategory,
+            "cardTitle" : data.cardTitle,
+          };
+          stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
+        })
+        .catch(error => console.log("error " + error));
     } else {
       // modify item title
       selectedArray[id] = selectedColumn[id].textContent;
@@ -228,12 +235,17 @@ function updateItem(id, column) {
         method : "PUT",
       };
       fetch(modifyApiUrl, otherParams)
-        .then(function(response){
-          if(response.ok){
-            console.log("update title success");
-          }else{
-            throw new Error(response.statusText);
-          }
+        .then(response => response.json())
+        .then(data => {
+          // web socket
+          const cardMessage = {
+            "method" : "changeCardTitle",
+            "cardID" : idOfCard,
+            "boardID" : Number.parseInt(boardID),
+            "cardCategory" : data.category,
+            "cardTitle" : data.title,
+          };
+          stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
         })
     }
     updateDOM();
@@ -313,10 +325,11 @@ async function addToColumn(column) {
   
   // web socket
   const cardMessage = {
+    "method" : "create" ,
     "cardID" : 0,
     "boardID" : boardID,
-    "category" : arrayNames[column],
-    "title" : itemText
+    "cardCategory" : arrayNames[column],
+    "cardTitle" : itemText
   };
   stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
   
@@ -412,6 +425,8 @@ function drop(e) {
   const idCardInDB = idListArray[sourceColumn][indexItem];
   idListArray[sourceColumn].splice(indexItem, 1);
   idListArray[currentColumn].push(idCardInDB);
+
+  // update category of card in db
   let nameOfCurrentColumn;
   switch (currentColumn) {
     case 0:
@@ -430,21 +445,41 @@ function drop(e) {
       console.log("name of current column is invalid");
       break;
   }
-  // update category of card in db
+
   var putApiUrl = "http://localhost:8080/api/card/category/".concat(idCardInDB.toString())
     .concat("/").concat(nameOfCurrentColumn);
   const otherParams = {
     headers : { "content-type" : "application/json; charset=UTF-8"},
     method : "PUT",
-  }
+  };
+  // fetch(putApiUrl, otherParams)
+  //   .then(function(response){
+  //     if(response.ok){
+  //       response.json.then(data => (cardTitle = data.title));
+  //       console.log("update category success");
+  //     }else{
+  //       throw new Error(response.statusText);
+  //     }
+  //   })
+  
+  // web socket
+  var cardTitle;
   fetch(putApiUrl, otherParams)
-    .then(function(response){
-      if(response.ok){
-        console.log("update category success");
-      }else{
-        throw new Error(response.statusText);
-      }
+    .then(response => response.json())
+    .then(response => {
+      cardTitle = response.title;
+      // console.log(cardTitle);
+      const cardMessage = {
+        "method" : "changeCardCategory",
+        "cardID" : idCardInDB,
+        "boardID" : boardID,
+        "cardCategory" : nameOfCurrentColumn,
+        "cardTitle" : cardTitle,
+      };
+      stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
     })
+    .catch(error => console.error("error", error));
+
   rebuildArrays();
 }
 
@@ -500,11 +535,64 @@ function connect(){
     stompClient.subscribe('/topic/update', function(newCardMessage){
       // add new card
       const resp = JSON.parse(newCardMessage.body);
-      const index = getIndexInIDListArray(resp.category);
+      const index = getIndexInIDListArray(resp.cardCategory);
       let isSender = idListArray[index].includes(resp.cardID);
-      if(!isSender){
-        idListArray[index].push(resp.cardID);
-        listArrays[index].push(resp.title);
+      if(resp.method == 'create'){
+        // const index = getIndexInIDListArray(resp.cardCategory);
+        // let isSender = idListArray[index].includes(resp.cardID);
+        if(!isSender){
+          idListArray[index].push(resp.cardID);
+          listArrays[index].push(resp.cardTitle);
+          updateDOM();
+        }
+      }
+
+      if(resp.method == 'changeCardCategory'){
+        console.log("change card category method");
+        if(!isSender){
+          // delete old card
+          var i;
+          for(i = 0; i < idListArray.length; i++){
+            const indexOldCard = idListArray[i].indexOf(resp.cardID);
+            if(indexOldCard > -1){
+              idListArray[i].splice(indexOldCard, 1);
+              listArrays[i].splice(indexOldCard, 1);
+              break;
+            } 
+          }
+          // update new card
+          idListArray[index].push(resp.cardID);
+          listArrays[index].push(resp.cardTitle);
+          updateDOM();
+        } 
+      }
+
+      if(resp.method == 'deleteCard'){
+        var i;
+        for(i = 0; i < idListArray.length; i++){
+          const indexOldCard = idListArray[i].indexOf(resp.cardID);
+          if(indexOldCard > -1){
+            idListArray[i].splice(indexOldCard, 1);
+            listArrays[i].splice(indexOldCard, 1);
+            break;
+          } 
+        }
+        if(!isSender){
+          // delete old card
+          console.log("is not sender");
+        }
+        updateDOM();
+      }
+
+      if(resp.method == 'changeCardTitle'){
+        var i;
+        for(i = 0; i < idListArray.length; i++){
+          const indexOldCard = idListArray[i].indexOf(resp.cardID);
+          if(indexOldCard > -1){
+            listArrays[i][indexOldCard] = resp.cardTitle;
+            break;
+          } 
+        }
         updateDOM();
       }
       console.log(resp);
