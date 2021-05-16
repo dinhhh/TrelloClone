@@ -25,7 +25,6 @@ public class UpdateBoardController {
 	private SimpMessagingTemplate simpMessagingTemplate;
 	
 	@MessageMapping("/board/update")
-//	@SendTo("/topic/update")
 	public void updateBoard(CardMessage cardMessage) throws Exception{
 		Thread.sleep(1000);
 		System.out.println(cardMessage.toString());
