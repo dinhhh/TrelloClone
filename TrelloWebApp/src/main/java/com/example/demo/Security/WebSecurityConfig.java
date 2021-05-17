@@ -48,6 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/board/*").authenticated()
 			.antMatchers("/home").authenticated()
 			.antMatchers("/login_sucess").authenticated()
+			.antMatchers("/profile").authenticated()
 			.and()
 			.formLogin()
 				.loginPage("/sign-in")
