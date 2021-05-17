@@ -112,4 +112,25 @@ public class CardController {
 			return new ResponseEntity<Card>(card, HttpStatus.OK);
 		}
 	}
+	
+	@PutMapping("/api/card/deadline/{idString}")
+	ResponseEntity<Card> updateDeadline(@PathVariable String idString, @RequestBody String deadline){
+		Long id = Long.valueOf(idString);
+		Optional<Card> cards = cardRepo.findById(id);
+		if(cards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			Card card = cards.get();
+			String[] spilitted = deadline.split("-");
+			String deadline_ = "";
+			for(int i = 2; i >= 0; i--) {
+				deadline_ += spilitted[i];
+				deadline_ += "-";
+			}
+			deadline_ = deadline_.substring(0, deadline_.length() - 1);
+			card.setDueDate(deadline_);
+			cardRepo.save(card);
+			return new ResponseEntity<Card>(card, HttpStatus.OK);
+		}
+	}
 }	

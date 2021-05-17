@@ -18,6 +18,7 @@ const boardID = currentURL.substring(currentURL.lastIndexOf("/") + 1);
 let boardTitle;
 let userID;
 const userGmail = document.getElementById("gmail").textContent;
+let currentCardIDFormDisplay;
 
 // Initialize Arrays
 let backlogListArray = [];
@@ -587,6 +588,7 @@ async function openEditForm(id, column) {
   const selectedColumn = listColumns[column].children;
   const idArray = idListArray[column];
   const idOfCard = idArray[id];
+  currentCardIDFormDisplay = idOfCard;
 
   // fetch infor about this card
   const inforApiUrl = "http://localhost:8080/api/activity/card/".concat(idOfCard.toString());
@@ -612,12 +614,31 @@ async function openEditForm(id, column) {
       document.getElementById("activity-history").appendChild(ulTag);
     })
     .catch(error => console.log("error " + error));
+
+    // deadline add
+    document.getElementById('deadline-button').onclick = async function(){
+      const deadlineValue = document.getElementById("deadline").value;
+      const deadlineApiUrl = "http://localhost:8080/api/card/deadline/".concat(idOfCard.toString());
+      await fetch(deadlineApiUrl, {
+        method : "PUT" ,
+        body : deadlineValue
+      })
+        .then(function(response){
+          if(response.ok){
+            console.log("change deadline ok");
+          }else{
+            throw new Error("Could not reach the API" + response.statusText);
+          }
+        })
+    }    
+    
 }
+
 function closeEditForm(){
   var edit_form = document.getElementById("form-edit-board")
   edit_form.classList.toggle('display-none');
   removeElement("temp");
-
+  currentCardIDFormDisplay = -1;
 }
 
 // implement WebSocket
