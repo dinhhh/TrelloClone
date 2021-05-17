@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +22,9 @@ import com.example.demo.Card.CardRepository;
 public class UserRestController {
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 	
 	// get user id in database by email
 	@GetMapping("/user/{gmail}")
@@ -99,6 +103,23 @@ public class UserRestController {
 			User user = res.get();
 			user.setGender(newGender);
 			return new ResponseEntity<User>(userRepo.save(user), HttpStatus.OK);
+		}
+	}
+	
+	// change password
+	@PutMapping("/api/user/password/{gmail}/{oldPassword}")
+	public ResponseEntity<User> changePassword(@PathVariable String gmail, @PathVariable String oldPassword, @RequestBody String newPassword){
+		Optional<User> res = userRepo.findByEmail(gmail);
+		if(res.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} else {
+			User user = res.get();
+			if(!passwordEncoder.matches(oldPassword, user.getPassword())) {
+				return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			}else {
+				user.setPassword(passwordEncoder.encode(newPassword));
+				return new ResponseEntity<User>(userRepo.save(user), HttpStatus.OK);
+			}
 		}
 	}
 }
