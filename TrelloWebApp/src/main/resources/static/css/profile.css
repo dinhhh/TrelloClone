@@ -76,3 +76,11 @@ img{
     -webkit-transition: background-color .2s ease-in-out 0s, border-color .2s ease-in-out 0s;
     transition: background-color .2s ease-in-out 0s, border-color .2s ease-in-out 0s
 }
+
+div{
+    padding-bottom: 5px;
+}
+
+h2{
+    padding-right: 5px;
+}
