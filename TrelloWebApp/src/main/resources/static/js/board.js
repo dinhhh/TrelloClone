@@ -16,6 +16,9 @@ let updatedOnLoad = false;
 const currentURL = window.location.href;
 const boardID = currentURL.substring(currentURL.lastIndexOf("/") + 1);
 let boardTitle;
+let userID;
+const userGmail = document.getElementById("gmail").textContent;
+let currentCardIDFormDisplay;
 
 // Initialize Arrays
 let backlogListArray = [];
@@ -53,6 +56,15 @@ function getIndexInIDListArray(category){
       return 3;
       break;
   }
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function removeElement(id) {
+  var elem = document.getElementById(id);
+  return elem.parentNode.removeChild(elem);
 }
 
 // Get Arrays from localStorage if available, set default values if not
@@ -128,17 +140,18 @@ function createItemEl(columnEl, column, item, index) {
   listEl.draggable = true;
   listEl.setAttribute('onfocusout', `updateItem(${index}, ${column})`);
   listEl.setAttribute('ondragstart', 'drag(event)');
+  listEl.setAttribute('ondblclick', `openEditForm(${index}, ${column})`);
   listEl.contentEditable = true;
 
   // bug =)))
   // add edit-button
-  // const editButton = document.createElement('div');
+  // const editButton = document.createElement('button');
   // editButton.setAttribute('class', 'add-btn');
   // editButton.setAttribute('onclick', 'openEditForm()');
   // editButton.setAttribute('display', 'inline');
 
   // const spanTag = document.createElement('span');
-  // spanTag.textContent = 'Chinh';
+  // spanTag.textContent = 'Edit';
   // editButton.appendChild(spanTag);
   
   // listEl.appendChild(editButton);
@@ -156,6 +169,12 @@ async function updateDOM() {
     const boardData = await resp.json();
     boardTitle = boardData.title;
     document.getElementById("board-title").innerHTML = boardTitle;
+
+    // get user id
+    var userIDApi = "http://localhost:8080/user/".concat(userGmail);
+    const resp2 = await fetch(userIDApi);
+    const userData = await resp2.json();
+    userID = userData[0].id;
     getSavedColumns();
   }
 
@@ -194,7 +213,7 @@ async function updateDOM() {
 }
 
 // Update Item - Delete if necessary, or update Array value
-function updateItem(id, column) {
+async function updateItem(id, column) {
   const selectedArray = listArrays[column];
   const selectedColumn = listColumns[column].children;
   const idArray = idListArray[column];
@@ -203,6 +222,8 @@ function updateItem(id, column) {
     // delete item
     if (!selectedColumn[id].textContent) {
       delete selectedArray[id]; // !!!
+      updateDOM();
+
       // delete card in database
       var deleteApiUrl = "http://localhost:8080/api/card/".concat(idOfCard.toString());
       const otherParams = {
@@ -247,8 +268,23 @@ function updateItem(id, column) {
           };
           stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
         })
+      
+      // add to activity
+      await sleep(2000);
+      const activityApiUrl = "http://localhost:8080/api/activity/title/".concat(boardID.toString()).concat("/")
+        .concat(idOfCard.toString()).concat("/").concat(userID.toString());
+      await fetch(activityApiUrl, {
+        headers : { "content-type" : "application/json; charset=UTF-8"},
+        method : "PUT",
+      })
+      .then(function(response){
+        if(response.ok){
+          console.log("add new update title activity ");
+        }else{
+          throw new Error("Could not reach the API" + response.statusText);
+        }
+      });
     }
-    updateDOM();
   }
 }
 
@@ -266,7 +302,7 @@ async function addToColumn(column) {
   const boardData = await resp.json();
   boardTitle = boardData.title;
   document.getElementById("board-title").innerHTML = boardTitle;
-
+  updateDOM(column);
   // send new card data to database
   var cardApiPath = "http://localhost:8080/api/card/add";
   const otherDataOfCard = {
@@ -333,7 +369,21 @@ async function addToColumn(column) {
   };
   stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
   
-  updateDOM(column);
+  // add to activity
+  await sleep(2000);
+  const activityApiUrl = "http://localhost:8080/api/activity/add/".concat(boardID.toString()).concat("/").concat(idOfNewCard.toString()).concat("/")
+    .concat(userID).concat("/create");
+    await fetch(activityApiUrl, {
+      headers : { "content-type" : "application/json; charset=UTF-8"},
+      method : "POST"
+    })
+      .then(function(response){
+        if(response.ok){
+          console.log("add new create activity ");
+        }else{
+          throw new Error("Could not reach the API" + response.statusText);
+        }
+      })
 }
 
 // Show Add Item Input Box
@@ -354,20 +404,25 @@ function hideInputBox(column) {
 // Allows arrays to reflect Drag and Drop items
 function rebuildArrays() {
   backlogListArray = [];
+  let str;
   for (let i = 0; i < backlogListEl.children.length; i++) {
-    backlogListArray.push(backlogListEl.children[i].textContent);
+    str = backlogListEl.children[i].textContent;
+    backlogListArray.push(str);
   }
   progressListArray = [];
   for (let i = 0; i < progressListEl.children.length; i++) {
-    progressListArray.push(progressListEl.children[i].textContent);
+    str = progressListEl.children[i].textContent;
+    progressListArray.push(str);
   }
   completeListArray = [];
   for (let i = 0; i < completeListEl.children.length; i++) {
-    completeListArray.push(completeListEl.children[i].textContent);
+    str = completeListEl.children[i].textContent;
+    completeListArray.push(str);
   }
   onHoldListArray = [];
   for (let i = 0; i < onHoldListEl.children.length; i++) {
-    onHoldListArray.push(onHoldListEl.children[i].textContent);
+    str = onHoldListEl.children[i].textContent;
+    onHoldListArray.push(str);
   }
   updateDOM();
 }
@@ -425,7 +480,7 @@ function drop(e) {
   const idCardInDB = idListArray[sourceColumn][indexItem];
   idListArray[sourceColumn].splice(indexItem, 1);
   idListArray[currentColumn].push(idCardInDB);
-
+  rebuildArrays();
   // update category of card in db
   let nameOfCurrentColumn;
   switch (currentColumn) {
@@ -452,15 +507,14 @@ function drop(e) {
     headers : { "content-type" : "application/json; charset=UTF-8"},
     method : "PUT",
   };
-  // fetch(putApiUrl, otherParams)
-  //   .then(function(response){
-  //     if(response.ok){
-  //       response.json.then(data => (cardTitle = data.title));
-  //       console.log("update category success");
-  //     }else{
-  //       throw new Error(response.statusText);
-  //     }
-  //   })
+  fetch(putApiUrl, otherParams)
+    .then(function(response){
+      if(response.ok){
+        console.log("update category success");
+      }else{
+        throw new Error(response.statusText);
+      }
+    })
   
   // web socket
   var cardTitle;
@@ -480,7 +534,20 @@ function drop(e) {
     })
     .catch(error => console.error("error", error));
 
-  rebuildArrays();
+  // add activity
+  const activityApiUrl = "http://localhost:8080/api/activity/category/".concat(boardID.toString()).concat("/")
+    .concat(idCardInDB).concat("/").concat(userID.toString());
+  fetch(activityApiUrl, {
+      headers : { "content-type" : "application/json; charset=UTF-8"},
+      method : "PUT"
+  })
+  .then(function(response){
+    if(response.ok){
+      console.log("add new category activity ");
+    }else{
+      throw new Error("Could not reach the API" + response.statusText);
+    }
+  });
 }
 
 // On Load
@@ -512,16 +579,67 @@ updateDOM();
 //     list_item_extend.classList.toggle('ul-extend');
 // });
 
-// // open edit form
-// function openEditForm() {
-//   var edit_form = document.getElementById("form-edit-board")
-//   edit_form.classList.toggle('display-none');
+// open edit form
+async function openEditForm(id, column) {
+  var edit_form = document.getElementById("form-edit-board")
+  edit_form.classList.toggle('display-none');
+  
+  const selectedArray = listArrays[column];
+  const selectedColumn = listColumns[column].children;
+  const idArray = idListArray[column];
+  const idOfCard = idArray[id];
+  currentCardIDFormDisplay = idOfCard;
 
-// }
-// function closeEditForm(){
-//   var edit_form = document.getElementById("form-edit-board")
-//   edit_form.classList.toggle('display-none');
-// }
+  // fetch infor about this card
+  const inforApiUrl = "http://localhost:8080/api/activity/card/".concat(idOfCard.toString());
+  await fetch(inforApiUrl, {
+    headers : { "content-type" : "application/json; charset=UTF-8"},
+    method : "GET"
+  })
+    .then(response => response.json())
+    .then(data => {
+      const count = Object.keys(data).length;
+      let ulTag = document.createElement('ol');
+      ulTag.setAttribute("id", "temp");
+      var i;
+      for(i = 0; i < count; i++){
+
+        // console.log(data[i].sourceUser.firstName);
+        var infor = data[i].sourceUser.firstName.concat(" ").concat(data[i].sourceUser.lastName).concat(" ").concat(data[i].method);
+        var li = document.createElement('li');
+        li.textContent = infor;
+        ulTag.appendChild(li);
+      }
+
+      document.getElementById("activity-history").appendChild(ulTag);
+    })
+    .catch(error => console.log("error " + error));
+
+    // deadline add
+    document.getElementById('deadline-button').onclick = async function(){
+      const deadlineValue = document.getElementById("deadline").value;
+      const deadlineApiUrl = "http://localhost:8080/api/card/deadline/".concat(idOfCard.toString());
+      await fetch(deadlineApiUrl, {
+        method : "PUT" ,
+        body : deadlineValue
+      })
+        .then(function(response){
+          if(response.ok){
+            console.log("change deadline ok");
+          }else{
+            throw new Error("Could not reach the API" + response.statusText);
+          }
+        })
+    }    
+    
+}
+
+function closeEditForm(){
+  var edit_form = document.getElementById("form-edit-board")
+  edit_form.classList.toggle('display-none');
+  removeElement("temp");
+  currentCardIDFormDisplay = -1;
+}
 
 // implement WebSocket
 var stompClient = null;
@@ -548,7 +666,6 @@ function connect(){
       }
 
       if(resp.method == 'changeCardCategory'){
-        console.log("change card category method");
         if(!isSender){
           // delete old card
           var i;

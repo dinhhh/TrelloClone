@@ -443,11 +443,14 @@ ul {
 .add-btn-group {
   display: flex;
   justify-content: space-between;
+  padding-left: 10px;
+  padding-bottom: 10px;
 }
 
 .add-btn {
-  margin: 10px;
-  padding: 5px 10px;
+  margin: 5px;
+  margin-left: 0px;
+  /* padding: 5px 10px; */
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -605,4 +608,12 @@ textarea{
   .drag-column {
     margin: 10px;
   }
+}
+
+#activity-history {
+  margin-left: 25px;
+}
+
+textarea {
+  resize: none;
 }
