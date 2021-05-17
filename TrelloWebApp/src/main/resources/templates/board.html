@@ -110,9 +110,7 @@
 
       <div class="add-board-form">
         <div class="form-edit-head">
-          <span class="heading-title sub-heading">
-            Title
-          </span>
+          <span id="card-title" class="heading-title sub-heading">Title</span>
           <span class="close" onclick="closeEditForm()">X</span>
         </div>
         <div class="form-edit-body">
@@ -122,12 +120,10 @@
             </div>
             <div>
               <p class="body-title">Mô tả</p>
-              <textarea name="" id="" cols="30" rows="10">At w3schools.com you will learn how to make a website.
-                 They offer free tutorials
-                 in all web development technologies.</textarea>
+              <textarea name="" id="describe-card" cols="30" rows="10" ></textarea>
             </div>
-            <div>
-              <p class="body-title">Hoạt động</p>
+            <p class="body-title">Hoạt động</p>
+            <div id="activity-history">
             </div>
 
           </div>
@@ -313,6 +309,8 @@
                             <button id="message" class="btn btn-purple">New list</button>
                         </span>
                     </li>
+
+                    <a style="display: none;" id="gmail">[[${#request.remoteUser}]]</a>
                 </ul>
             </div>
         </div>
