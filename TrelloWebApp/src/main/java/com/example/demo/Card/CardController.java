@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.Activity.Activity;
+import com.example.demo.Activity.ActivityReposity;
 import com.example.demo.Board.Board;
 import com.example.demo.Board.BoardRepository;
 import com.example.demo.WebSocketConfig.CardMessage;
@@ -26,6 +28,9 @@ public class CardController {
 	
 	@Autowired
 	private BoardRepository boardRepo;
+	
+	@Autowired
+	private ActivityReposity activityRepo;
 	
 	@GetMapping("/api/card/{id}")
 	ResponseEntity<Card> getCardByID(@PathVariable Long id) {
@@ -74,13 +79,16 @@ public class CardController {
 	@DeleteMapping("/api/card/{idString}")
 	ResponseEntity<CardMessage> deleteCard(@PathVariable String idString) {
 		Long id = Long.valueOf(idString);
+		
 		Optional<Card> cards = cardRepo.findById(id);
 		if(cards.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {
+//			activityRepo.deleteActivityWhereSourceUserIDEqual(id);
+//			activityRepo.deleteActivityWhereDestUserIDEqual(id);
 			Card card = cards.get();
 			CardMessage cardMessage = new CardMessage("deleteCard", card.getId(), card.getBoard().getId(), card.getCategory(), card.getTitle());
-			cardRepo.deleteById(id);
+			cardRepo.delete(card);
 			return new ResponseEntity<CardMessage>(cardMessage, HttpStatus.OK);
 		}
 	}

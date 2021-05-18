@@ -50,6 +50,16 @@ public class UserRestController {
 		}
 	}
 	
+	@GetMapping("/api/user/id/{id}")
+	public ResponseEntity<User> getUserByID(@PathVariable String id){
+		Optional<User> res = userRepo.findById(Long.valueOf(id));
+		if(res.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<User>(res.get(), HttpStatus.OK);
+		}
+	}
+	
 	// change user name
 	@PutMapping("/api/user/name/{gmail}")
 	public ResponseEntity<User> changeUserName(@PathVariable String gmail, @RequestBody String newUserName){

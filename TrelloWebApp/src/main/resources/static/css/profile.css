@@ -84,3 +84,7 @@ div{
 h2{
     padding-right: 5px;
 }
+
+.avatar {
+    content:url("../image/default-avatar-male.png");
+}
