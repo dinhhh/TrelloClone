@@ -439,3 +439,6 @@ html{
 .display-none{
     display: none;
 }
+.avatar {
+    content:url("../image/default-avatar-male.png");
+}

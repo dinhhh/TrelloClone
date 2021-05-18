@@ -29,8 +29,8 @@ public class Card {
 	@Column(name = "description", nullable = true, length = 50)
 	private String description;
 	
-	@Column(name = "color", nullable = false, length = 10)
-	private String color = "blue";
+	@Column(name = "color", nullable = true, length = 10)
+	private String color;
 	
 	@Column(name = "category", nullable = false)
 	private String category;
@@ -38,7 +38,7 @@ public class Card {
 	@ManyToOne
 	@JoinColumn(name = "board_id", nullable = false)
 	private Board board;
-
+	
 	public Long getId() {
 		return id;
 	}
