@@ -1,9 +1,11 @@
 package com.example.demo.Board;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface BoardRepository extends JpaRepository<Board, Long>{
 	@Query("SELECT b FROM Board b JOIN b.users u WHERE u.id = ?1")
@@ -12,4 +14,6 @@ public interface BoardRepository extends JpaRepository<Board, Long>{
 	@Query("SELECT b FROM Board b JOIN b.users u WHERE u.email = ?1")
 	List<Board> findByUserGmail(String email);
 	
+	@Query(nativeQuery = true, value = "SELECT * FROM board WHERE title LIKE %:title%")
+	Optional<Board> findByTitleContain(@Param("title") String title);
 }

@@ -46,9 +46,9 @@
             </a>
           </div>
           <div class=" nav-box">
-            <input class="nav-box search form-field u" type="text" name="search" placeholder="Search..." >
+            <input class="nav-box search form-field u" id="search-field" onkeyup="getStates(this.value)" type="text" name="search" placeholder="Search..." >
 
-            <i class="fas fa-search icon"></i>
+            <i class="fas fa-search icon" id="search-button"></i>
           </div>
           
         </div>
@@ -245,6 +245,10 @@
             </div>
           </div>
           <div class="see-all-closed-board button"><a href="#">Xem tất cả các bảng</a></div>
+          <div>
+            <ul id="search-result">
+            </ul>
+          </div>
         </div>
 
       </div>
