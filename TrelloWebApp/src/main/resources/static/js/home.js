@@ -1,5 +1,5 @@
 
-
+let boardJson = {};
 var notification_click = document.getElementById("notification-click")
 console.log(notification_click);
 notification_click.addEventListener('click',function(){
@@ -55,7 +55,7 @@ async function getTitle(){
             a1.setAttribute("href", "http://localhost:8080/board/".concat(data[i].id.toString()));
             a1.appendChild(document.createTextNode(data[i].title));
             li1.appendChild(a1);
-
+            boardJson[data[i].id] = data[i].title;
             document.getElementById("owned-board").appendChild(li1);
         }
     }
@@ -67,12 +67,9 @@ async function getTitle(){
     // lastItem.appendChild(a1);
 
     // document.getElementById("owned-board").appendChild(lastItem);
-    
     console.log(data)
 }
 getTitle();
-console.log(gmailOfUser)
-
 
 function check(event) {
     event.preventDefault();
@@ -103,3 +100,19 @@ function check(event) {
     return true;
 }
 
+function getStates(value){
+    const listElement = document.getElementById("search-result");
+    listElement.innerHTML = '';
+    for(var key in boardJson){
+        // console.log(boardJson[key]);
+        if(boardJson[key].toLowerCase().includes(value.toLowerCase())){
+            let liEl = document.createElement('li');
+            // let anchorEl = document.createElement('a');
+            // anchorEl.setAttribute('href', 'board/'.concat(key));
+            // liEl.appendChild(anchorEl);
+            liEl.setAttribute('onclick', "location.href=".concat("'").concat("http://localhost:8080/board/").concat(key).concat("'"));
+            liEl.textContent = boardJson[key];
+            listElement.appendChild(liEl);
+        }
+    }
+}
