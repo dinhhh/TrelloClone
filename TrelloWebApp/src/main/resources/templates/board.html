@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trello clone</title>
+    <!-- <link rel="stylesheet" href="/css/home.css"> -->
     <link rel="stylesheet" href="/css/board.css">
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
@@ -15,96 +16,108 @@
 <body>
     <!--nav-->
     <header class="header">
-        <div class="container">
-          <nav class="nav">
-            <div class="nav-left">
-              <div class="nav-box">
-                <a href="home"><i class="fas fa-home icon"></i></a>
-              </div>
-              <div class="nav-box">
-                <a href="#" class="board">
-                  <i class="fas fa-clipboard-list icon"></i>
-                  <p>Bảng</p>
-                </a>
-              </div>
-              <div class=" nav-box">
-                <input class="nav-box search form-field u" type="text" name="search" placeholder="Search..." >
-    
-                <i class="fas fa-search icon"></i>
-              </div>
+      <div class="container">
+        <nav class="nav">
+          <div class="nav-left">
+            <div class="nav-box">
+              <a href="/home"><i class="fas fa-home icon"></i></a>
               
             </div>
-            
-            <div class="nav-right">
-              <div class="nav-box">
-                <i class="fas fa-plus icon"></i>
+            <div class="nav-box">
+              <a href="#" class="board">
+                <i class="fas fa-clipboard-list icon"></i>
+                <p>Bảng</p>
+              </a>
+            </div>
+            <div>
+              <div class=" nav-box">
+                <input class="nav-box search form-field u" type="text" name="search" placeholder="Search..." >
+  
+                <i class="fas fa-search icon"></i>
+  
               </div>
-              <div class="nav-box">
-                <i class="fas fa-exclamation icon"></i>
-              </div>
-    
-              <!--notification-->
+              <!--list search-->
+              <div class="modal-search">
+                  <ul class="list-search">
+                    <!-- <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                    <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                    <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                    <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                    <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                    <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                    <li class="modal-user-button"><a href="">KKKKKKKKK</a></li> -->
+                  </ul>
+                </div>
+            </div>
+          </div>
+          
+          <div class="nav-right">
+            <div class="nav-box">
+              <i class="fas fa-plus icon"></i>
+            </div>
+            <div class="nav-box">
+              <i class="fas fa-exclamation icon"></i>
+            </div>
+  
+            <!--notification-->
+            <div>
               <div class="notification nav-box">
                 <div id="notification-click">
                   <i class="far fa-bell icon"></i>
                 </div>
-                <div id="modal-notification" class="modal-notification open-modal-notification">
-                  <div class="modal-user-title flex-flex-center">
-                    <span>Thông báo</span>
-                  </div>
-                  <div>
-                    ---------------------------------------------------------
-                  </div>
-                  <div>
-                    <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div>
-    
-                  </div>
-                  <div>
-                    ---------------------------------------------------------
-                  </div>
-                  <div>
-                    <div class="flex-flex-start modal-user-button"><a href="#">Xem tất cả thông báo</span></div>
-                  </div>
-                <!-- </div> -->
-                </div>
               </div>
-    
-              <!--user-->
+              <div id="modal-notification" class="modal-notification open-modal-notification">
+                <div class="modal-user-title flex-flex-center">
+                  <span>Thông báo</span>
+                </div>
+                
+                <div>
+                  <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div>
+                  <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div>
+                  <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div>
+  
+                </div>
+                
+                <div>
+                  <div class="flex-flex-start modal-user-button"><a href="#">Xem tất cả thông báo</span></div>
+                </div>
+              <!-- </div> -->
+              </div>
+            </div>
+            <!--user-->
+            <div>
               <div class="user-info nav-box">
                 <div id="user-avatar">
                   <img class="avatar" src="intro-photo.png" alt="#">
                 </div>
-                <!-- <div id="user-avatar">
-                  
-                </div> -->
-                <div id="modal-user-info" class="modal-user-info open-modal-user-info">
-                  <div class="modal-user-title flex-flex-center">
-                    <span>Tài khoản</span>
-                  </div>
-                  <div>
-                    ---------------------------------------------------------
-                  </div>
-                  <div>
-                    <div class="flex-flex-start modal-user-button"><a href="#">Hồ sơ và hiển thị</a></div>
-                    <div class="flex-flex-start modal-user-button"><a href="#">Hoạt động</a></div>
-                    <div class="flex-flex-start modal-user-button"><a href="#">Thẻ</a></div>
-                    <div class="flex-flex-start modal-user-button"><a href="#">Cài đặt</a></div>
-                  </div>
-                  <div>
-                    ---------------------------------------------------------
-                  </div>
-                  <div>
-                    <div class="flex-flex-start modal-user-button"><a href="">Trợ giúp</a></div>
-                    <div class="flex-flex-start modal-user-button"><a href="">Đăng xuất</a></div>
-                  </div>
+              
+              
+            </div>
+            <div id="modal-user-info" class="modal-user-info open-modal-user-info">
+                <div class="modal-user-title flex-flex-center">
+                  <span>Tài khoản</span>
                 </div>
                 
+                <div>
+                  <div class="flex-flex-start modal-user-button"><a href="/profile">Hồ sơ và hiển thị</a></div>
+                  <div class="flex-flex-start modal-user-button"><a href="#">Hoạt động</a></div>
+                  <div class="flex-flex-start modal-user-button"><a href="#">Thẻ</a></div>
+                  <div class="flex-flex-start modal-user-button"><a href="#">Cài đặt</a></div>
+                </div>
+                
+                <div>
+                  <div class="flex-flex-start modal-user-button"><a href="">Trợ giúp</a></div>
+                  <div class="flex-flex-start modal-user-button"><a href="/logout">Đăng xuất</a></div>
+                </div>
               </div>
             </div>
-          </nav>
-        </div>
+            
+          </div>
+        </nav>
+      </div>
     </header>
-    
+  
+  
     <!--modal edit-->
     <div id="form-edit-board" class="template-gray display-none">
 
@@ -299,7 +312,7 @@
                     </li>
         
         
-                    <li class="">
+                    <li style="display: none;">
                         <span class="drag-header">
                             <button id="message" class="btn btn-purple">New list</button>
                         </span>

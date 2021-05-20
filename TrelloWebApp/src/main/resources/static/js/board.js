@@ -225,14 +225,10 @@ async function updateItem(id, column) {
       updateDOM();
 
       // delete card in database
-      var deleteApiUrl = "http://localhost:8080/api/card/".concat(idOfCard.toString());
-      const otherParams = {
+      fetch("http://localhost:8080/api/card/".concat(idOfCard.toString()), {
         headers : { "content-type" : "application/json; charset=UTF-8"},
-        method : "DELETE",
-      };
-      
-      // delete in DB
-      fetch(deleteApiUrl, otherParams)
+        method : "DELETE"
+      })
         .then(response => response.json())
         .then(data => {
           // web socket
@@ -581,6 +577,7 @@ updateDOM();
 
 // open edit form
 async function openEditForm(id, column) {
+
   var edit_form = document.getElementById("form-edit-board")
   edit_form.classList.toggle('display-none');
   
@@ -590,8 +587,25 @@ async function openEditForm(id, column) {
   const idOfCard = idArray[id];
   currentCardIDFormDisplay = idOfCard;
 
-  // fetch infor about this card
+  // fet infor of card
+  await fetch("http://localhost:8080/api/card/".concat(idOfCard.toString()), {
+    headers : { "content-type" : "application/json; charset=UTF-8"},
+    method : "GET"
+  })
+    .then(response => response.json())
+    .then(data => {
+      if(data.dueDate != null && data.dueDate != ""){
+        var dMY = data.dueDate.split("-");
+        var date = new Date();
+        date.setFullYear(parseInt(dMY[2]), parseInt(dMY[1]) - 1, parseInt(dMY[0]));
+        document.getElementById("deadline").valueAsDate = date;
+      }
+    })
+
+  // fetch infor about activity of this card
   const inforApiUrl = "http://localhost:8080/api/activity/card/".concat(idOfCard.toString());
+  let sourceUser = [];
+  let method = [];
   await fetch(inforApiUrl, {
     headers : { "content-type" : "application/json; charset=UTF-8"},
     method : "GET"
@@ -599,21 +613,40 @@ async function openEditForm(id, column) {
     .then(response => response.json())
     .then(data => {
       const count = Object.keys(data).length;
-      let ulTag = document.createElement('ol');
-      ulTag.setAttribute("id", "temp");
+      console.log("count = ");
+      console.log(count);
+      // let ulTag = document.createElement('ol');
+      // ulTag.setAttribute("id", "temp");
       var i;
       for(i = 0; i < count; i++){
-
-        // console.log(data[i].sourceUser.firstName);
-        var infor = data[i].sourceUser.firstName.concat(" ").concat(data[i].sourceUser.lastName).concat(" ").concat(data[i].method);
-        var li = document.createElement('li');
-        li.textContent = infor;
-        ulTag.appendChild(li);
+        sourceUser.push(data[i].sourceUser);
+        method.push(data[i].method);
+        // var infor = firstName.concat(" ").concat(lastName).concat(" ").concat(data[i].method);
+        // var li = document.createElement('li');
+        // li.textContent = infor;
+        // ulTag.appendChild(li);
       }
-
-      document.getElementById("activity-history").appendChild(ulTag);
+      // document.getElementById("activity-history").appendChild(ulTag);
     })
     .catch(error => console.log("error " + error));
+
+    // display list of activity
+    let ulTag = document.createElement('ol');
+    ulTag.setAttribute("id", "temp");
+    for(let i = 0; i < sourceUser.length; i++){
+      // get name of source user 
+      await fetch("http://localhost:8080/api/user/id/".concat(sourceUser[i]))
+        .then(response => response.json())
+        .then(data => {
+          var infor = data.firstName.concat(" ").concat(data.lastName).concat(" ").concat(method[i]);
+          var li = document.createElement('li');
+          li.textContent = infor;
+          ulTag.appendChild(li);
+        })
+        .catch(error => console.log("error " + error));
+    }
+    document.getElementById("activity-history").appendChild(ulTag);
+
 
     // deadline add
     document.getElementById('deadline-button').onclick = async function(){
@@ -719,7 +752,23 @@ function connect(){
 
 connect();
 
+// add recent view
+// RVB = recently viewed board
+async function addRVB(){
+  await sleep(2000);
+  await fetch("http://localhost:8080/api/rvb/".concat(userID.toString()).concat("/").concat(boardID.toString()), {
+    method : "POST"
+  })
+    .then(function (response){
+      if(response.ok){
+        console.log("added RVB");
+      }else{
+        throw new Error("Could not reach the API" + response.statusText);
+      }
+    })
+}
 
+addRVB();
 
 
 

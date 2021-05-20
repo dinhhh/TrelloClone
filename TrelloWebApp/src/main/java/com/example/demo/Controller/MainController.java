@@ -51,6 +51,11 @@ public class MainController {
 		return "redirect:/home";
 	}
 	
+	@GetMapping("/profile/home")
+	public String reGoToHome2() {
+		return "redirect:/home";
+	}
+	
 	@GetMapping("/updateInfo")
 	public String goToProfile() {
 		return "profile";
