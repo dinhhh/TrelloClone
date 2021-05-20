@@ -752,7 +752,23 @@ function connect(){
 
 connect();
 
+// add recent view
+// RVB = recently viewed board
+async function addRVB(){
+  await sleep(2000);
+  await fetch("http://localhost:8080/api/rvb/".concat(userID.toString()).concat("/").concat(boardID.toString()), {
+    method : "POST"
+  })
+    .then(function (response){
+      if(response.ok){
+        console.log("added RVB");
+      }else{
+        throw new Error("Could not reach the API" + response.statusText);
+      }
+    })
+}
 
+addRVB();
 
 
 

@@ -13,7 +13,4 @@ public interface BoardRepository extends JpaRepository<Board, Long>{
 	
 	@Query("SELECT b FROM Board b JOIN b.users u WHERE u.email = ?1")
 	List<Board> findByUserGmail(String email);
-	
-	@Query(nativeQuery = true, value = "SELECT * FROM board WHERE title LIKE %:title%")
-	Optional<Board> findByTitleContain(@Param("title") String title);
 }

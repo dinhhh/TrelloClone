@@ -190,8 +190,8 @@ hr{
 .menu-detail{
     background-color: #026ba763;
 }
-li{
-
+li:hover{
+    color: orangered;
 }
 ul{
     list-style: none;
