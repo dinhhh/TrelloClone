@@ -1,6 +1,5 @@
 package com.example.demo.Activity;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class ActivityController {
 	CardRepository cardRepo;
 	
 	@Autowired
-	private ActivityService activityService;
+	private ActivityServiceImpl activityService;
 	
 	// create new card
 	@PostMapping("/api/activity/add/{boardID}/{cardID}/{sourceUserID}/{method}")
@@ -53,10 +52,7 @@ public class ActivityController {
 		if(opSourceUser.isEmpty() || opBoard.isEmpty() || opCard.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {
-			User user = opSourceUser.get();
-			Board board = opBoard.get();
-			Card card = opCard.get();
-			Activity activity = new Activity(board, user, user, "đã tạo thẻ", card);
+			Activity activity = new Activity(boardIDLong, sourceUserIDLong, sourceUserIDLong, "đã tạo thẻ", cardIDLong);
 			return new ResponseEntity<Activity>(activityRepo.save(activity), HttpStatus.OK);
 		}
 	}
@@ -77,10 +73,7 @@ public class ActivityController {
 		if(opSourceUser.isEmpty() || opBoard.isEmpty() || opCard.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {
-			User user = opSourceUser.get();
-			Board board = opBoard.get();
-			Card card = opCard.get();
-			Activity activity = new Activity(board, user, user, "đã thay đổi tiêu đề của thẻ", card);
+			Activity activity = new Activity(boardIDLong, sourceUserIDLong, sourceUserIDLong, "đã thay đổi tiêu đề của thẻ", cardIDLong);
 			return new ResponseEntity<Activity>(activityRepo.save(activity), HttpStatus.OK);
 		}
 	}
@@ -101,10 +94,7 @@ public class ActivityController {
 		if(opSourceUser.isEmpty() || opBoard.isEmpty() || opCard.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {
-			User user = opSourceUser.get();
-			Board board = opBoard.get();
-			Card card = opCard.get();
-			Activity activity = new Activity(board, user, user, "đã thay đổi vị trí của thẻ", card);
+			Activity activity = new Activity(boardIDLong, sourceUserIDLong, sourceUserIDLong, "đã thay đổi vị trí của thẻ", cardIDLong);
 			return new ResponseEntity<Activity>(activityRepo.save(activity), HttpStatus.OK);
 		}
 	}
@@ -117,7 +107,7 @@ public class ActivityController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {
 			Card card = cards.get();
-			return new ResponseEntity<Iterable<Activity>>(activityService.findAll(card), HttpStatus.OK);
+			return new ResponseEntity<Iterable<Activity>>(activityService.findAll(card.getId()), HttpStatus.OK);
 		}
 	}
 }

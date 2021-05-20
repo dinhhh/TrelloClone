@@ -13,93 +13,115 @@
 </head>
 
 <body>
-  <nav class="nav">
-    <div class="nav-left">
-      <div class="nav-box">
-        <a href="#"><i class="fas fa-home"></i></a>
+  <!--nav-->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <div class="nav-left">
+          <div class="nav-box">
+            <a href="/home"><i class="fas fa-home icon"></i></a>
+            
+          </div>
+          <div class="nav-box">
+            <a href="#" class="board">
+              <i class="fas fa-clipboard-list icon"></i>
+              <p>Bảng</p>
+            </a>
+          </div>
+          <div>
+            <div class=" nav-box">
+              <input class="nav-box search form-field u" type="text" name="search" placeholder="Search..." >
 
-      </div>
-      <div class="board nav-box">
-        <a href="#">
-          <i class="fas fa-clipboard-list"></i>
-          <text>Bảng</text>
-        </a>
-      </div>
-      <div class="search nav-box">
-        <text>Tìm kiếm ....</text>
-        <i class="fas fa-search"></i>
-      </div>
+              <i class="fas fa-search icon"></i>
+
+            </div>
+            <!--list search-->
+            <!-- <div class="modal-search">
+                <ul class="list-search">
+                  <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                  <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                  <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                  <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                  <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                  <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                  <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                </ul>
+              </div> -->
+          </div>
+        </div>
+        
+        <div class="nav-right">
+          <div class="nav-box">
+            <i class="fas fa-plus icon"></i>
+          </div>
+          <div class="nav-box">
+            <i class="fas fa-exclamation icon"></i>
+          </div>
+
+          <!--notification-->
+          <div>
+            <div class="notification nav-box">
+              <div id="notification-click">
+                <i class="far fa-bell icon"></i>
+              </div>
+            </div>
+            <div id="modal-notification" class="modal-notification open-modal-notification">
+              <div class="modal-user-title flex-flex-center">
+                <span>Thông báo</span>
+              </div>
+              
+              <div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div>
+
+              </div>
+              
+              <div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Xem tất cả thông báo</span></div>
+              </div>
+            <!-- </div> -->
+            </div>
+          </div>
+          <!--user-->
+          <div>
+            <div class="user-info nav-box">
+              <div id="user-avatar">
+                <img class="avatar" src="intro-photo.png" alt="#">
+              </div>
+            
+            
+          </div>
+          <div id="modal-user-info" class="modal-user-info open-modal-user-info">
+              <div class="modal-user-title flex-flex-center">
+                <span>Tài khoản</span>
+              </div>
+              
+              <div>
+                <div class="flex-flex-start modal-user-button"><a href="/profile">Hồ sơ và hiển thị</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Hoạt động</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Thẻ</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Cài đặt</a></div>
+              </div>
+              
+              <div>
+                <div class="flex-flex-start modal-user-button"><a href="">Trợ giúp</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="/logout">Đăng xuất</a></div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </nav>
     </div>
+  </header>
 
-    <div class="nav-right">
-      <div class="nav-box">
-        <i class="fas fa-plus"></i>
-      </div>
-      <div class="nav-box">
-        <i class="fas fa-exclamation"></i>
-      </div>
 
-      <!--notification-->
-      <div class="notification nav-box">
-        <div id="notification-click">
-          <i class="far fa-bell"></i>
-        </div>
-        <div id="modal-notification" class="modal-notification open-modal-notification">
-          <div class="modal-user-title flex-flex-center">
-            <span>Thông báo</span>
-          </div>
-          <div>
-            ---------------------------------------------------------
-          </div>
-          <div>
-            <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div>
-
-          </div>
-          <div>
-            ---------------------------------------------------------
-          </div>
-          <div>
-            <div class="flex-flex-start modal-user-button"><a href="#">Xem tất cả thông báo</span></div>
-          </div>
-          <!-- </div> -->
-        </div>
-      </div>
-
-      <!--user-->
-      <div class="user-info nav-box">
-        <div id="user-avatar">
-          <img class="avatar" src="1.jpg" alt="#">
-        </div>
-        <div id="modal-user-info" class="modal-user-info open-modal-user-info">
-          <div class="modal-user-title flex-flex-center">
-            <span>Tài khoản</span>
-          </div>
-          <div>
-            ---------------------------------------------------------
-          </div>
-          <div>
-            <div class="flex-flex-start modal-user-button"><a href="profile.html">Hồ sơ và hiển thị</a></div>
-            <div class="flex-flex-start modal-user-button"><a href="#">Hoạt động</a></div>
-            <div class="flex-flex-start modal-user-button"><a href="#">Thẻ</a></div>
-            <div class="flex-flex-start modal-user-button"><a href="#">Cài đặt</a></div>
-          </div>
-          <div>
-            ---------------------------------------------------------
-          </div>
-          <div>
-            <div class="flex-flex-start modal-user-button"><a href="">Trợ giúp</a></div>
-            <div class="flex-flex-start modal-user-button"><a href="">Đăng xuất</a></div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </nav>
   <div class="background-header">
     <div class="wrapper-header profile-flex-flex-center">
       <div class="profile-header profile-flex">
         <div class="profile-avatar">
-          <img src="1.jpg" alt="">
+          <img class="avatar">
         </div>
         <h2 id="user-name"></h2>
         <strong id="user-gmail">[[${#request.remoteUser}]]</strong>
@@ -109,6 +131,7 @@
     </div>
   </div>
   <div class="profile-body">
+    
     <div class="profile-show">
       <div class="profile-display">
         <div class="profile-title">
@@ -122,7 +145,7 @@
                 <span>[[${#request.remoteUser}]]</span>
               </div>
               <div>
-                <label>Họ Và tên</label>
+                <label>Họ và tên</label>
               </div>
               <div>
                 <input type="text" name="username" id="userName" class="form-field" inputmode="email">

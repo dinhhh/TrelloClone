@@ -14,7 +14,7 @@ public class ActivityServiceImpl implements ActivityService{
 	private ActivityReposity activityRepo;
 
 	@Override
-	public Iterable<Activity> findAll(Card card) {
+	public Iterable<Activity> findAll(Long card) {
 		return activityRepo.findByCard(card);
 	}
 }

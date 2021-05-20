@@ -47,4 +47,16 @@ public class CardRepositoryTest {
 			System.out.println(cards.get().toString());
 		}
 	}
+
+	@Test
+	public void deleteACard() {
+		Long id = (long) 1;
+		cardRepo.deleteById(id);
+		Optional<Card> cards = cardRepo.findById(id);
+		if(cards.isEmpty()) {
+			System.out.println("card is deleted !");
+		}else {
+			System.out.println("card have not been deleted");
+		}
+	}
 }
