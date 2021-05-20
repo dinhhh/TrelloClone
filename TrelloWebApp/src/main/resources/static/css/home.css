@@ -171,6 +171,8 @@ hr{
     padding-right: 8px;
     font-weight: bolder;
 }
+
+/****/
 .grid{
     padding-top: 50px;
     display: flex;
@@ -326,11 +328,14 @@ ul{
     border: .5px solid rgb(197, 193, 193);
     font-size: small;
     color: rgb(143, 143, 148);
-    margin-top: 355px;
-    margin-right: 177px;
+    margin-top: 5px;
+    margin-left: -250px;
     padding-bottom: 8px;
     z-index: 1;
     /* display: none; */
+}
+.open-modal-user-info{
+    display: none;
 }
 /* .back-ground-modal{
     position:absolute;
@@ -352,8 +357,8 @@ ul{
 .modal-notification{
     position: absolute;
     background-color:white;
-    margin-top: 208px;
-    margin-right: 177px;
+    margin-top: 5px;
+    margin-left: -190px;
     box-shadow: 0 0 12px 3px  rgb(228, 226, 226);
     border: .5px solid rgb(197, 193, 193);
     /* display: none; */
@@ -386,9 +391,7 @@ ul{
   align-items: center;
   object-fit: cover;
 }
-.open-modal-user-info{
-    display: none;
-}
+
 .ul-extend{
     transition-duration: 85ms;
     display: none;
@@ -439,6 +442,16 @@ html{
 .display-none{
     display: none;
 }
-.avatar {
-    content:url("../image/default-avatar-male.png");
+.modal-search{
+    position: absolute;
+    background-color:white;
+    margin-top: 5px;
+    margin-right: 177px;
+    box-shadow: 0 0 13px 3px  rgb(228, 226, 226);
+    border: .5px solid rgb(197, 193, 193);
+    /* display: none; */
+        font-size: small;
+     color: rgb(143, 143, 148);
+     z-index: 1;
+     width: 184px;
 }
