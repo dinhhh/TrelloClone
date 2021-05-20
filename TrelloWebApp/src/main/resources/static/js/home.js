@@ -128,6 +128,7 @@ function check(event) {
 
 function getStates(value) {
 	const listElement = document.getElementById("search-result");
+	document.getElementById("div-search-result").style.display = "block";
 	listElement.innerHTML = '';
 	for (var key in boardJson) {
 		// console.log(boardJson[key]);
@@ -136,9 +137,23 @@ function getStates(value) {
 			// let anchorEl = document.createElement('a');
 			// anchorEl.setAttribute('href', 'board/'.concat(key));
 			// liEl.appendChild(anchorEl);
+			liEl.setAttribute('class', 'modal-user-button');
 			liEl.setAttribute('onclick', "location.href=".concat("'").concat("http://localhost:8080/board/").concat(key).concat("'"));
 			liEl.textContent = boardJson[key];
 			listElement.appendChild(liEl);
 		}
 	}
 }
+
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const searchField = document.getElementById("search-field");
+searchField.addEventListener('focusout', () => {
+	var searchValue = document.getElementById("search-field").value;
+	console.log(searchValue);
+	if(searchValue == null || searchValue == ""){
+		document.getElementById("div-search-result").style.display = "none";
+	}
+});
