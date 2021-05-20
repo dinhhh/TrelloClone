@@ -5,12 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.example.demo.Board.Board;
-import com.example.demo.Card.Card;
-import com.example.demo.User.User;
 
 @Entity
 @Table(name = "activity")
@@ -20,19 +16,15 @@ public class Activity {
     @Column(nullable = false, unique = true, length = 45)
 	private Long id;
 	
-	@OneToOne
-	private Board board;
+	private Long board;
 	
-	@OneToOne
-	private User sourceUser;
+	private Long sourceUser;
 	
-	@OneToOne
-	private User destUser;
+	private Long destUser;
 	
 	private String method;
 	
-	@OneToOne
-	private Card card;
+	private Long card;
 
 	public Long getId() {
 		return id;
@@ -40,29 +32,29 @@ public class Activity {
 
 	public void setId(Long id) {
 		this.id = id;
-	} 
+	}
 
-	public Board getBoard() {
+	public Long getBoard() {
 		return board;
 	}
 
-	public void setBoard(Board board) {
+	public void setBoard(Long board) {
 		this.board = board;
 	}
 
-	public User getSourceUser() {
+	public Long getSourceUser() {
 		return sourceUser;
 	}
 
-	public void setSourceUser(User sourceUser) {
+	public void setSourceUser(Long sourceUser) {
 		this.sourceUser = sourceUser;
 	}
 
-	public User getDestUser() {
+	public Long getDestUser() {
 		return destUser;
 	}
 
-	public void setDestUser(User destUser) {
+	public void setDestUser(Long destUser) {
 		this.destUser = destUser;
 	}
 
@@ -74,15 +66,15 @@ public class Activity {
 		this.method = method;
 	}
 
-	public Card getCard() {
+	public Long getCard() {
 		return card;
 	}
 
-	public void setCard(Card card) {
+	public void setCard(Long card) {
 		this.card = card;
 	}
 
-	public Activity(Board board, User sourceUser, User destUser, String method, Card card) {
+	public Activity(Long board, Long sourceUser, Long destUser, String method, Long card) {
 		this.board = board;
 		this.sourceUser = sourceUser;
 		this.destUser = destUser;
@@ -91,10 +83,8 @@ public class Activity {
 	}
 
 	public Activity() {
-		
+		super();
 	}
-	
-	
 	
 	
 }
