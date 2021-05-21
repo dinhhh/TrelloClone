@@ -451,7 +451,7 @@ html{
     margin-right: 177px;
     box-shadow: 0 0 13px 3px  rgb(228, 226, 226);
     border: .5px solid rgb(197, 193, 193);
-    /* display: none; */
+    display: none;
         font-size: small;
      color: rgb(143, 143, 148);
      z-index: 1;
