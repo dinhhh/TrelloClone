@@ -9,9 +9,8 @@
 </head>
 
 <body>
-  <div id="form-add-board" class="template-gray display-none">
+  <!-- <div id="form-add-board" class="template-gray display-none">
     <div>
-       <!-- <div class="text-center"> -->
       <div class="add-board-form">
         <form id="add-board" method="POST" onsubmit="return check();">
           <input class="form-field" type="text" id="new-board-title" name="new-board-title" style="background-color: rgba(187, 187, 192, 0.479); text-decoration: none;
@@ -26,12 +25,13 @@
           <br>
           <span id="message"></span>
         </form>
-      <!-- </div> -->
     </div>
     </div>
    
   </div>
-  <header class="header">
+   -->
+  
+   <header class="header">
     <div class="container">
       <nav class="nav">
         <div class="nav-left">
@@ -176,6 +176,32 @@
                   </li>
                 </ul>
               </li>
+              <li id="list-iteam-team">
+                
+                <div id="menu-extend"class=" button font-weight flex-space-between">
+                  <span>Team1</span>
+                  <i class="fas fa-chevron-up"></i>  
+                </div>
+                <ul class="ul-extend">
+                  <li class="button buton-small" >
+                    <i class="fas fa-clipboard-list"></i>
+                    <span> &nbsp Bảng</span>
+                  </li>
+                  <li class="button buton-small">
+                    <i class="far fa-heart"></i>
+                    <span> &nbsp Điểm nổi bật</span>
+                  </li>
+                  <li class="button buton-small">
+                    <i class="fas fa-user-friends"></i>
+                    <span> &nbsp Thành viên</span>
+                  </li>
+                  <li class="button buton-small">
+                    <i class="fas fa-cog"></i>
+                    <span> &nbsp Cài đặt</span>
+                  </li>
+                </ul>
+              </li>
+
             </ul>
           </div>
         </div>
@@ -195,11 +221,6 @@
             </div>
             <div>
               <ul class="ul-grid" id="recently-viewed-board">
-                <!-- <li class="each-board">
-                  <a href="" class="title-each-board">
-                    Team 1
-                  </a>
-                </li>
                 <li class="each-board">
                   <a href="" class="title-each-board">
                     Team 1
@@ -214,7 +235,17 @@
                   <a href="" class="title-each-board">
                     Team 1
                   </a>
-                </li> -->
+                </li>
+                <li class="each-board">
+                  <a href="" class="title-each-board">
+                    Team 1
+                  </a>
+                </li>
+                <li class="each-board">
+                  <a href="" class="title-each-board">
+                    Team 1
+                  </a>
+                </li>
                 
               </ul>
             </div>
@@ -226,6 +257,21 @@
                 <span> &nbsp Bảng cá nhân</span>
               </div>
               
+            </div>
+            <div class="create-new-board">
+              <!-- <div >
+                <i class="fas fa-plus icon"></i>
+              </div> -->
+              <form id="add-board" method="POST" onsubmit="return check();">
+
+                <div style="display: flex; justify-content: space-between;">
+                  <input class="form-field" type="text" id="new-board-title" name="new-board-title" style="background-color: rgba(187, 187, 192, 0.479); text-decoration: none;
+                  color: inherit; font-size: large; width: 77%;" placeholder="Ten bang">
+                  <button class="btn btn-purple" type="submit" onclick="check(event)" name="Submit" ><i class="fas fa-edit"></i><b>&nbsp; Tao bang moi</b></button>
+      
+                </div>
+                <span id="message"></span>
+              </form>
             </div>
             <div>
               <ul class="ul-grid" id="owned-board">
@@ -240,12 +286,7 @@
                   demo
                 </li> -->
 
-                <li class="add-board" onclick="create()">
-                  <div >
-                    <i class="fas fa-plus icon"></i>
-                  </div>
                 
-                </li>
                 
                 <li class="each-board" style="display: none;">
                   <a class="title-each-board" id="gmail">[[${#request.remoteUser}]]</a>
@@ -254,7 +295,12 @@
               
             </div>
           </div>
-          <div class="see-all-closed-board button"><a href="#">Xem tất cả các bảng</a></div>
+          <div class="see-all-closed-board ">
+            <div class="with-150px button">
+              <a href="#">Xem tất cả các bảng</a>
+            </div>
+            
+          </div>
           <div>
             <ul id="search-result">
             </ul>
