@@ -174,9 +174,11 @@ hr{
 
 /****/
 .grid{
-    padding-top: 50px;
+    margin-top: 83px;
     display: flex;
     flex-direction: row;
+    box-shadow: 0 0 20px 20px  rgb(228, 226, 226);
+    border: 1px solid rgb(197, 193, 193);
     
     grid-template-columns: 272px 700px;
 }
@@ -185,7 +187,7 @@ hr{
     position: sticky;
 }
 .in-menu{
-    margin: 40px 0 0;
+    /* margin: 40px 0 0; */
     padding: 0 16px;
     width: 240px;
 }
@@ -202,7 +204,7 @@ ul{
 .button{
     height: 32px;
     cursor: pointer;  
-      border-radius: 5px;
+      /* border-radius: 5px; */
       display: flex;
       align-items: center;
       padding: 6px 8px 6px 6px;
@@ -247,7 +249,7 @@ ul{
     justify-content: flex-start;
 }
 .in-all-board{
-    margin: 40px 0 0;
+    margin: 20px 0 0;
     padding: 0 16px;
 }
 .detail-title{
@@ -255,19 +257,17 @@ ul{
 }
 .each-board{
     display: flex;
-    height: 80px;
-    width: 160px;
+    height: 90px;
+    width: 165px;
     background-color: var(--purple-solid);
+    opacity: 0.8;
     margin-bottom: 10px;
     margin-left: 10px;
     border: 1px solid var(--dark-color);
-    transition: .2s;
-    transform: scale();
-    border-radius: 10px;
+    border-radius: 5px;
 }
 .each-board:hover{
     opacity: 0.7;
-    border: 1px solid var(--yellow-solid);
 }
 .title-each-board{
     font-size: 16px;
@@ -303,7 +303,6 @@ ul{
     width: 100%;
 }
 .see-all-closed-board{
-    background-color: rgb(182, 179, 179);
     margin-left: 10px;
     display: flex;
     margin-top: 10px;
@@ -399,6 +398,8 @@ ul{
 }
 #menu-extend{
     transition-duration: 85ms;
+    border-left: 5px solid red;
+    margin-bottom: 5px;
 }
 #list-iteam-team > ul:nth-child(2){
     transition-duration: 85ms;
@@ -453,9 +454,19 @@ html{
     margin-right: 177px;
     box-shadow: 0 0 13px 3px  rgb(228, 226, 226);
     border: .5px solid rgb(197, 193, 193);
-    /* display: none; */
-    font-size: small;
-    color: rgb(143, 143, 148);
-    z-index: 1;
-    width: 184px;
+    display: none;
+        font-size: small;
+     color: rgb(143, 143, 148);
+     z-index: 1;
+     width: 184px;
+}
+.create-new-board{
+    padding: 10px;
+    /* box-shadow: 0 0 7px 7px  rgb(228, 226, 226); */
+    border: .1px solid rgb(197, 193, 193);
+}
+.with-150px{
+    width: 150px;
+    background-color: rgb(182, 179, 179);
+
 }
