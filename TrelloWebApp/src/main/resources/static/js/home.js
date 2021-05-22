@@ -61,14 +61,6 @@ async function getTitle() {
 		}
 	}
 
-	// const lastItem = document.createElement("li");
-	// lastItem.setAttribute("class", "add-board");
-	// const a1 = document.createElement("span");
-	// a1.appendChild(document.createTextNode("Tạo bảng mới"));
-	// lastItem.appendChild(a1);
-
-	// document.getElementById("owned-board").appendChild(lastItem);
-
 	// get recently viewed board of user
 	await fetch("http://localhost:8080/api/rvb/".concat(userID.toString()))
 		.then(response => response.json())
@@ -118,11 +110,6 @@ function check(event) {
 				throw new Error("Could not reach the API: " + response.statusText);
 			}
 		})
-	// .then(function(data) {
-	//     document.getElementById("message").innerHTML = data.encoded;
-	// }).catch(function(error) {
-	//     document.getElementById("message").innerHTML = error.message;
-	// });
 	return true;
 }
 
