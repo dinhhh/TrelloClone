@@ -47,21 +47,21 @@
           </div>
           <div>
             <div class=" nav-box">
-              <input class="nav-box search form-field u" type="text" name="search" placeholder="Search..." >
+              <input class="nav-box search form-field u" id="search-field" onkeyup="getStates(this.value)" type="text" name="search" placeholder="Search..." >
 
               <i class="fas fa-search icon"></i>
 
             </div>
             <!--list search-->
-            <div class="modal-search">
-                <ul class="list-search">
+            <div class="modal-search" style="display: none;" id="div-search-result">
+                <ul class="list-search" id="search-result">
+                  <!-- <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
                   <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
                   <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
                   <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
                   <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
                   <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
-                  <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
-                  <li class="modal-user-button"><a href="">KKKKKKKKK</a></li>
+                  <li class="modal-user-button"><a href="">KKKKKKKKK</a></li> -->
                 </ul>
               </div>
           </div>
@@ -304,7 +304,7 @@
           <div>
             <ul id="search-result">
             </ul>
-          </div>
+          </div> -->
         </div>
 
       </div>
