@@ -37,5 +37,13 @@ Trello Clone is a fully functioning task management Web Application. This app su
 ## Screenshot
 ![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-22 17-08-59.png?raw=true "Title")
 
+![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-22 17-10-06.png?raw=true "Title")
+
+![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-22 17-09-54.png?raw=true "Title")
+
+![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-22 17-10-18.png?raw=true "Title")
+
+![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-22 17-11-21.png?raw=true "Title")
+
 ## License
 MIT
