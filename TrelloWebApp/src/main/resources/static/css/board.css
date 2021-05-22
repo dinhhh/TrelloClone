@@ -646,3 +646,7 @@ textarea {
 .open-modal-user-info{
   display: none;
 }
+
+.avatar {
+  content:url("../image/default-avatar-male.png");
+}
