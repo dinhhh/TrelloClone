@@ -15,6 +15,8 @@ let updatedOnLoad = false;
 // board infor
 const currentURL = window.location.href;
 const boardID = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+let member = [];
+let memberID = [];
 let boardTitle;
 let userID;
 const userGmail = document.getElementById("gmail").textContent;
@@ -69,18 +71,6 @@ function removeElement(id) {
 
 // Get Arrays from localStorage if available, set default values if not
 async function getSavedColumns() {
-  // use local storage
-  // if (localStorage.getItem('backlogItems')) {
-  //   backlogListArray = JSON.parse(localStorage.backlogItems);
-  //   progressListArray = JSON.parse(localStorage.progressItems);
-  //   completeListArray = JSON.parse(localStorage.completeItems);
-  //   onHoldListArray = JSON.parse(localStorage.onHoldItems);
-  // } else {
-  //   backlogListArray = ['Release the course', 'Sit back and relax'];
-  //   progressListArray = ['Work on projects', 'Listen to music'];
-  //   completeListArray = ['Being cool', 'Getting stuff done'];
-  //   onHoldListArray = ['Being uncool'];
-  // }
 
   // fetch data from database
   const apiURL = "http://localhost:8080/api/card/board/".concat(boardID.toString());
@@ -297,6 +287,7 @@ async function addToColumn(column) {
   const resp = await fetch(boardApiPath);
   const boardData = await resp.json();
   boardTitle = boardData.title;
+  const numMember = Object.keys(boardData)
   document.getElementById("board-title").innerHTML = boardTitle;
   updateDOM(column);
   // send new card data to database
@@ -587,18 +578,34 @@ async function openEditForm(id, column) {
   const idOfCard = idArray[id];
   currentCardIDFormDisplay = idOfCard;
 
-  // fet infor of card
+  // fetch infor of card
   await fetch("http://localhost:8080/api/card/".concat(idOfCard.toString()), {
     headers : { "content-type" : "application/json; charset=UTF-8"},
     method : "GET"
   })
     .then(response => response.json())
     .then(data => {
+      // print deadline of card
       if(data.dueDate != null && data.dueDate != ""){
         var dMY = data.dueDate.split("-");
         var date = new Date();
         date.setFullYear(parseInt(dMY[2]), parseInt(dMY[1]) - 1, parseInt(dMY[0]));
         document.getElementById("deadline").valueAsDate = date;
+      }
+
+      // print description of card 
+      if(data.description != null && data.description != ""){
+        document.getElementById("describe-card").value = data.description;
+      }
+
+      // print member who is assigned to this card
+      if(data.userID != null && data.userID != ""){
+        for(var i = 0; i < memberID.length; i++){
+          if(memberID[i] == data.userID){
+            document.getElementById("add-new-member-value").value = member[i];
+            break;
+          }
+        }
       }
     })
 
@@ -615,18 +622,11 @@ async function openEditForm(id, column) {
       const count = Object.keys(data).length;
       console.log("count = ");
       console.log(count);
-      // let ulTag = document.createElement('ol');
-      // ulTag.setAttribute("id", "temp");
       var i;
       for(i = 0; i < count; i++){
         sourceUser.push(data[i].sourceUser);
         method.push(data[i].method);
-        // var infor = firstName.concat(" ").concat(lastName).concat(" ").concat(data[i].method);
-        // var li = document.createElement('li');
-        // li.textContent = infor;
-        // ulTag.appendChild(li);
       }
-      // document.getElementById("activity-history").appendChild(ulTag);
     })
     .catch(error => console.log("error " + error));
 
@@ -658,16 +658,56 @@ async function openEditForm(id, column) {
       })
         .then(function(response){
           if(response.ok){
-            console.log("change deadline ok");
+            document.getElementById("update-infor-message").textContent = "Cập nhật deadline thành công";
           }else{
             throw new Error("Could not reach the API" + response.statusText);
           }
         })
     }    
     
+    // description update
+    document.getElementById("description-button").onclick = async function(){
+      const description = document.getElementById("describe-card").value;
+      console.log("DESCRIPTION IS :");
+      console.log(description);
+      fetch("http://localhost:8080/api/card/description/".concat(idOfCard.toString()), {
+        method : "PUT",
+        body : description
+      })
+        .then(function(response){
+          if(response.ok){
+            document.getElementById("description-message").textContent = "Cập nhật miêu tả cho thẻ thành công !";
+          }else{
+            document.getElementById("description-message").textContent = "Vui lòng thử lại !";
+          }
+        })
+    }
+
+    // add new member
+    document.getElementById("add-user-button").onclick = async function(){
+      for(var i = 0; i < member.length; i++){
+        if(member[i] == document.getElementById("add-new-member-value").value){
+          await fetch("http://localhost:8080/api/card/member/".concat(memberID[i].toString()).concat("/").concat(idOfCard.toString()), {
+            method : "PUT"
+          })
+            .then(function(response) {
+              if(response.ok){
+                document.getElementById("update-infor-message").textContent = "Gán thành viên thành công !";
+              }else{
+                document.getElementById("update-infor-message").textContent = "Gán thành viên thất bại. Vui lòng thử lại !";
+              }
+            })
+        }
+      }
+    }
 }
 
 function closeEditForm(){
+  document.getElementById("add-new-member-value").value = "";
+  document.getElementById("add-member-suggest").style.display = "none";
+  document.getElementById("update-infor-message").textContent = "";
+  document.getElementById("description-message").textContent = "";
+  document.getElementById("describe-card").value = "";
   var edit_form = document.getElementById("form-edit-board")
   edit_form.classList.toggle('display-none');
   removeElement("temp");
@@ -689,8 +729,6 @@ function connect(){
       const index = getIndexInIDListArray(resp.cardCategory);
       let isSender = idListArray[index].includes(resp.cardID);
       if(resp.method == 'create'){
-        // const index = getIndexInIDListArray(resp.cardCategory);
-        // let isSender = idListArray[index].includes(resp.cardID);
         if(!isSender){
           idListArray[index].push(resp.cardID);
           listArrays[index].push(resp.cardTitle);
@@ -770,13 +808,56 @@ async function addRVB(){
 
 addRVB();
 
+function showInputGmail(){
+  document.getElementById("new-member-form").style.display = "block";
+  document.getElementById("add-new-member").onclick = async function () {
+    const newGmail = document.getElementById("new-member-gmail").value;
+    await fetch("http://localhost:8080/api/board/member/".concat(boardID.toString()).concat("/").concat(newGmail))
+      .then(function(response){
+        if(response.ok){
+          document.getElementById("new-member-message").textContent = "Thêm thành viên mới vào bảng thành công";
+        }else{
+          document.getElementById("new-member-message").textContent = "Tài khoản email chưa được đăng ký trên hệ thống !";
+        }
+      })
+  }
+}
 
+document.getElementById("new-member-form").addEventListener("focusout", () => {
+  if(document.getElementById("new-member-form").textContent == null || document.getElementById("new-member-form").textContent == ""){
+    document.getElementById("new-member-form").style.display = "none";
+  }
+})
 
+// get id of member of this board
+async function getMemberID(){
+  await fetch("http://localhost:8080/api/board/member/".concat(boardID.toString()), {
+    method : "GET"
+  })
+    .then(response => response.json())
+    .then(data => {
+      const num = Object.keys(data).length;
+      for(var i = 0; i < num; i++){
+        member.push(data[i].firstName.concat(" ").concat(data[i].lastName));
+        memberID.push(data[i].id);
+      }
+    })
+}
 
+getMemberID();
 
-
-
-
-
-
-
+function getStates(value) {
+	const listElement = document.getElementById("add-member-suggest");
+	listElement.style.display = "block";
+	listElement.innerHTML = '';
+	for (var key in member) {
+    if (member[key].toLowerCase().includes(value.toLowerCase())) {
+      let liEl = document.createElement('li');
+      liEl.textContent = member[key];
+      liEl.onclick = function (){
+        document.getElementById("add-new-member-value").value = liEl.textContent;
+      }
+			listElement.appendChild(liEl);
+		}
+	}
+}
