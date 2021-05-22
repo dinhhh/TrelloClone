@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/css/profile.css">
-  <link rel="stylesheet" href="/css/home.css">
+  <link rel="stylesheet" href="../static/css/profile.css">
+  <link rel="stylesheet" href="../static/css/home.css">
   <script src="https://kit.fontawesome.com/9d54f43127.js" crossorigin="anonymous"></script>
 
   <title>Document</title>
@@ -116,128 +116,129 @@
     </div>
   </header>
 
-
-  <div class="background-header">
-    <div class="wrapper-header profile-flex-flex-center">
-      <div class="profile-header profile-flex">
-        <div class="profile-avatar">
-          <img class="avatar">
-        </div>
-        <h2 id="user-name"></h2>
-        <strong id="user-gmail">[[${#request.remoteUser}]]</strong>
-
-      </div>
-
-    </div>
-  </div>
   <div class="profile-body">
+    <div class="container">
+      <div class="profile-show">
+        <div>
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <div class="profile-avatar">
+              <img class="avatar">
+            </div>
+            <h2 id="user-name"></h2>
+            <strong id="user-gmail">[[${#request.remoteUser}]]</strong>
     
-    <div class="profile-show">
-      <div class="profile-display">
-        <div class="profile-title">
-          <h3>Cập nhật thông tin</h3>
+          </div>
         </div>
-        <div class="">
-          <!-- <form id="login-form" method="PUT"> -->
+        <div class="grid-columns">
+          <div class="profile-display">
+            
             <div class="">
-              <div>
-                <label>Tên đăng nhập: </label>
-                <span>[[${#request.remoteUser}]]</span>
-              </div>
-              <div>
-                <label>Họ và tên</label>
-              </div>
-              <div>
-                <input type="text" name="username" id="userName" class="form-field" inputmode="email">
-              </div>
-              
-              <div>
-                <label>Ngày sinh</label>
-              </div>
-              <div>
-                <input type="text" id="date-of-birth" class="form-field">
-              </div>
-              <div>
-                <label>Giới tính</label>
-              </div>
-              <div>
-                <input type="text" id="gender" class="form-field">
-              </div>
-              
-              <input id="submit-button" type="submit" class="button account-button button-green" value="Cập nhật">
-            </div>
-          <!-- </form> -->
-          <!-- <div class="grid-columns">
-                    <text>Họ và tên</text>
-                    <text>Nguyen Van A</text>
-
-                </div>
-                <div class="grid-columns">
-                    <text>Tên đăng nhập</text>
-                    <text>nguyenvana</text>
-
-                </div>
-                <div class="grid-columns">
-                    <text>Ngày sinh</text>
-                    <text>12/2/2021</text>
-
-                </div>
-                <div class="grid-columns">
-                    <text>Giới tính</text>
-                    <text>Nam</text>
-
-                </div> -->
-
-        </div>
-
-      </div>
-      <div class="security">
-        <!-- <div class="email">
-          <div class="profile-title">
-            <h3>Địa chỉ email</h3>
-          </div>
-          <div>
-            <p>Địa chỉ email hiện tại của bạn là <i>nguyenvana@gmail.com</i></p>
-
-            <div>
-              <h4>Địa chỉ email mới</h4>
-              <form action="/" id="login-form" method="POST">
+              <!-- <form id="login-form" method="PUT"> -->
                 <div class="">
-                  <input type="text" name="password" id="password" class="form-field"
-                    placeholder="Nhập địa chỉ email mới">
-
-                  <input id="login" type="submit" class="button account-button button-green" value="Cập nhật">
+                  <div class="profile-title">
+                    <h3>Cập nhật thông tin</h3>
+                  </div>
+                  <div>
+                    <label>Tên đăng nhập: </label>
+                    <span>[[${#request.remoteUser}]]</span>
+                  </div>
+                  <div>
+                    <label>Họ Và tên</label>
+                  </div>
+                  <div>
+                    <input type="text" name="username" id="userName" class="form-field" inputmode="email">
+                  </div>
+                  
+                  <div>
+                    <label>Ngày sinh</label>
+                  </div>
+                  <div>
+                    <input type="text" id="date-of-birth" class="form-field">
+                  </div>
+                  <div>
+                    <label>Giới tính</label>
+                  </div>
+                  <div>
+                    <input type="text" id="gender" class="form-field">
+                  </div>
+                  
+                  <input id="submit-button" type="submit" class="btn account-button btn-gradient" value="Cập nhật">
                 </div>
-              </form>
+              <!-- </form> -->
+              <!-- <div class="grid-columns">
+                        <text>Họ và tên</text>
+                        <text>Nguyen Van A</text>
+
+                    </div>
+                    <div class="grid-columns">
+                        <text>Tên đăng nhập</text>
+                        <text>nguyenvana</text>
+
+                    </div>
+                    <div class="grid-columns">
+                        <text>Ngày sinh</text>
+                        <text>12/2/2021</text>
+
+                    </div>
+                    <div class="grid-columns">
+                        <text>Giới tính</text>
+                        <text>Nam</text>
+
+                    </div> -->
+
             </div>
 
-          </div>
+            </div>
+            <div class="security">
+            <!-- <div class="email">
+              <div class="profile-title">
+                <h3>Địa chỉ email</h3>
+              </div>
+              <div>
+                <p>Địa chỉ email hiện tại của bạn là <i>nguyenvana@gmail.com</i></p>
 
-        </div> -->
-        <div class="password">
-          <div class="profile-title">
-            <h3>Mật khẩu</h3>
-          </div>
-          <div>
-            <!-- <form action="/" id="login-form" method="POST"> -->
-              <div>
-                <input type="password" id="old-password" class="form-field" placeholder="Mật khẩu cũ">
+                <div>
+                  <h4>Địa chỉ email mới</h4>
+                  <form action="/" id="login-form" method="POST">
+                    <div class="">
+                      <input type="text" name="password" id="password" class="form-field"
+                        placeholder="Nhập địa chỉ email mới">
+
+                      <input id="login" type="submit" class="button account-button button-green" value="Cập nhật">
+                    </div>
+                  </form>
+                </div>
+
+              </div>
+
+            </div> -->
+            <div class="password">
+              <div class="profile-title">
+                <h3>Mật khẩu</h3>
               </div>
               <div>
-                <input type="password" id="new-password-1" class="form-field" placeholder="Mật khẩu mới">
+                <!-- <form action="/" id="login-form" method="POST"> -->
+                  <div>
+                    <input type="password" id="old-password" class="form-field" placeholder="Mật khẩu cũ">
+                  </div>
+                  <div>
+                    <input type="password" id="new-password-1" class="form-field" placeholder="Mật khẩu mới">
+                  </div>
+                  <div>
+                    <input type="password" id="new-password-2" class="form-field" placeholder="Nhập lại mật khẩu mới">
+                  </div>
+                  <input id="submit-button-sercurity" type="submit" class="btn account-button btn-gradient" value="Cập nhật">
+                <!-- </form> -->
               </div>
-              <div>
-                <input type="password" id="new-password-2" class="form-field" placeholder="Nhập lại mật khẩu mới">
-              </div>
-              <input id="submit-button-sercurity" type="submit" class="button account-button button-green" value="Cập nhật">
-            <!-- </form> -->
+            </div>
+
+            <div id="message"></div>
+
           </div>
         </div>
-
-        <div id="message"></div>
-
       </div>
     </div>
+    
 
   </div>
   <!-- <script type="text/javascript" src="/css/home.js"></script> -->
