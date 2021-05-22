@@ -35,6 +35,7 @@ Trello Clone is a fully functioning task management Web Application. This app su
  - Change date of birth of user: http://localhost:8080/api/user/dob/{gmail}
 
 ## Screenshot
+![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-22 17-08-59.png?raw=true "Title")
 
 ## License
 MIT
