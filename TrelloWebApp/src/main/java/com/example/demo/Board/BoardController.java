@@ -1,8 +1,10 @@
 package com.example.demo.Board;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,6 +27,33 @@ public class BoardController {
 	
 	@Autowired
 	private UserRepository userRepo;
+	
+	@GetMapping("/api/board/title/user/{email}")
+	public ResponseEntity<Map<Long, String>> getBoardTitleOwner(@PathVariable String email){
+		// get user id
+		Optional<User> users = userRepo.findByEmail(email);
+		if(users.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			Long id = users.get().getId();
+			HashMap<Long, String> res = new HashMap<Long, String>();
+			List<Board> allBoards = boardRepo.findAllBoard();
+			if(allBoards.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}else {
+				for(Board board : allBoards) {
+					Set<User> userSet = board.getUsers();
+					for(User user : userSet) {
+						if(user.getId() == id) {
+							res.put(board.getId(), board.getTitle());
+						}
+					}
+				}
+				return new ResponseEntity<Map<Long,String>>(res, HttpStatus.OK);
+			}
+		}
+	}
+	
 	
 	@GetMapping("/api/board/member/{boardID}")
 	public ResponseEntity<List<User>> getMemberID(@PathVariable String boardID){

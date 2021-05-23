@@ -13,4 +13,7 @@ public interface BoardRepository extends JpaRepository<Board, Long>{
 	
 	@Query("SELECT b FROM Board b JOIN b.users u WHERE u.email = ?1")
 	List<Board> findByUserGmail(String email);
+	
+	@Query(value = "select b from Board b")
+	List<Board> findAllBoard();
 }
