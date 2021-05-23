@@ -47,19 +47,17 @@
           <div class="nav-right">
             <div>
               <div class="nav-box">
-                <i class="fas fa-plus icon"></i>
+                <i class="fas fa-plus icon" onclick="showInputGmail()"></i>
               </div>
               <!--modal add people to board-->
-              <div class="modal-add-people">
+              <div class="modal-add-people" style="display: none;" id="new-member-form">
                 <div>
-                  <form  method="POST">
-                      <label for="new-member-gmail">Thêm thành viên mới vào bảng</label>
-                      <input class="form-field" placeholder="Gmail" style="padding-left: 8px;" id="new-member-gmail">                   
-                      <!-- <input id="login" type="submit" class="btn btn-purple" value="add"> -->
-                      <button type="submit" id="add-new-member"><b>Thêm</b></button>
-                      <div id="new-member-message" style="color: red;"></div>
-                  </form>
-
+                    <label for="new-member-gmail">Thêm thành viên mới vào bảng</label>
+                    <br>
+                    <input class="form-field" placeholder="Gmail" style="padding-left: 8px;" id="new-member-gmail">                   
+                    <!-- <input id="login" type="submit" class="btn btn-purple" value="add"> -->
+                    <button type="submit" id="add-new-member"><b>Thêm</b></button>
+                    <div id="new-member-message" style="color: red;"></div>
                 </div>
               </div>
             </div>
@@ -343,11 +341,11 @@
     </section>
     
     <!--message-->
-    <div class="backgroung-mesage">
+    <div class="backgroung-mesage" id="notification-div-tag" style="display: none;">
 
        <div class="message-form">
 
-          <p><i class="far fa-check-circle" style="color: rgb(142, 253, 142);"></i> &nbsp;A đã gắn thẻ x chhhhhhhhhhhhhho bạn</p>
+          <p id="assign-to-card-notification"><i class="far fa-check-circle" style="color: rgb(142, 253, 142);"></i></p>
 
         </div>
     </div>

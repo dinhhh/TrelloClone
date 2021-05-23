@@ -34,13 +34,16 @@ public class UpdateBoardController {
 		else if(cardMessage.getMethod().equalsIgnoreCase("changeCardTitle")) {
 			this.simpMessagingTemplate.convertAndSend("/topic/update/" + cardMessage.getBoardID().toString(), cardMessage);
 		}
+		else if(cardMessage.getMethod().equalsIgnoreCase("assignToCard")) {
+			this.simpMessagingTemplate.convertAndSend("/topic/update/" + cardMessage.getBoardID().toString(), cardMessage);
+		}
 		else {
 			Optional<Card> cards = cardRepo.findByBoardIDCateTitle(cardMessage.getBoardID(), cardMessage.getCardCategory(), cardMessage.getCardTitle());
 			if(cards.isEmpty()) {
 				System.out.println("Update board controller error!!");
 			}
 			Card card = cards.get();
-			CardMessage cardMessage_ = new CardMessage(cardMessage.getMethod(), card.getId(), cardMessage.getBoardID(), cardMessage.getCardCategory(), cardMessage.getCardTitle());
+			CardMessage cardMessage_ = new CardMessage(cardMessage.getSourceUserGmail(), cardMessage.getTargetUserGmail(), cardMessage.getMethod(), card.getId(), cardMessage.getBoardID(), cardMessage.getCardCategory(), cardMessage.getCardTitle());
 			this.simpMessagingTemplate.convertAndSend("/topic/update/" + cardMessage.getBoardID().toString(), cardMessage_);
 		}
 	}
