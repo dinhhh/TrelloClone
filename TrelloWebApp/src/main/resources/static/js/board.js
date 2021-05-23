@@ -169,18 +169,6 @@ function createItemEl(columnEl, column, item, index) {
   listEl.setAttribute('ondblclick', `openEditForm(${index}, ${column})`);
   listEl.contentEditable = true;
 
-  // bug =)))
-  // add edit-button
-  // const editButton = document.createElement('button');
-  // editButton.setAttribute('class', 'add-btn');
-  // editButton.setAttribute('onclick', 'openEditForm()');
-  // editButton.setAttribute('display', 'inline');
-
-  // const spanTag = document.createElement('span');
-  // spanTag.textContent = 'Edit';
-  // editButton.appendChild(spanTag);
-  
-  // listEl.appendChild(editButton);
   // Append
   columnEl.appendChild(listEl);
 }
@@ -231,11 +219,6 @@ async function updateDOM() {
   // Don't run more than once, Update Local Storage
   updatedOnLoad = true;
   updateSavedColumns();
-
-  // console.log(backlogIdArray);
-  // console.log(progressIdArray);
-  // console.log(completeIdArray);
-  // console.log(ohHoldIdArray);
 }
 
 // Update Item - Delete if necessary, or update Array value
@@ -259,6 +242,8 @@ async function updateItem(id, column) {
         .then(data => {
           // web socket
           const cardMessage = {
+            "sourceUserGmail" : userGmail , 
+            "targetUserGmail" : userGmail , 
             "method" : "deleteCard",
             "cardID" : idOfCard,
             "boardID" : Number.parseInt(boardID),
@@ -282,6 +267,8 @@ async function updateItem(id, column) {
         .then(data => {
           // web socket
           const cardMessage = {
+            "sourceUserGmail" : userGmail ,
+            "targetUserGmail" : userGmail ,
             "method" : "changeCardTitle",
             "cardID" : idOfCard,
             "boardID" : Number.parseInt(boardID),
@@ -382,6 +369,8 @@ async function addToColumn(column) {
   
   // web socket
   const cardMessage = {
+    "sourceUserGmail" : userGmail ,
+    "targetUserGmail" : userGmail ,
     "method" : "create" ,
     "cardID" : 0,
     "boardID" : boardID,
@@ -545,6 +534,8 @@ function drop(e) {
       cardTitle = response.title;
       // console.log(cardTitle);
       const cardMessage = {
+        "sourceUserGmail" : userGmail ,
+        "targetUserGmail" : userGmail ,
         "method" : "changeCardCategory",
         "cardID" : idCardInDB,
         "boardID" : boardID,
@@ -611,7 +602,24 @@ async function openEditForm(id, column) {
   const idArray = idListArray[column];
   const idOfCard = idArray[id];
   currentCardIDFormDisplay = idOfCard;
-
+  const cardTitle = listArrays[column][id];
+  let cardCategory = "";
+  switch (column) {
+    case 1:
+      cardCategory = "backlog";
+      break;
+    case 2:
+      cardCategory = "progress";
+      break;
+    case 3:
+      cardCategory = "complete";
+      break;
+    case 4:
+      cardCategory = "onHold";
+      break;
+    default:
+      break;
+  }
   // fetch infor of card
   await fetch("http://localhost:8080/api/card/".concat(idOfCard.toString()), {
     headers : { "content-type" : "application/json; charset=UTF-8"},
@@ -726,6 +734,18 @@ async function openEditForm(id, column) {
               if(response.ok){
                 document.getElementById("add-member-suggest").style.display = "none";
                 document.getElementById("update-infor-message").textContent = "Gán thành viên thành công !";
+                // web socket
+                const cardMessage = {
+                  "sourceUserGmail" : userGmail ,
+                  "targetUserGmail" : memberEmail[i] ,
+                  "method" : "assignToCard",
+                  "cardID" : idOfCard,
+                  "boardID" : Number.parseInt(boardID),
+                  // store gmail of user who assigns this card to another member
+                  "cardCategory" : cardCategory,
+                  "cardTitle" : cardTitle,
+                };
+                stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
               }else{
                 document.getElementById("add-member-suggest").style.display = "none";
                 document.getElementById("update-infor-message").textContent = "Gán thành viên thất bại. Vui lòng thử lại !";
@@ -817,6 +837,25 @@ function connect(){
         }
         updateDOM();
       }
+
+      if(resp.method == 'assignToCard' && resp.targetUserGmail == userGmail){
+        
+        for(var i = 0; i < idListArray.length; i++){
+          for(var j = 0; j < idListArray[i].length; j++){
+            if(idListArray[i][j] == resp.cardID){
+              for(var k = 0; k < memberEmail.length; k++){
+                document.getElementById("notification-div-tag").style.display = "flex";
+                document.getElementById("assign-to-card-notification").innerHTML = member[k] + " đã gán thẻ " + listArrays[i][j] + " cho bạn !";
+                setTimeout(function(){
+                  document.getElementById("assign-to-card-notification").innerHTML = "";
+                  document.getElementById("notification-div-tag").style.display = "none";
+                }, 3000);
+                break;
+              }
+            }
+          }
+        }
+      }
       console.log(resp);
     })  
   })
@@ -842,26 +881,31 @@ async function addRVB(){
 
 addRVB();
 
+document.getElementById("new-member-form").addEventListener("focusout", () => {
+  if(document.getElementById("new-member-gmail").value == null || document.getElementById("new-member-gmail").value == ""){
+    document.getElementById("new-member-form").style.display = "none";
+  }
+})
+
 function showInputGmail(){
   document.getElementById("new-member-form").style.display = "block";
   document.getElementById("add-new-member").onclick = async function () {
     const newGmail = document.getElementById("new-member-gmail").value;
-    await fetch("http://localhost:8080/api/board/member/".concat(boardID.toString()).concat("/").concat(newGmail))
+    await fetch("http://localhost:8080/api/board/member/".concat(boardID.toString()).concat("/").concat(newGmail),{
+      method: "PUT"
+    })
       .then(function(response){
         if(response.ok){
+          console.log("them thanh cong");
           document.getElementById("new-member-message").textContent = "Thêm thành viên mới vào bảng thành công";
         }else{
+          console.log("them that bai");
           document.getElementById("new-member-message").textContent = "Tài khoản email chưa được đăng ký trên hệ thống !";
         }
       })
   }
 }
 
-document.getElementById("new-member-form").addEventListener("focusout", () => {
-  if(document.getElementById("new-member-form").textContent == null || document.getElementById("new-member-form").textContent == ""){
-    document.getElementById("new-member-form").style.display = "none";
-  }
-})
 
 
 

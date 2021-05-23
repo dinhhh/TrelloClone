@@ -37,16 +37,6 @@ public class CardRepositoryTest {
 		}
 	}
 	
-	@Test
-	public void getCardByBoardIDCateTitle() {
-		CardMessage cardMessage = new CardMessage("deleteCard",(long) 0,(long) 3, "complete", "BUG");
-		Optional<Card> cards = cardRepo.findByBoardIDCateTitle(cardMessage.getBoardID(), cardMessage.getCardCategory(), cardMessage.getCardTitle());
-		if(cards.isEmpty()) {
-			System.out.println("?");
-		}else {
-			System.out.println(cards.get().toString());
-		}
-	}
 
 	@Test
 	public void deleteACard() {
