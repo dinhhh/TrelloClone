@@ -10,11 +10,15 @@ Trello Clone is a fully functioning task management Web Application. This app su
 	- Currently, our project only accept email register. 
  
 	- We will implement another Authentication (Facebook, Github,...) in the future
+ 
  - Update account information (name, date of birth, gender, password)
+ 
  - Board
 
 	- Create personal board
 
+	- Add member to your board
+	
 	- Recently viewed boards
 
 	- Search all board you have
@@ -22,6 +26,8 @@ Trello Clone is a fully functioning task management Web Application. This app su
 	- Change list of card in each board
 
 	- Use WebSocket for automatically update your board when someone change card in board
+
+	- Display live notification when a card is assigned to you
 
 ## Installation
  - Install Java 8
@@ -56,6 +62,13 @@ Trello Clone is a fully functioning task management Web Application. This app su
 
  - Board page
 ![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-22 17-11-21.png?raw=true "Title")
+
+ - Visit a board that you do not have permission
+![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-23 23-22-00.png?raw=true "Title")
+
+ - Forgot password page
+ 
+![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-23 23-24-36.png?raw=true "Title")
 
 ## License
 MIT
