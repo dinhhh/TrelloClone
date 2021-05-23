@@ -17,6 +17,7 @@ const currentURL = window.location.href;
 const boardID = currentURL.substring(currentURL.lastIndexOf("/") + 1);
 let member = [];
 let memberID = [];
+let memberEmail = [];
 let boardTitle;
 let userID;
 const userGmail = document.getElementById("gmail").textContent;
@@ -42,6 +43,41 @@ let dragging = false;
 let currentColumn;
 let indexItem;
 let sourceColumn;
+
+// get id of member of this board
+async function getMemberID(){
+  await fetch("http://localhost:8080/api/board/member/".concat(boardID.toString()), {
+    method : "GET"
+  })
+    .then(response => response.json())
+    .then(data => {
+      const num = Object.keys(data).length;
+      var flag = 0;
+      for(var i = 0; i < num; i++){
+        member.push(data[i].firstName.concat(" ").concat(data[i].lastName));
+        memberID.push(data[i].id);
+        memberEmail.push(data[i].email);
+        // check permission of current user to this board
+        if(data[i].email == userGmail){
+          flag = 1;
+        }
+      }
+      if(flag != 1){
+        window.alert("Bạn không có quyền truy cập vào trang này !");
+        hideAllCard();
+      }
+    })
+}
+
+getMemberID();
+
+// hide all card in this board
+function hideAllCard(){
+  document.getElementById("backlog-content").style.display = "none";
+  document.getElementById("progress-content").style.display = "none";
+  document.getElementById("complete-content").style.display = "none";
+  document.getElementById("on-hold-content").style.display = "none";
+}
 
 function getIndexInIDListArray(category){
   switch (category) {
@@ -331,12 +367,10 @@ async function addToColumn(column) {
     .then(function(response){
       if(response.ok){
         document.getElementById("message").innerHTML = "success";
-        // console.log("fetched api !");
 
         // get id of new card
         response.json().then(data => {
           idOfNewCard = data.id;
-          // console.log(idOfNewCard);
           idListArray[column].push(idOfNewCard);
         })
         
@@ -668,8 +702,6 @@ async function openEditForm(id, column) {
     // description update
     document.getElementById("description-button").onclick = async function(){
       const description = document.getElementById("describe-card").value;
-      console.log("DESCRIPTION IS :");
-      console.log(description);
       fetch("http://localhost:8080/api/card/description/".concat(idOfCard.toString()), {
         method : "PUT",
         body : description
@@ -692,8 +724,10 @@ async function openEditForm(id, column) {
           })
             .then(function(response) {
               if(response.ok){
+                document.getElementById("add-member-suggest").style.display = "none";
                 document.getElementById("update-infor-message").textContent = "Gán thành viên thành công !";
               }else{
+                document.getElementById("add-member-suggest").style.display = "none";
                 document.getElementById("update-infor-message").textContent = "Gán thành viên thất bại. Vui lòng thử lại !";
               }
             })
@@ -829,22 +863,7 @@ document.getElementById("new-member-form").addEventListener("focusout", () => {
   }
 })
 
-// get id of member of this board
-async function getMemberID(){
-  await fetch("http://localhost:8080/api/board/member/".concat(boardID.toString()), {
-    method : "GET"
-  })
-    .then(response => response.json())
-    .then(data => {
-      const num = Object.keys(data).length;
-      for(var i = 0; i < num; i++){
-        member.push(data[i].firstName.concat(" ").concat(data[i].lastName));
-        memberID.push(data[i].id);
-      }
-    })
-}
 
-getMemberID();
 
 function getStates(value) {
 	const listElement = document.getElementById("add-member-suggest");
