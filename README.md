@@ -49,26 +49,26 @@ Trello Clone is a fully functioning task management Web Application. This app su
 
 ## Screenshot
  - Landing page
-![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-22 17-08-59.png?raw=true "Title")
+![Alt text](https://github.com/dinhhh/TrelloClone/blob/master/TrelloWebApp/src/main/resources/static/image/Screenshot%20from%202021-05-22%2017-08-59.png?raw=true)
 
-![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-22 17-10-06.png?raw=true "Title")
+![Alt text](https://github.com/dinhhh/TrelloClone/blob/master/TrelloWebApp/src/main/resources/static/image/Screenshot%20from%202021-05-22%2017-09-54.png?raw=true)
 
-![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-22 17-09-54.png?raw=true "Title")
+![Alt text](https://github.com/dinhhh/TrelloClone/blob/master/TrelloWebApp/src/main/resources/static/image/Screenshot%20from%202021-05-22%2017-10-06.png?raw=true)
  
 
  - Login page
-![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-22 17-10-18.png?raw=true "Title")
+![Alt text](https://github.com/dinhhh/TrelloClone/blob/master/TrelloWebApp/src/main/resources/static/image/Screenshot%20from%202021-05-22%2017-10-18.png?raw=true)
 
 
  - Board page
-![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-22 17-11-21.png?raw=true "Title")
+![Alt text](https://github.com/dinhhh/TrelloClone/blob/master/TrelloWebApp/src/main/resources/static/image/Screenshot%20from%202021-05-22%2017-11-21.png?raw=true)
 
  - Visit a board that you do not have permission
-![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-23 23-22-00.png?raw=true "Title")
+![Alt text](https://github.com/dinhhh/TrelloClone/blob/master/TrelloWebApp/src/main/resources/static/image/Screenshot%20from%202021-05-23%2023-22-00.png?raw=true)
 
  - Forgot password page
  
-![Alt text](TrelloWebApp/src/main/resources/static/image/Screenshot from 2021-05-23 23-24-36.png?raw=true "Title")
+![Alt text](https://github.com/dinhhh/TrelloClone/blob/master/TrelloWebApp/src/main/resources/static/image/Screenshot%20from%202021-05-23%2023-24-36.png?raw=true)
 
 ## License
 MIT
