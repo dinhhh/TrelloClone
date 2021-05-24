@@ -2,19 +2,25 @@ package com.example.demo.WebSocketConfig;
 
 public class CardMessage {
 	
+	private String sourceUserGmail;
+	private String targetUserGmail;
 	private String method;
 	private Long cardID;
 	private Long boardID;
 	private String cardCategory;
 	private String cardTitle;
 	
-	public CardMessage(String method, Long cardID, Long boardID, String cardCategory, String cardTitle) {
-		super();
-		this.method = method;
-		this.cardID = cardID;
-		this.boardID = boardID;
-		this.cardCategory = cardCategory;
-		this.cardTitle = cardTitle;
+	public String getTargetUserGmail() {
+		return targetUserGmail;
+	}
+	public void setTargetUserGmail(String targetUserGmail) {
+		this.targetUserGmail = targetUserGmail;
+	}
+	public String getSourceUserGmail() {
+		return sourceUserGmail;
+	}
+	public void setSourceUserGmail(String sourceUserGmail) {
+		this.sourceUserGmail = sourceUserGmail;
 	}
 	public String getMethod() {
 		return method;
@@ -46,9 +52,23 @@ public class CardMessage {
 	public void setCardTitle(String cardTitle) {
 		this.cardTitle = cardTitle;
 	}
+	public CardMessage(String sourceUserGmail, String targetUserGmail, String method, Long cardID, Long boardID,
+			String cardCategory, String cardTitle) {
+		super();
+		this.sourceUserGmail = sourceUserGmail;
+		this.targetUserGmail = targetUserGmail;
+		this.method = method;
+		this.cardID = cardID;
+		this.boardID = boardID;
+		this.cardCategory = cardCategory;
+		this.cardTitle = cardTitle;
+	}
 	@Override
 	public String toString() {
-		return "CardMessage [method=" + method + ", cardID=" + cardID + ", boardID=" + boardID + ", cardCategory="
-				+ cardCategory + ", cardTitle=" + cardTitle + "]";
+		return "CardMessage [sourceUserGmail=" + sourceUserGmail + ", targetUserGmail=" + targetUserGmail + ", method="
+				+ method + ", cardID=" + cardID + ", boardID=" + boardID + ", cardCategory=" + cardCategory
+				+ ", cardTitle=" + cardTitle + "]";
 	}
+	
+	
 }

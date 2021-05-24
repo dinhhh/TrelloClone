@@ -32,6 +32,34 @@ public class CardController {
 	@Autowired
 	private ActivityReposity activityRepo;
 	
+	// assign card to member
+	@PutMapping("/api/card/member/{memberID}/{cardID}")
+	ResponseEntity<Card> assignMember(@PathVariable String memberID, @PathVariable String cardID){
+		Optional<Card> cards = cardRepo.findById(Long.valueOf(cardID));
+		if(cards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			Card card = cards.get();
+			card.setUserID(Long.valueOf(memberID));
+			cardRepo.save(card);
+			return new ResponseEntity<Card>(card, HttpStatus.OK); 
+		}
+	}
+	
+	// change description of card
+	@PutMapping("/api/card/description/{id}")
+	ResponseEntity<Card> changeDescription(@PathVariable String id, @RequestBody String des){
+		Optional<Card> cards = cardRepo.findById(Long.valueOf(id));
+		if(cards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			Card card = cards.get();
+			card.setDescription(des);
+			cardRepo.save(card);
+			return new ResponseEntity<Card>(card, HttpStatus.OK);
+		}
+	}
+	
 	@GetMapping("/api/card/{id}")
 	ResponseEntity<Card> getCardByID(@PathVariable Long id) {
 		Optional<Card> card = cardRepo.findById(id);
@@ -87,7 +115,7 @@ public class CardController {
 //			activityRepo.deleteActivityWhereSourceUserIDEqual(id);
 //			activityRepo.deleteActivityWhereDestUserIDEqual(id);
 			Card card = cards.get();
-			CardMessage cardMessage = new CardMessage("deleteCard", card.getId(), card.getBoard().getId(), card.getCategory(), card.getTitle());
+			CardMessage cardMessage = new CardMessage("unknown","unknown", "deleteCard", card.getId(), card.getBoard().getId(), card.getCategory(), card.getTitle());
 			cardRepo.delete(card);
 			return new ResponseEntity<CardMessage>(cardMessage, HttpStatus.OK);
 		}

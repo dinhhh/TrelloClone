@@ -39,35 +39,54 @@ function create() {
 var gmailOfUser = document.getElementById("gmail").textContent;
 
 async function getTitle() {
-	var path = "http://localhost:8080/board/title/";
-	var apiURL = path.concat(gmailOfUser);
-	const resp = await fetch(apiURL);
-	const data = await resp.json();
-	var count = Object.keys(data).length;
-	const userID = data[0].users[0].id;
-	var i;
+	// var path = "http://localhost:8080/board/title/";
+	// var apiURL = path.concat(gmailOfUser);
+	// const resp = await fetch(apiURL);
+	// const data = await resp.json();
+	// var count = Object.keys(data).length;
+	// const userID = data[0].users[0].id;
+	// var i;
 
-	if (count > 0) {
-		for (i = 0; i < count; i++) {
-			const li1 = document.createElement("li");
-			li1.setAttribute("class", "each-board");
-			const a1 = document.createElement("a");
-			a1.setAttribute("class", "title-each-board");
-			a1.setAttribute("href", "http://localhost:8080/board/".concat(data[i].id.toString()));
-			a1.appendChild(document.createTextNode(data[i].title));
-			li1.appendChild(a1);
-			boardJson[data[i].id] = data[i].title;
-			document.getElementById("owned-board").appendChild(li1);
-		}
-	}
+	// if (count > 0) {
+	// 	for (i = 0; i < count; i++) {
+	// 		const li1 = document.createElement("li");
+	// 		li1.setAttribute("class", "each-board");
+	// 		const a1 = document.createElement("a");
+	// 		a1.setAttribute("class", "title-each-board");
+	// 		a1.setAttribute("href", "http://localhost:8080/board/".concat(data[i].id.toString()));
+	// 		a1.appendChild(document.createTextNode(data[i].title));
+	// 		li1.appendChild(a1);
+	// 		boardJson[data[i].id] = data[i].title;
+	// 		document.getElementById("owned-board").appendChild(li1);
+	// 	}
+	// }
 
-	// const lastItem = document.createElement("li");
-	// lastItem.setAttribute("class", "add-board");
-	// const a1 = document.createElement("span");
-	// a1.appendChild(document.createTextNode("Tạo bảng mới"));
-	// lastItem.appendChild(a1);
+	// fetch title of board
+	await fetch("http://localhost:8080/api/board/title/user/".concat(gmailOfUser))
+		.then(response => response.json())
+		.then(data => {
+			const counter = Object.keys(data).length;
+			if(counter > 0){
+				for(var key in data){
+					const li1 = document.createElement("li");
+					li1.setAttribute("class", "each-board");
+					const a1 = document.createElement("a");
+					a1.setAttribute("class", "title-each-board");
+					a1.setAttribute("href", "http://localhost:8080/board/".concat(key.toString()));
+					a1.appendChild(document.createTextNode(data[key]));
+					li1.appendChild(a1);
+					boardJson[key] = data[key];
+					document.getElementById("owned-board").appendChild(li1);
+				}
+			}
+		})
 
-	// document.getElementById("owned-board").appendChild(lastItem);
+	var userID;
+	await fetch("http://localhost:8080/user/".concat(gmailOfUser))
+		.then(response => response.json())
+		.then(data => {
+			userID = data[0].id;
+		})
 
 	// get recently viewed board of user
 	await fetch("http://localhost:8080/api/rvb/".concat(userID.toString()))
@@ -118,11 +137,6 @@ function check(event) {
 				throw new Error("Could not reach the API: " + response.statusText);
 			}
 		})
-	// .then(function(data) {
-	//     document.getElementById("message").innerHTML = data.encoded;
-	// }).catch(function(error) {
-	//     document.getElementById("message").innerHTML = error.message;
-	// });
 	return true;
 }
 

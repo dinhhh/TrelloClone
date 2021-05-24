@@ -3,6 +3,7 @@ package com.example.demo.Board;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -42,6 +43,28 @@ public class Board {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "board")
 	private Set<Card> cards;
+	
+	// maybe dont need this column. not sure
+	@Column(name = "listUser")
+	@ElementCollection(targetClass=Long.class)
+	private Set<Long> listUserID;
+
+	
+	public Set<Card> getCards() {
+		return cards;
+	}
+
+	public void setCards(Set<Card> cards) {
+		this.cards = cards;
+	}
+
+	public Set<Long> getListUserID() {
+		return listUserID;
+	}
+
+	public void setListUserID(Set<Long> listUserID) {
+		this.listUserID = listUserID;
+	}
 
 	public Long getId() {
 		return id;

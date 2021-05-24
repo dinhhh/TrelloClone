@@ -1,8 +1,10 @@
 package com.example.demo.Board;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.User.User;
@@ -25,16 +28,78 @@ public class BoardController {
 	@Autowired
 	private UserRepository userRepo;
 	
-//	@GetMapping("/api/board/{id}")
-//	public ResponseEntity<Board> getAllBoard(@PathVariable Long id){
-//		Optional<Board> boards = boardRepo.findById(id);
-//		if(boards.isEmpty()) {
-//			System.out.println("no users email title");
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//		}else {
-//			return new ResponseEntity<>(boards.get(), HttpStatus.OK);
-//		}
-//	}
+	@GetMapping("/api/board/title/user/{email}")
+	public ResponseEntity<Map<Long, String>> getBoardTitleOwner(@PathVariable String email){
+		// get user id
+		Optional<User> users = userRepo.findByEmail(email);
+		if(users.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			Long id = users.get().getId();
+			HashMap<Long, String> res = new HashMap<Long, String>();
+			List<Board> allBoards = boardRepo.findAllBoard();
+			if(allBoards.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}else {
+				for(Board board : allBoards) {
+					Set<User> userSet = board.getUsers();
+					for(User user : userSet) {
+						if(user.getId() == id) {
+							res.put(board.getId(), board.getTitle());
+						}
+					}
+				}
+				return new ResponseEntity<Map<Long,String>>(res, HttpStatus.OK);
+			}
+		}
+	}
+	
+	
+	@GetMapping("/api/board/member/{boardID}")
+	public ResponseEntity<List<User>> getMemberID(@PathVariable String boardID){
+		Optional<Board> boards = boardRepo.findById(Long.valueOf(boardID));
+		if(boards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			List<User> users = new ArrayList<User>();
+			Set<User> member = boards.get().getUsers();
+			for(User u : member) {
+				Optional<User> user = userRepo.findById(u.getId());
+				if(user.isEmpty()) {
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}else {
+					users.add(user.get());
+				}
+			}
+			return new ResponseEntity<>(users, HttpStatus.OK);
+		}
+	}
+	
+	@PutMapping("/api/board/member/{boardID}/{email}")
+	public ResponseEntity<Board> addNewMember(@PathVariable String boardID, @PathVariable String email){
+		Optional<User> users = userRepo.findByEmail(email);
+		Optional<Board> boards = boardRepo.findById(Long.valueOf(boardID));
+		if(users.isEmpty() || boards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			User user = users.get();
+			Board board = boards.get();
+			Set<User> listUser = board.getUsers();
+			int flag = 0;  
+			for(User u : listUser) {
+				if(u.getId() == user.getId()) {
+					flag = 1;
+					break;
+				}
+			}
+			if(flag != 1) {
+				listUser.add(user);
+			}
+			board.setUsers(listUser);
+			boardRepo.save(board);
+			return new ResponseEntity<Board>(board, HttpStatus.OK);
+		}
+	}
 	
 	@GetMapping("/api/board/{idString}")
 	public ResponseEntity<Board> getAllBoard(@PathVariable String idString){
