@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.4" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <package id="1" language="java" name="com.example.demo.Activity" project="TrelloWebApp" 
+    file="/TrelloWebApp/src/main/java/com/example/demo/Activity" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="804" y="492"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="com.example.demo.Board" project="TrelloWebApp" 
+    file="/TrelloWebApp/src/main/java/com/example/demo/Board" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="564" y="319"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="com.example.demo.Card" project="TrelloWebApp" 
+    file="/TrelloWebApp/src/main/java/com/example/demo/Card" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="561" y="403"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="com.example.demo.ConfirmationToken" project="TrelloWebApp" 
+    file="/TrelloWebApp/src/main/java/com/example/demo/ConfirmationToken" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="298" y="407"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="5" language="java" name="com.example.demo.Controller" project="TrelloWebApp" 
+    file="/TrelloWebApp/src/main/java/com/example/demo/Controller" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="579" y="491"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="6" language="java" name="com.example.demo.RecentlyViewedBoard" project="TrelloWebApp" 
+    file="/TrelloWebApp/src/main/java/com/example/demo/RecentlyViewedBoard" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="307" y="491"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="7" language="java" name="com.example.demo.Security" project="TrelloWebApp" 
+    file="/TrelloWebApp/src/main/java/com/example/demo/Security" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="266" y="237"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="8" language="java" name="com.example.demo.User" project="TrelloWebApp" 
+    file="/TrelloWebApp/src/main/java/com/example/demo/User" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="560" y="234"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="9" language="java" name="com.example.demo.WebSocketConfig" project="TrelloWebApp" 
+    file="/TrelloWebApp/src/main/java/com/example/demo/WebSocketConfig" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="294" y="314"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

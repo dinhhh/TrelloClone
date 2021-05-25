@@ -32,22 +32,24 @@
   </div>
    -->
 
-   <!--delete-form-->
+  <!--delete-form-->
   <div id="delete-form" class="message template-gray display-none">
     <div>
       <div class="message-form">
-        <form method="POST">
-          <div><p>Bạn có muốn xóa bảng này không?</p></div>
+        <!-- <form method="POST"> -->
+          <div>
+            <p>Bạn có muốn xóa bảng này không?</p>
+          </div>
           <div style="display: flex; justify-content: space-between; padding-top: 20px;">
             <div class="btn btn-purple" onclick="handle_board()"><b>Hủy</b></div>
-            <button class="btn btn-purple" type="submit" name="Submit" ><b>xóa bảng</b></button>
+            <button id="delete-board-button" class="btn btn-purple" type="submit" name="Submit"><b>xóa bảng</b></button>
 
           </div>
           <br>
-          
+
           <br>
-          <span id="message"></span>
-        </form>
+          <span id="delete-board-message"></span>
+        <!-- </form> -->
       </div>
     </div>
   </div>
@@ -119,7 +121,7 @@
           <div>
             <div class="user-info nav-box">
               <div id="user-avatar">
-                <img class="avatar" src="intro-photo.png" alt="#">
+                <img class="avatar" src="" alt="#">
               </div>
 
 
@@ -267,28 +269,22 @@
               <ul class="ul-grid" id="owned-board">
                 <!-- change here to get JSON file -->
                 <!--board-->
-                <li class="each-board">
+                <!-- <li class="each-board">
                   <a href="" class="title-each-board" id="test-title">
                     Team 1
                   </a>
                   <div>
-                    <div class="title-each-board button-delete" onclick="handle_board()"><i class="fas fa-trash-alt"></i></div>
+                    <div class="title-each-board button-delete" onclick="handle_board()"><i
+                        class="fas fa-trash-alt"></i></div>
                     <script>
-                      function handle_board(){
+                      function handle_board() {
                         var delete_form = document.getElementById("delete-form")
                         delete_form.classList.toggle('display-none')
                       }
                     </script>
                   </div>
-                  
-                </li>
 
-                <!-- <li class="each-board">
-                  demo
-                </li> -->
-
-
-
+                </li> -->      
                 <li class="each-board" style="display: none;">
                   <a class="title-each-board" id="gmail">[[${#request.remoteUser}]]</a>
                 </li>

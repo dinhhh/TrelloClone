@@ -434,12 +434,16 @@ html{
     width: 400px;
 
 }
+.message-form{
+    background-color: white;
+    /* opacity: 1; */
     padding: 20px;
     border: 1px solid rgb(59, 58, 58);
     box-shadow: 0 0 5px 5px  rgb(161, 159, 159);
     width: 400px;
 
 }
+
 .form-field{
     font-size: 14px;
     background-color: #FAFBFC;

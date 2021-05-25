@@ -1,4 +1,4 @@
-
+let boardIDDelete = -1;
 let boardJson = {};
 var notification_click = document.getElementById("notification-click")
 console.log(notification_click);
@@ -7,6 +7,18 @@ notification_click.addEventListener('click', function () {
 	// console.log(notification_click)
 	modal_notification.classList.toggle('open-modal-notification');
 });
+
+function handle_board(boardID) {
+	var delete_form = document.getElementById("delete-form");
+	delete_form.classList.toggle('display-none');
+	document.getElementById("delete-board-button").onclick = async function (){
+		console.log("board id = " + boardID);
+		await fetch("http://localhost:8080/api/board/".concat(boardID.toString()), {
+			method : "DELETE"
+		});
+		location.reload();
+	}
+}
 
 var avatar_click = document.getElementById("user-avatar")
 console.log(avatar_click);
@@ -74,7 +86,16 @@ async function getTitle() {
 					a1.setAttribute("class", "title-each-board");
 					a1.setAttribute("href", "http://localhost:8080/board/".concat(key.toString()));
 					a1.appendChild(document.createTextNode(data[key]));
+
+					const divTag = document.createElement('div');
+					divTag.setAttribute("class", "title-each-board button-delete");
+					divTag.setAttribute("onclick", `handle_board(${key})`);
+					const iTag = document.createElement("i");
+					iTag.setAttribute("class", "fas fa-trash-alt")
+					divTag.appendChild(iTag);
+
 					li1.appendChild(a1);
+					li1.appendChild(divTag)
 					boardJson[key] = data[key];
 					document.getElementById("owned-board").appendChild(li1);
 				}
