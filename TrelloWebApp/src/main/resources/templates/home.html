@@ -32,6 +32,26 @@
   </div>
    -->
 
+   <!--delete-form-->
+  <div id="delete-form" class="message template-gray display-none">
+    <div>
+      <div class="message-form">
+        <form method="POST">
+          <div><p>Bạn có muốn xóa bảng này không?</p></div>
+          <div style="display: flex; justify-content: space-between; padding-top: 20px;">
+            <div class="btn btn-purple" onclick="handle_board()"><b>Hủy</b></div>
+            <button class="btn btn-purple" type="submit" name="Submit" ><b>xóa bảng</b></button>
+
+          </div>
+          <br>
+          
+          <br>
+          <span id="message"></span>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <header class="header">
     <div class="container">
       <nav class="nav">
@@ -246,13 +266,24 @@
             <div>
               <ul class="ul-grid" id="owned-board">
                 <!-- change here to get JSON file -->
-                <!-- <li class="each-board">
+                <!--board-->
+                <li class="each-board">
                   <a href="" class="title-each-board" id="test-title">
                     Team 1
                   </a>
+                  <div>
+                    <div class="title-each-board button-delete" onclick="handle_board()"><i class="fas fa-trash-alt"></i></div>
+                    <script>
+                      function handle_board(){
+                        var delete_form = document.getElementById("delete-form")
+                        delete_form.classList.toggle('display-none')
+                      }
+                    </script>
+                  </div>
+                  
                 </li>
 
-                <li class="each-board">
+                <!-- <li class="each-board">
                   demo
                 </li> -->
 
