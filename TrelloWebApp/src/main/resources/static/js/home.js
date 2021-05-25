@@ -87,6 +87,8 @@ async function getTitle() {
 					a1.setAttribute("href", "http://localhost:8080/board/".concat(key.toString()));
 					a1.appendChild(document.createTextNode(data[key]));
 
+					const fDivTag = document.createElement('div');
+
 					const divTag = document.createElement('div');
 					divTag.setAttribute("class", "title-each-board button-delete");
 					divTag.setAttribute("onclick", `handle_board(${key})`);
@@ -94,8 +96,10 @@ async function getTitle() {
 					iTag.setAttribute("class", "fas fa-trash-alt")
 					divTag.appendChild(iTag);
 
+					fDivTag.appendChild(divTag);
+
 					li1.appendChild(a1);
-					li1.appendChild(divTag)
+					li1.appendChild(fDivTag)
 					boardJson[key] = data[key];
 					document.getElementById("owned-board").appendChild(li1);
 				}
