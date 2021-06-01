@@ -38,7 +38,7 @@
   </package>  
   <package id="8" language="java" name="com.example.demo.User" project="TrelloWebApp" 
     file="/TrelloWebApp/src/main/java/com/example/demo/User" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="560" y="234"/>    
+    <position height="-1" width="-1" x="559" y="236"/>    
     <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
   </package>  
   <package id="9" language="java" name="com.example.demo.WebSocketConfig" project="TrelloWebApp" 

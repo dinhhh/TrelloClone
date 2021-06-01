@@ -692,3 +692,12 @@ textarea {
   padding: 1rem  1rem;
 
 }
+
+.edit-button {
+  background-image: url("/static/image/edit-button.png");
+  position: relative;
+  top: 200px;
+  right: 100px;
+  width: 40px;
+  height: 40px;
+}

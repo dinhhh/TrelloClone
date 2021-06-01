@@ -44,25 +44,36 @@ let currentColumn;
 let indexItem;
 let sourceColumn;
 
+function getCardTitleByID(id){
+  for(var j = 0; j < idListArray.length; j++){
+    for(var i = 0; i < idListArray[j].length; i++){
+      if(idListArray[j][i] == id){
+        return listArrays[j][i];
+      }
+    }
+  }
+  return "!!!";
+}
+
 // get id of member of this board
-async function getMemberID(){
+async function getMemberID() {
   await fetch("http://localhost:8080/api/board/member/".concat(boardID.toString()), {
-    method : "GET"
+    method: "GET"
   })
     .then(response => response.json())
     .then(data => {
       const num = Object.keys(data).length;
       var flag = 0;
-      for(var i = 0; i < num; i++){
+      for (var i = 0; i < num; i++) {
         member.push(data[i].firstName.concat(" ").concat(data[i].lastName));
         memberID.push(data[i].id);
         memberEmail.push(data[i].email);
         // check permission of current user to this board
-        if(data[i].email == userGmail){
+        if (data[i].email == userGmail) {
           flag = 1;
         }
       }
-      if(flag != 1){
+      if (flag != 1) {
         window.alert("Bạn không có quyền truy cập vào trang này !");
         hideAllCard();
       }
@@ -72,14 +83,14 @@ async function getMemberID(){
 getMemberID();
 
 // hide all card in this board
-function hideAllCard(){
+function hideAllCard() {
   document.getElementById("backlog-content").style.display = "none";
   document.getElementById("progress-content").style.display = "none";
   document.getElementById("complete-content").style.display = "none";
   document.getElementById("on-hold-content").style.display = "none";
 }
 
-function getIndexInIDListArray(category){
+function getIndexInIDListArray(category) {
   switch (category) {
     case "backlog":
       return 0;
@@ -114,10 +125,10 @@ async function getSavedColumns() {
   const data = await resp.json();
   const numOfCards = Object.keys(data).length;
   // console.log(data);
-  if(numOfCards > 0){
+  if (numOfCards > 0) {
     var i;
-    for(i = 0; i < numOfCards; i++){
-      switch (data[i].category){
+    for (i = 0; i < numOfCards; i++) {
+      switch (data[i].category) {
         case "backlog":
           backlogListArray.push(data[i].title);
           backlogIdArray.push(data[i].id);
@@ -129,7 +140,7 @@ async function getSavedColumns() {
         case "complete":
           completeListArray.push(data[i].title);
           completeIdArray.push(data[i].id);
-          break;  
+          break;
         case "onHold":
           onHoldListArray.push(data[i].title);
           ohHoldIdArray.push(data[i].id);
@@ -164,8 +175,8 @@ function createItemEl(columnEl, column, item, index) {
   listEl.id = index;
   listEl.classList.add('drag-item');
   listEl.draggable = true;
-  listEl.setAttribute('onfocusout', `updateItem(${index}, ${column})`);
   listEl.setAttribute('ondragstart', 'drag(event)');
+  listEl.setAttribute('onfocusout', `updateItem(${index}, ${column})`);
   listEl.setAttribute('ondblclick', `openEditForm(${index}, ${column})`);
   listEl.contentEditable = true;
 
@@ -235,20 +246,20 @@ async function updateItem(id, column) {
 
       // delete card in database
       fetch("http://localhost:8080/api/card/".concat(idOfCard.toString()), {
-        headers : { "content-type" : "application/json; charset=UTF-8"},
-        method : "DELETE"
+        headers: { "content-type": "application/json; charset=UTF-8" },
+        method: "DELETE"
       })
         .then(response => response.json())
         .then(data => {
           // web socket
           const cardMessage = {
-            "sourceUserGmail" : userGmail , 
-            "targetUserGmail" : userGmail , 
-            "method" : "deleteCard",
-            "cardID" : idOfCard,
-            "boardID" : Number.parseInt(boardID),
-            "cardCategory" : data.cardCategory,
-            "cardTitle" : data.cardTitle,
+            "sourceUserGmail": userGmail,
+            "targetUserGmail": userGmail,
+            "method": "deleteCard",
+            "cardID": idOfCard,
+            "boardID": Number.parseInt(boardID),
+            "cardCategory": data.cardCategory,
+            "cardTitle": data.cardTitle,
           };
           stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
         })
@@ -259,40 +270,40 @@ async function updateItem(id, column) {
       const newTitle = selectedColumn[id].textContent;
       var modifyApiUrl = "http://localhost:8080/api/card/title/".concat(idOfCard.toString()).concat("/").concat(newTitle);
       const otherParams = {
-        headers : { "content-type" : "application/json; charset=UTF-8"},
-        method : "PUT",
+        headers: { "content-type": "application/json; charset=UTF-8" },
+        method: "PUT",
       };
       fetch(modifyApiUrl, otherParams)
         .then(response => response.json())
         .then(data => {
           // web socket
           const cardMessage = {
-            "sourceUserGmail" : userGmail ,
-            "targetUserGmail" : userGmail ,
-            "method" : "changeCardTitle",
-            "cardID" : idOfCard,
-            "boardID" : Number.parseInt(boardID),
-            "cardCategory" : data.category,
-            "cardTitle" : data.title,
+            "sourceUserGmail": userGmail,
+            "targetUserGmail": userGmail,
+            "method": "changeCardTitle",
+            "cardID": idOfCard,
+            "boardID": Number.parseInt(boardID),
+            "cardCategory": data.category,
+            "cardTitle": data.title,
           };
           stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
         })
-      
+
       // add to activity
       await sleep(2000);
       const activityApiUrl = "http://localhost:8080/api/activity/title/".concat(boardID.toString()).concat("/")
         .concat(idOfCard.toString()).concat("/").concat(userID.toString());
       await fetch(activityApiUrl, {
-        headers : { "content-type" : "application/json; charset=UTF-8"},
-        method : "PUT",
+        headers: { "content-type": "application/json; charset=UTF-8" },
+        method: "PUT",
       })
-      .then(function(response){
-        if(response.ok){
-          console.log("add new update title activity ");
-        }else{
-          throw new Error("Could not reach the API" + response.statusText);
-        }
-      });
+        .then(function (response) {
+          if (response.ok) {
+            console.log("add new update title activity ");
+          } else {
+            throw new Error("Could not reach the API" + response.statusText);
+          }
+        });
     }
   }
 }
@@ -316,17 +327,17 @@ async function addToColumn(column) {
   // send new card data to database
   var cardApiPath = "http://localhost:8080/api/card/add";
   const otherDataOfCard = {
-    "title" : itemText,
+    "title": itemText,
     "dueDate": "",
     "description": "",
     "color": "blue",
     "category": arrayNames[column],
-    "board" : {
+    "board": {
       "id": boardData.id,
       "title": boardData.title,
       "backGroundImage": boardData.backGroundImage,
       "visiable": boardData.visiable,
-      "user" : [
+      "user": [
         {
           "id": boardData.users[0].id,
           "email": boardData.users[0].email,
@@ -344,15 +355,15 @@ async function addToColumn(column) {
     }
   };
   const otherParams = {
-    headers : { "content-type" : "application/json; charset=UTF-8"},
-    method : "POST",
-    body : JSON.stringify(otherDataOfCard),
+    headers: { "content-type": "application/json; charset=UTF-8" },
+    method: "POST",
+    body: JSON.stringify(otherDataOfCard),
   }
   // console.log(otherParams);
   let idOfNewCard;
   await fetch(cardApiPath, otherParams)
-    .then(function(response){
-      if(response.ok){
+    .then(function (response) {
+      if (response.ok) {
         document.getElementById("message").innerHTML = "success";
 
         // get id of new card
@@ -360,40 +371,39 @@ async function addToColumn(column) {
           idOfNewCard = data.id;
           idListArray[column].push(idOfNewCard);
         })
-        
-      }else{
+
+      } else {
         document.getElementById("message").innerHTML = "something error!!!";
         throw new Error("Could not reach the API" + response.statusText);
       }
     })
-  
+
   // web socket
   const cardMessage = {
-    "sourceUserGmail" : userGmail ,
-    "targetUserGmail" : userGmail ,
-    "method" : "create" ,
-    "cardID" : 0,
-    "boardID" : boardID,
-    "cardCategory" : arrayNames[column],
-    "cardTitle" : itemText
+    "sourceUserGmail": userGmail,
+    "targetUserGmail": userGmail,
+    "method": "create",
+    "cardID": 0,
+    "boardID": boardID,
+    "cardCategory": arrayNames[column],
+    "cardTitle": itemText
   };
   stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
-  
+
   // add to activity
   await sleep(2000);
   const activityApiUrl = "http://localhost:8080/api/activity/add/".concat(boardID.toString()).concat("/").concat(idOfNewCard.toString()).concat("/")
     .concat(userID).concat("/create");
-    await fetch(activityApiUrl, {
-      headers : { "content-type" : "application/json; charset=UTF-8"},
-      method : "POST"
+  await fetch(activityApiUrl, {
+    headers: { "content-type": "application/json; charset=UTF-8" },
+  })
+    .then(function (response) {
+      if (response.ok) {
+        console.log("add new create activity ");
+      } else {
+        throw new Error("Could not reach the API" + response.statusText);
+      }
     })
-      .then(function(response){
-        if(response.ok){
-          console.log("add new create activity ");
-        }else{
-          throw new Error("Could not reach the API" + response.statusText);
-        }
-      })
 }
 
 // Show Add Item Input Box
@@ -450,7 +460,7 @@ function drag(e) {
   // console.log(draggedItem.parentNode.parentNode.id);
   switch (draggedItem.parentNode.parentNode.id) {
     case "backlog-content":
-      sourceColumn = 0;      
+      sourceColumn = 0;
       break;
     case "progress-content":
       sourceColumn = 1;
@@ -514,18 +524,18 @@ function drop(e) {
   var putApiUrl = "http://localhost:8080/api/card/category/".concat(idCardInDB.toString())
     .concat("/").concat(nameOfCurrentColumn);
   const otherParams = {
-    headers : { "content-type" : "application/json; charset=UTF-8"},
-    method : "PUT",
+    headers: { "content-type": "application/json; charset=UTF-8" },
+    method: "PUT",
   };
   fetch(putApiUrl, otherParams)
-    .then(function(response){
-      if(response.ok){
+    .then(function (response) {
+      if (response.ok) {
         console.log("update category success");
-      }else{
+      } else {
         throw new Error(response.statusText);
       }
     })
-  
+
   // web socket
   var cardTitle;
   fetch(putApiUrl, otherParams)
@@ -534,13 +544,13 @@ function drop(e) {
       cardTitle = response.title;
       // console.log(cardTitle);
       const cardMessage = {
-        "sourceUserGmail" : userGmail ,
-        "targetUserGmail" : userGmail ,
-        "method" : "changeCardCategory",
-        "cardID" : idCardInDB,
-        "boardID" : boardID,
-        "cardCategory" : nameOfCurrentColumn,
-        "cardTitle" : cardTitle,
+        "sourceUserGmail": userGmail,
+        "targetUserGmail": userGmail,
+        "method": "changeCardCategory",
+        "cardID": idCardInDB,
+        "boardID": boardID,
+        "cardCategory": nameOfCurrentColumn,
+        "cardTitle": cardTitle,
       };
       stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
     })
@@ -550,37 +560,74 @@ function drop(e) {
   const activityApiUrl = "http://localhost:8080/api/activity/category/".concat(boardID.toString()).concat("/")
     .concat(idCardInDB).concat("/").concat(userID.toString());
   fetch(activityApiUrl, {
-      headers : { "content-type" : "application/json; charset=UTF-8"},
-      method : "PUT"
+    headers: { "content-type": "application/json; charset=UTF-8" },
+    method: "PUT"
   })
-  .then(function(response){
-    if(response.ok){
-      console.log("add new category activity ");
-    }else{
-      throw new Error("Could not reach the API" + response.statusText);
-    }
-  });
+    .then(function (response) {
+      if (response.ok) {
+        console.log("add new category activity ");
+      } else {
+        throw new Error("Could not reach the API" + response.statusText);
+      }
+    });
 }
 
 // On Load
 updateDOM();
 
 // // onclick button
-// var notification_click = document.getElementById("notification-click")
-// console.log(notification_click);
-// notification_click.addEventListener('click',function(){
-//     var modal_notification = document.getElementById("modal-notification")
-//     // console.log(notification_click)
-//     modal_notification.classList.toggle('open-modal-notification');
-// });
+var notification_click = document.getElementById("notification-click")
+notification_click.addEventListener('click', async function () {
+  var modal_notification = document.getElementById("modal-notification")
+  modal_notification.classList.toggle('open-modal-notification');
 
-// var avatar_click = document.getElementById("user-avatar")
-// console.log(avatar_click);
-// avatar_click.addEventListener('click',function(){
-//     var modal_notification = document.getElementById("modal-user-info")
-//     // console.log(notification_click)
-//     modal_notification.classList.toggle('open-modal-user-info');
-// });
+  var divParent = document.getElementById("notification-info");
+  await fetch("http://localhost:8080/api/activity/notification/"
+    .concat(userID.toString())
+    .concat("/")
+    .concat(boardID.toString()), {
+      method : "GET" ,
+    })
+      .then(response => response.json())
+      .then(data => {
+        for(var j = 0; j < data.length; j++){
+          
+          if(data[j].sourceUser != -1){  
+            var newDivTag = document.createElement('div');
+            newDivTag.setAttribute('class', 'flex-flex-start modal-user-button');
+            let content = "";
+            for(var i = 0; i < memberID.length; i++){
+              if(memberID[i] == data[j].sourceUser){
+                content = content.concat(member[i]);
+              }
+            }
+            data[j].method = data[j].method.slice(0, -1);
+            var array = data[j].method.split(" ");
+            array.pop();
+            var method = array.join(" ");
+            content = content.concat(" ").concat(method).concat(" ").concat(getCardTitleByID(data[j].card)).concat(" cho bạn !");
+            newDivTag.textContent = content;
+            console.log("content: " + content);
+            divParent.appendChild(newDivTag);
+          }
+        }
+      });
+  console.log("notification click!!");
+});
+
+notification_click.addEventListener('onfocusout', function(){
+  console.log("ON FOCUS OUT");
+  var divParent = document.getElementById("notification-info");
+  divParent.removeChild();
+})
+
+
+var avatar_click = document.getElementById("user-avatar")
+avatar_click.addEventListener('click',function(){
+    var modal_notification = document.getElementById("modal-user-info")
+    // console.log(notification_click)
+    modal_notification.classList.toggle('open-modal-user-info');
+});
 
 // var list_item_team_click = document.getElementById("menu-extend");
 // console.log(list_item_team_click);
@@ -596,7 +643,7 @@ async function openEditForm(id, column) {
 
   var edit_form = document.getElementById("form-edit-board")
   edit_form.classList.toggle('display-none');
-  
+
   const selectedArray = listArrays[column];
   const selectedColumn = listColumns[column].children;
   const idArray = idListArray[column];
@@ -622,13 +669,13 @@ async function openEditForm(id, column) {
   }
   // fetch infor of card
   await fetch("http://localhost:8080/api/card/".concat(idOfCard.toString()), {
-    headers : { "content-type" : "application/json; charset=UTF-8"},
-    method : "GET"
+    headers: { "content-type": "application/json; charset=UTF-8" },
+    method: "GET"
   })
     .then(response => response.json())
     .then(data => {
       // print deadline of card
-      if(data.dueDate != null && data.dueDate != ""){
+      if (data.dueDate != null && data.dueDate != "") {
         var dMY = data.dueDate.split("-");
         var date = new Date();
         date.setFullYear(parseInt(dMY[2]), parseInt(dMY[1]) - 1, parseInt(dMY[0]));
@@ -636,14 +683,14 @@ async function openEditForm(id, column) {
       }
 
       // print description of card 
-      if(data.description != null && data.description != ""){
+      if (data.description != null && data.description != "") {
         document.getElementById("describe-card").value = data.description;
       }
 
       // print member who is assigned to this card
-      if(data.userID != null && data.userID != ""){
-        for(var i = 0; i < memberID.length; i++){
-          if(memberID[i] == data.userID){
+      if (data.userID != null && data.userID != "") {
+        for (var i = 0; i < memberID.length; i++) {
+          if (memberID[i] == data.userID) {
             document.getElementById("add-new-member-value").value = member[i];
             break;
           }
@@ -654,10 +701,11 @@ async function openEditForm(id, column) {
   // fetch infor about activity of this card
   const inforApiUrl = "http://localhost:8080/api/activity/card/".concat(idOfCard.toString());
   let sourceUser = [];
+  let destUser = [];
   let method = [];
   await fetch(inforApiUrl, {
-    headers : { "content-type" : "application/json; charset=UTF-8"},
-    method : "GET"
+    headers: { "content-type": "application/json; charset=UTF-8" },
+    method: "GET"
   })
     .then(response => response.json())
     .then(data => {
@@ -665,17 +713,19 @@ async function openEditForm(id, column) {
       console.log("count = ");
       console.log(count);
       var i;
-      for(i = 0; i < count; i++){
+      for (i = 0; i < count; i++) {
         sourceUser.push(data[i].sourceUser);
+        destUser.push(data[i].destUser);
         method.push(data[i].method);
       }
     })
     .catch(error => console.log("error " + error));
 
-    // display list of activity
-    let ulTag = document.createElement('ol');
-    ulTag.setAttribute("id", "temp");
-    for(let i = 0; i < sourceUser.length; i++){
+  // display list of activity
+  let ulTag = document.createElement('ol');
+  ulTag.setAttribute("id", "temp");
+  for (let i = 0; i < sourceUser.length; i++) {
+    if (sourceUser[i] == destUser[i]) {
       // get name of source user 
       await fetch("http://localhost:8080/api/user/id/".concat(sourceUser[i]))
         .then(response => response.json())
@@ -686,77 +736,145 @@ async function openEditForm(id, column) {
           ulTag.appendChild(li);
         })
         .catch(error => console.log("error " + error));
+    } else {
+      let sourceUserName;
+      let destUserName;
+      await fetch("http://localhost:8080/api/user/id/".concat(sourceUser[i]))
+        .then(response => response.json())
+        .then(data => {
+          sourceUserName = data.firstName.concat(" ").concat(data.lastName)
+        })
+        .catch(error => console.log("error " + error));
+
+      await fetch("http://localhost:8080/api/user/id/".concat(destUser[i]))
+        .then(response => response.json())
+        .then(data => {
+          destUserName = data.firstName.concat(" ").concat(data.lastName)
+        })
+        .catch(error => console.log("error " + error));
+
+      var infor = sourceUserName.concat(" ").concat(method[i]).concat(" ").concat(destUserName);
+      var li = document.createElement('li');
+      li.textContent = infor;
+      ulTag.appendChild(li);
     }
-    document.getElementById("activity-history").appendChild(ulTag);
+  }
+  document.getElementById("activity-history").appendChild(ulTag);
 
 
-    // deadline add
-    document.getElementById('deadline-button').onclick = async function(){
-      const deadlineValue = document.getElementById("deadline").value;
-      const deadlineApiUrl = "http://localhost:8080/api/card/deadline/".concat(idOfCard.toString());
-      await fetch(deadlineApiUrl, {
-        method : "PUT" ,
-        body : deadlineValue
+  // deadline add
+  document.getElementById('deadline-button').onclick = async function () {
+    const deadlineValue = document.getElementById("deadline").value;
+    const deadlineApiUrl = "http://localhost:8080/api/card/deadline/".concat(idOfCard.toString());
+    await fetch(deadlineApiUrl, {
+      method: "PUT",
+      body: deadlineValue
+    })
+      .then(function (response) {
+        if (response.ok) {
+          document.getElementById("update-infor-message").textContent = "Cập nhật deadline thành công";
+        } else {
+          throw new Error("Could not reach the API" + response.statusText);
+        }
       })
-        .then(function(response){
-          if(response.ok){
-            document.getElementById("update-infor-message").textContent = "Cập nhật deadline thành công";
-          }else{
+
+    await fetch("http://localhost:8080/api/activity/deadline/"
+      .concat(boardID.toString())
+      .concat("/")
+      .concat(idOfCard.toString())
+      .concat("/")
+      .concat(userID.toString()), {
+        method : "PUT",
+      })
+        .then(function (response) {
+          if (response.ok) {
+            console.log("OK!");
+          } else {
             throw new Error("Could not reach the API" + response.statusText);
           }
-        })
-    }    
-    
-    // description update
-    document.getElementById("description-button").onclick = async function(){
-      const description = document.getElementById("describe-card").value;
-      fetch("http://localhost:8080/api/card/description/".concat(idOfCard.toString()), {
-        method : "PUT",
-        body : description
-      })
-        .then(function(response){
-          if(response.ok){
-            document.getElementById("description-message").textContent = "Cập nhật miêu tả cho thẻ thành công !";
-          }else{
-            document.getElementById("description-message").textContent = "Vui lòng thử lại !";
-          }
-        })
-    }
+        });
+  }
 
-    // add new member
-    document.getElementById("add-user-button").onclick = async function(){
-      for(var i = 0; i < member.length; i++){
-        if(member[i] == document.getElementById("add-new-member-value").value){
-          await fetch("http://localhost:8080/api/card/member/".concat(memberID[i].toString()).concat("/").concat(idOfCard.toString()), {
-            method : "PUT"
-          })
-            .then(function(response) {
-              if(response.ok){
-                document.getElementById("add-member-suggest").style.display = "none";
-                document.getElementById("update-infor-message").textContent = "Gán thành viên thành công !";
-                // web socket
-                const cardMessage = {
-                  "sourceUserGmail" : userGmail ,
-                  "targetUserGmail" : memberEmail[i] ,
-                  "method" : "assignToCard",
-                  "cardID" : idOfCard,
-                  "boardID" : Number.parseInt(boardID),
-                  // store gmail of user who assigns this card to another member
-                  "cardCategory" : cardCategory,
-                  "cardTitle" : cardTitle,
-                };
-                stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
-              }else{
-                document.getElementById("add-member-suggest").style.display = "none";
-                document.getElementById("update-infor-message").textContent = "Gán thành viên thất bại. Vui lòng thử lại !";
-              }
-            })
+  // description update
+  document.getElementById("description-button").onclick = async function () {
+    const description = document.getElementById("describe-card").value;
+    await fetch("http://localhost:8080/api/card/description/".concat(idOfCard.toString()), {
+      method: "PUT",
+      body: description
+    })
+      .then(function (response) {
+        if (response.ok) {
+          document.getElementById("description-message").textContent = "Cập nhật miêu tả cho thẻ thành công !";
+        } else {
+          document.getElementById("description-message").textContent = "Vui lòng thử lại !";
         }
+      });
+    
+    await fetch("http://localhost:8080/api/activity/description/".concat(boardID.toString())
+      .concat("/")
+      .concat(idOfCard.toString())
+      .concat("/")
+      .concat(userID.toString()), {
+        method : "PUT",
+      })
+        .then(function (response) {
+          if (response.ok) {
+            console.log("OK!");
+          } else {
+            throw new Error("Could not reach the API" + response.statusText);
+          }
+        });
+
+  }
+
+  // add new member
+  document.getElementById("add-user-button").onclick = async function () {
+    for (var i = 0; i < member.length; i++) {
+      if (member[i] == document.getElementById("add-new-member-value").value) {
+        await fetch("http://localhost:8080/api/card/member/".concat(memberID[i].toString()).concat("/").concat(idOfCard.toString()), {
+          method: "PUT"
+        })
+          .then(function (response) {
+            if (response.ok) {
+              document.getElementById("add-member-suggest").style.display = "none";
+              document.getElementById("update-infor-message").textContent = "Gán thành viên thành công !";
+              // web socket
+              const cardMessage = {
+                "sourceUserGmail": userGmail,
+                "targetUserGmail": memberEmail[i],
+                "method": "assignToCard",
+                "cardID": idOfCard,
+                "boardID": Number.parseInt(boardID),
+                // store gmail of user who assigns this card to another member
+                "cardCategory": cardCategory,
+                "cardTitle": cardTitle,
+              };
+              stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
+            } else {
+              document.getElementById("add-member-suggest").style.display = "none";
+              document.getElementById("update-infor-message").textContent = "Gán thành viên thất bại. Vui lòng thử lại !";
+            }
+          });
+
+        await fetch("http://localhost:8080/api/activity/assign/".concat(boardID.toString()).concat("/")
+          .concat(idOfCard.toString()).concat("/")
+          .concat(userGmail).concat("/")
+          .concat(memberEmail[i]), {
+          method: "PUT"
+        })
+          .then(function (response) {
+            if (response.ok) {
+              console.log("them hoat dong gan the thanh cong");
+            } else {
+              throw new Error("Could not reach the API" + response.statusText);
+            }
+          });
       }
     }
+  }
 }
 
-function closeEditForm(){
+function closeEditForm() {
   document.getElementById("add-new-member-value").value = "";
   document.getElementById("add-member-suggest").style.display = "none";
   document.getElementById("update-infor-message").textContent = "";
@@ -771,82 +889,82 @@ function closeEditForm(){
 // implement WebSocket
 var stompClient = null;
 
-function connect(){
+function connect() {
   var socket = new SockJS('/gs-guide-websocket');
   console.log("Connecting....");
   stompClient = Stomp.over(socket);
-  stompClient.connect({}, function(frame){
+  stompClient.connect({}, function (frame) {
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/update/'.concat(boardID.toString()), function(newCardMessage){
+    stompClient.subscribe('/topic/update/'.concat(boardID.toString()), function (newCardMessage) {
       // add new card
       const resp = JSON.parse(newCardMessage.body);
       const index = getIndexInIDListArray(resp.cardCategory);
       let isSender = idListArray[index].includes(resp.cardID);
-      if(resp.method == 'create'){
-        if(!isSender){
+      if (resp.method == 'create') {
+        if (!isSender) {
           idListArray[index].push(resp.cardID);
           listArrays[index].push(resp.cardTitle);
           updateDOM();
         }
       }
 
-      if(resp.method == 'changeCardCategory'){
-        if(!isSender){
+      if (resp.method == 'changeCardCategory') {
+        if (!isSender) {
           // delete old card
           var i;
-          for(i = 0; i < idListArray.length; i++){
+          for (i = 0; i < idListArray.length; i++) {
             const indexOldCard = idListArray[i].indexOf(resp.cardID);
-            if(indexOldCard > -1){
+            if (indexOldCard > -1) {
               idListArray[i].splice(indexOldCard, 1);
               listArrays[i].splice(indexOldCard, 1);
               break;
-            } 
+            }
           }
           // update new card
           idListArray[index].push(resp.cardID);
           listArrays[index].push(resp.cardTitle);
           updateDOM();
-        } 
+        }
       }
 
-      if(resp.method == 'deleteCard'){
+      if (resp.method == 'deleteCard') {
         var i;
-        for(i = 0; i < idListArray.length; i++){
+        for (i = 0; i < idListArray.length; i++) {
           const indexOldCard = idListArray[i].indexOf(resp.cardID);
-          if(indexOldCard > -1){
+          if (indexOldCard > -1) {
             idListArray[i].splice(indexOldCard, 1);
             listArrays[i].splice(indexOldCard, 1);
             break;
-          } 
+          }
         }
-        if(!isSender){
+        if (!isSender) {
           // delete old card
           console.log("is not sender");
         }
         updateDOM();
       }
 
-      if(resp.method == 'changeCardTitle'){
+      if (resp.method == 'changeCardTitle') {
         var i;
-        for(i = 0; i < idListArray.length; i++){
+        for (i = 0; i < idListArray.length; i++) {
           const indexOldCard = idListArray[i].indexOf(resp.cardID);
-          if(indexOldCard > -1){
+          if (indexOldCard > -1) {
             listArrays[i][indexOldCard] = resp.cardTitle;
             break;
-          } 
+          }
         }
         updateDOM();
       }
 
-      if(resp.method == 'assignToCard' && resp.targetUserGmail == userGmail){
-        
-        for(var i = 0; i < idListArray.length; i++){
-          for(var j = 0; j < idListArray[i].length; j++){
-            if(idListArray[i][j] == resp.cardID){
-              for(var k = 0; k < memberEmail.length; k++){
+      if ((resp.method == 'assignToCard') && (resp.targetUserGmail == userGmail) && (resp.sourceUserGmail != userGmail)) {
+
+        for (var i = 0; i < idListArray.length; i++) {
+          for (var j = 0; j < idListArray[i].length; j++) {
+            if (idListArray[i][j] == resp.cardID) {
+              for (var k = 0; k < memberEmail.length; k++) {
                 document.getElementById("notification-div-tag").style.display = "flex";
                 document.getElementById("assign-to-card-notification").innerHTML = member[k] + " đã gán thẻ " + listArrays[i][j] + " cho bạn !";
-                setTimeout(function(){
+                setTimeout(function () {
                   document.getElementById("assign-to-card-notification").innerHTML = "";
                   document.getElementById("notification-div-tag").style.display = "none";
                 }, 3000);
@@ -857,7 +975,7 @@ function connect(){
         }
       }
       console.log(resp);
-    })  
+    })
   })
 }
 
@@ -865,15 +983,15 @@ connect();
 
 // add recent view
 // RVB = recently viewed board
-async function addRVB(){
+async function addRVB() {
   await sleep(2000);
   await fetch("http://localhost:8080/api/rvb/".concat(userID.toString()).concat("/").concat(boardID.toString()), {
-    method : "POST"
+    method: "POST"
   })
-    .then(function (response){
-      if(response.ok){
+    .then(function (response) {
+      if (response.ok) {
         console.log("added RVB");
-      }else{
+      } else {
         throw new Error("Could not reach the API" + response.statusText);
       }
     })
@@ -882,23 +1000,23 @@ async function addRVB(){
 addRVB();
 
 document.getElementById("new-member-form").addEventListener("focusout", () => {
-  if(document.getElementById("new-member-gmail").value == null || document.getElementById("new-member-gmail").value == ""){
+  if (document.getElementById("new-member-gmail").value == null || document.getElementById("new-member-gmail").value == "") {
     document.getElementById("new-member-form").style.display = "none";
   }
 })
 
-function showInputGmail(){
+function showInputGmail() {
   document.getElementById("new-member-form").style.display = "block";
   document.getElementById("add-new-member").onclick = async function () {
     const newGmail = document.getElementById("new-member-gmail").value;
-    await fetch("http://localhost:8080/api/board/member/".concat(boardID.toString()).concat("/").concat(newGmail),{
+    await fetch("http://localhost:8080/api/board/member/".concat(boardID.toString()).concat("/").concat(newGmail), {
       method: "PUT"
     })
-      .then(function(response){
-        if(response.ok){
+      .then(function (response) {
+        if (response.ok) {
           console.log("them thanh cong");
           document.getElementById("new-member-message").textContent = "Thêm thành viên mới vào bảng thành công";
-        }else{
+        } else {
           console.log("them that bai");
           document.getElementById("new-member-message").textContent = "Tài khoản email chưa được đăng ký trên hệ thống !";
         }
@@ -910,17 +1028,17 @@ function showInputGmail(){
 
 
 function getStates(value) {
-	const listElement = document.getElementById("add-member-suggest");
-	listElement.style.display = "block";
-	listElement.innerHTML = '';
-	for (var key in member) {
+  const listElement = document.getElementById("add-member-suggest");
+  listElement.style.display = "block";
+  listElement.innerHTML = '';
+  for (var key in member) {
     if (member[key].toLowerCase().includes(value.toLowerCase())) {
       let liEl = document.createElement('li');
       liEl.textContent = member[key];
-      liEl.onclick = function (){
+      liEl.onclick = function () {
         document.getElementById("add-new-member-value").value = liEl.textContent;
       }
-			listElement.appendChild(liEl);
-		}
-	}
+      listElement.appendChild(liEl);
+    }
+  }
 }
