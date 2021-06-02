@@ -44,6 +44,9 @@ let currentColumn;
 let indexItem;
 let sourceColumn;
 
+// ignore 
+let currentTitle;
+
 function getCardTitleByID(id){
   for(var j = 0; j < idListArray.length; j++){
     for(var i = 0; i < idListArray[j].length; i++){
@@ -178,10 +181,18 @@ function createItemEl(columnEl, column, item, index) {
   listEl.setAttribute('ondragstart', 'drag(event)');
   listEl.setAttribute('onfocusout', `updateItem(${index}, ${column})`);
   listEl.setAttribute('ondblclick', `openEditForm(${index}, ${column})`);
-  listEl.contentEditable = true;
+  listEl.setAttribute('onclick', `setContentEditable(${index}, ${column})`)
+  listEl.contentEditable = false;
 
   // Append
   columnEl.appendChild(listEl);
+}
+
+function setContentEditable(index, column){
+  const selectedArray = listArrays[column];
+  const selectedColumn = listColumns[column].children;
+  selectedColumn[index].contentEditable = true;
+  currentTitle = selectedColumn[index].textContent;
 }
 
 // Update Columns in DOM - Reset HTML, Filter Array, Update localStorage
@@ -238,72 +249,74 @@ async function updateItem(id, column) {
   const selectedColumn = listColumns[column].children;
   const idArray = idListArray[column];
   const idOfCard = idArray[id];
-  if (!dragging) {
-    // delete item
-    if (!selectedColumn[id].textContent) {
-      delete selectedArray[id]; // !!!
-      updateDOM();
+  if(selectedColumn[id].textContent != currentTitle){
+    if (!dragging) {
+      // delete item
+      if (!selectedColumn[id].textContent) {
+        delete selectedArray[id]; // !!!
+        updateDOM();
 
-      // delete card in database
-      fetch("http://localhost:8080/api/card/".concat(idOfCard.toString()), {
-        headers: { "content-type": "application/json; charset=UTF-8" },
-        method: "DELETE"
-      })
-        .then(response => response.json())
-        .then(data => {
-          // web socket
-          const cardMessage = {
-            "sourceUserGmail": userGmail,
-            "targetUserGmail": userGmail,
-            "method": "deleteCard",
-            "cardID": idOfCard,
-            "boardID": Number.parseInt(boardID),
-            "cardCategory": data.cardCategory,
-            "cardTitle": data.cardTitle,
-          };
-          stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
+        // delete card in database
+        fetch("http://localhost:8080/api/card/".concat(idOfCard.toString()), {
+          headers: { "content-type": "application/json; charset=UTF-8" },
+          method: "DELETE"
         })
-        .catch(error => console.log("error " + error));
-    } else {
-      // modify item title
-      selectedArray[id] = selectedColumn[id].textContent;
-      const newTitle = selectedColumn[id].textContent;
-      var modifyApiUrl = "http://localhost:8080/api/card/title/".concat(idOfCard.toString()).concat("/").concat(newTitle);
-      const otherParams = {
-        headers: { "content-type": "application/json; charset=UTF-8" },
-        method: "PUT",
-      };
-      fetch(modifyApiUrl, otherParams)
-        .then(response => response.json())
-        .then(data => {
-          // web socket
-          const cardMessage = {
-            "sourceUserGmail": userGmail,
-            "targetUserGmail": userGmail,
-            "method": "changeCardTitle",
-            "cardID": idOfCard,
-            "boardID": Number.parseInt(boardID),
-            "cardCategory": data.category,
-            "cardTitle": data.title,
-          };
-          stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
-        })
+          .then(response => response.json())
+          .then(data => {
+            // web socket
+            const cardMessage = {
+              "sourceUserGmail": userGmail,
+              "targetUserGmail": userGmail,
+              "method": "deleteCard",
+              "cardID": idOfCard,
+              "boardID": Number.parseInt(boardID),
+              "cardCategory": data.cardCategory,
+              "cardTitle": data.cardTitle,
+            };
+            stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
+          })
+          .catch(error => console.log("error " + error));
+      } else {
+        // modify item title
+        selectedArray[id] = selectedColumn[id].textContent;
+        const newTitle = selectedColumn[id].textContent;
+        var modifyApiUrl = "http://localhost:8080/api/card/title/".concat(idOfCard.toString()).concat("/").concat(newTitle);
+        const otherParams = {
+          headers: { "content-type": "application/json; charset=UTF-8" },
+          method: "PUT",
+        };
+        fetch(modifyApiUrl, otherParams)
+          .then(response => response.json())
+          .then(data => {
+            // web socket
+            const cardMessage = {
+              "sourceUserGmail": userGmail,
+              "targetUserGmail": userGmail,
+              "method": "changeCardTitle",
+              "cardID": idOfCard,
+              "boardID": Number.parseInt(boardID),
+              "cardCategory": data.category,
+              "cardTitle": data.title,
+            };
+            stompClient.send("/app/board/update", {}, JSON.stringify(cardMessage));
+          })
 
-      // add to activity
-      await sleep(2000);
-      const activityApiUrl = "http://localhost:8080/api/activity/title/".concat(boardID.toString()).concat("/")
-        .concat(idOfCard.toString()).concat("/").concat(userID.toString());
-      await fetch(activityApiUrl, {
-        headers: { "content-type": "application/json; charset=UTF-8" },
-        method: "PUT",
-      })
-        .then(function (response) {
-          if (response.ok) {
-            console.log("add new update title activity ");
-          } else {
-            throw new Error("Could not reach the API" + response.statusText);
-          }
-        });
+        // add to activity
+        await sleep(2000);
+        const activityApiUrl = "http://localhost:8080/api/activity/title/".concat(boardID.toString()).concat("/")
+          .concat(idOfCard.toString()).concat("/").concat(userID.toString());
+        await fetch(activityApiUrl, {
+          headers: { "content-type": "application/json; charset=UTF-8" },
+          method: "PUT",
+        })
+          .then(function (response) {
+            if (response.ok) {
+              console.log("add new update title activity ");
+            } else {
+              throw new Error("Could not reach the API" + response.statusText);
+            }
+          });
+      }
     }
   }
 }
@@ -641,6 +654,7 @@ avatar_click.addEventListener('click',function(){
 // open edit form
 async function openEditForm(id, column) {
 
+  document.getElementsByTagName('li').contentEditable = false;
   var edit_form = document.getElementById("form-edit-board")
   edit_form.classList.toggle('display-none');
 
