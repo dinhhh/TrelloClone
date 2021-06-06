@@ -93,7 +93,26 @@ public class UserRestController {
 			User user = res.get();
 			String[] spilitted = newDoB.split("-");
 			String newDoB_ = "";
+			// validate new of birth
+			Integer day = Integer.valueOf(spilitted[0]), month = Integer.valueOf(spilitted[1]), year = Integer.valueOf(spilitted[2]);
+			System.out.println("day: " + day + " month: " + month + " year: " + year);
+			if(month > 12 || month < 1 || day > 31 || day < 1 || year < 1900) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			if (month == 4 || month == 6 || month == 9 || month == 11) {
+				if (day == 31) {
+					return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+				}
+			}
+			if(month == 2) {
+				if(!(year % 4 == 0 && year % 100 != 0)) {
+					if (day > 28) {
+						return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+					}
+				}
+			}
 			for(int i = 2; i >= 0; i--) {
+				System.out.println(spilitted[i]);
 				newDoB_ += spilitted[i];
 				newDoB_ += "-";
 			}
@@ -130,6 +149,17 @@ public class UserRestController {
 				user.setPassword(passwordEncoder.encode(newPassword));
 				return new ResponseEntity<User>(userRepo.save(user), HttpStatus.OK);
 			}
+		}
+	}
+	
+	@GetMapping("/api/user/infor/{id}")
+	public ResponseEntity<User> getUserInformation(@PathVariable String id){
+		Long userID = Long.valueOf(id);
+		Optional<User> users = userRepo.findById(userID);
+		if(users.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<User>(users.get(), HttpStatus.OK);
 		}
 	}
 }

@@ -60,6 +60,17 @@ public class BoardController {
 		}
 	}
 	
+	@GetMapping("/api/board/title/{id}")
+	public ResponseEntity<Board> getBoardTitleByID(@PathVariable String id){
+		Long boardID = Long.valueOf(id);
+		Optional<Board> opBoard = boardRepo.findById(boardID);
+		if(opBoard.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<Board>(opBoard.get(), HttpStatus.OK);
+		}
+	}
+	
 	@GetMapping("/api/board/title/user/{email}")
 	public ResponseEntity<Map<Long, String>> getBoardTitleOwner(@PathVariable String email){
 		// get user id

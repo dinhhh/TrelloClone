@@ -589,43 +589,47 @@ function drop(e) {
 updateDOM();
 
 // // onclick button
+let loadedNotification = false;
 var notification_click = document.getElementById("notification-click")
 notification_click.addEventListener('click', async function () {
+  
+  if(!loadedNotification){
+    var divParent = document.getElementById("notification-info");
+    await fetch("http://localhost:8080/api/activity/notification/"
+      .concat(userID.toString())
+      .concat("/")
+      .concat(boardID.toString()), {
+        method : "GET" ,
+      })
+        .then(response => response.json())
+        .then(data => {
+          for(var j = 0; j < data.length; j++){
+            
+            if(data[j].sourceUser != -1){  
+              var newDivTag = document.createElement('div');
+              newDivTag.setAttribute('class', 'flex-flex-start modal-user-button');
+              let content = "";
+              for(var i = 0; i < memberID.length; i++){
+                if(memberID[i] == data[j].sourceUser){
+                  content = content.concat(member[i]);
+                }
+              }
+              data[j].method = data[j].method.slice(0, -1);
+              var array = data[j].method.split(" ");
+              array.pop();
+              var method = array.join(" ");
+              content = content.concat(" ").concat(method).concat(" ").concat(getCardTitleByID(data[j].card)).concat(" cho bạn !");
+              newDivTag.textContent = content;
+              console.log("content: " + content);
+              divParent.appendChild(newDivTag);
+            }
+          }
+        });
+        loadedNotification = true;
+    }
+  console.log("notification click!!");
   var modal_notification = document.getElementById("modal-notification")
   modal_notification.classList.toggle('open-modal-notification');
-
-  var divParent = document.getElementById("notification-info");
-  await fetch("http://localhost:8080/api/activity/notification/"
-    .concat(userID.toString())
-    .concat("/")
-    .concat(boardID.toString()), {
-      method : "GET" ,
-    })
-      .then(response => response.json())
-      .then(data => {
-        for(var j = 0; j < data.length; j++){
-          
-          if(data[j].sourceUser != -1){  
-            var newDivTag = document.createElement('div');
-            newDivTag.setAttribute('class', 'flex-flex-start modal-user-button');
-            let content = "";
-            for(var i = 0; i < memberID.length; i++){
-              if(memberID[i] == data[j].sourceUser){
-                content = content.concat(member[i]);
-              }
-            }
-            data[j].method = data[j].method.slice(0, -1);
-            var array = data[j].method.split(" ");
-            array.pop();
-            var method = array.join(" ");
-            content = content.concat(" ").concat(method).concat(" ").concat(getCardTitleByID(data[j].card)).concat(" cho bạn !");
-            newDivTag.textContent = content;
-            console.log("content: " + content);
-            divParent.appendChild(newDivTag);
-          }
-        }
-      });
-  console.log("notification click!!");
 });
 
 notification_click.addEventListener('onfocusout', function(){
@@ -913,6 +917,7 @@ function connect() {
       // add new card
       const resp = JSON.parse(newCardMessage.body);
       const index = getIndexInIDListArray(resp.cardCategory);
+      console.log(resp.cardCategory + "\t" + index + "\t" + idListArray[index]);
       let isSender = idListArray[index].includes(resp.cardID);
       if (resp.method == 'create') {
         if (!isSender) {
@@ -976,13 +981,15 @@ function connect() {
           for (var j = 0; j < idListArray[i].length; j++) {
             if (idListArray[i][j] == resp.cardID) {
               for (var k = 0; k < memberEmail.length; k++) {
-                document.getElementById("notification-div-tag").style.display = "flex";
-                document.getElementById("assign-to-card-notification").innerHTML = member[k] + " đã gán thẻ " + listArrays[i][j] + " cho bạn !";
-                setTimeout(function () {
-                  document.getElementById("assign-to-card-notification").innerHTML = "";
-                  document.getElementById("notification-div-tag").style.display = "none";
-                }, 3000);
-                break;
+                if(memberEmail[k] == resp.sourceUserGmail){
+                  document.getElementById("notification-div-tag").style.display = "flex";
+                  document.getElementById("assign-to-card-notification").innerHTML = member[k] + " đã gán thẻ " + listArrays[i][j] + " cho bạn !";
+                  setTimeout(function () {
+                    document.getElementById("assign-to-card-notification").innerHTML = "";
+                    document.getElementById("notification-div-tag").style.display = "none";
+                  }, 3000);
+                  break;
+                }
               }
             }
           }
@@ -1035,6 +1042,20 @@ function showInputGmail() {
           document.getElementById("new-member-message").textContent = "Tài khoản email chưa được đăng ký trên hệ thống !";
         }
       })
+    
+      await fetch("http://localhost:8080/api/activity/addNewMemberToBoard/"
+      .concat(boardID.toString())
+      .concat("/")
+      .concat(userGmail)
+      .concat("/")
+      .concat(newGmail), {
+        method : "POST"
+      })
+      .then(function (response) {
+        if (response.ok) {
+          console.log("Them hoat dong thanh cong");
+        } 
+      }) 
   }
 }
 

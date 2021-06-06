@@ -189,6 +189,36 @@ public class ActivityController {
 			return new ResponseEntity<Activity>(activityRepo.save(activity), HttpStatus.OK);
 		}
 	}
+	
+	// create new card
+	@PostMapping("/api/activity/addNewMemberToBoard/{boardID}/{sourceUserGmail}/{destUserGmail}")
+	public ResponseEntity<Activity> addNewMemberToBoard(@PathVariable String boardID, @PathVariable String sourceUserGmail, 
+			@PathVariable String destUserGmail
+			){
+		Optional<User> opSourceUser = userRepo.findByEmail(sourceUserGmail);
+		Optional<User> opDestUser = userRepo.findByEmail(destUserGmail);
+		
+		Long boardIDLong = Long.valueOf(boardID);
+		Optional<Board> opBoard = boardRepo.findById(boardIDLong);
+		
+		if(opSourceUser.isEmpty() || opDestUser.isEmpty() || opBoard.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			Activity activity = new Activity(boardIDLong, opSourceUser.get().getId(), opDestUser.get().getId(), "thêm thành viên mới", (long) -1);
+			return new ResponseEntity<Activity>(activityRepo.save(activity), HttpStatus.OK);
+		}
+	}
+	
+	@GetMapping("/api/activity/findAddNewMember/{gmail}")
+	public ResponseEntity<List<Activity>> findAddNewMemberList(@PathVariable String gmail){
+		Optional<User> users = userRepo.findByEmail(gmail);
+		if (users.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		else {
+			return new ResponseEntity<List<Activity>>(activityRepo.findAddNewMember(users.get().getId()), HttpStatus.OK);
+		}
+	}
 }
 
 

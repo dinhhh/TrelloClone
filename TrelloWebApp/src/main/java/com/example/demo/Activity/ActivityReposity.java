@@ -16,4 +16,7 @@ public interface ActivityReposity extends JpaRepository<Activity, Long>{
 
 	@Query(nativeQuery = true, value = "delete from activity where card = ?")
 	void deleteByCardID(Long cardID);
+	
+	@Query(nativeQuery = true, value = "select * from activity where source_user != ?1 and dest_user = ?1 and method = \"thêm thành viên mới\";")
+	List<Activity> findAddNewMember(Long id);
 }
