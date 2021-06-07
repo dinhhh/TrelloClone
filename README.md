@@ -35,7 +35,7 @@ Trello Clone is a fully functioning task management Web Application. This app su
  - Install [Spring Tool Suite IDE](https://spring.io/tools) or [Eclipse IDE](https://www.eclipse.org/downloads/packages/installer)
  - Clone this repository
 ```
-    git clone https://gitlab.com/soict-it4409/20202/nhom13/cnweb
+    git clone https://github.com/dinhhh/TrelloClone
 ```
  - Open IDE and import this project to workspace
  - Click run button on IDE's tab bar
