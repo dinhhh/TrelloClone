@@ -38,7 +38,7 @@ function checkGenderForm(gender) {
 	if (gender.toLowerCase().trimRight() == "nam" || gender.toLowerCase().trimRight() == "nữ") {
 		return true;
 	} else {
-		document.getElementById("message").textContent = "Giới tính không thỏa mãn (Nam/Nữ) "
+		document.getElementById("left-message").textContent = "Giới tính không thỏa mãn (Nam/Nữ) "
 		return false;
 	}
 }
@@ -61,19 +61,23 @@ submit.onclick = async function () {
 	}
 
 	const newDoB = document.getElementById("date-of-birth").value;
-	if (newDoB != null && newDoB != "") {
-		const changeDoBApiUrl = "http://localhost:8080/api/user/dob/".concat(userGmail);
-		await fetch(changeDoBApiUrl, {
-			method: "PUT",
-			body: newDoB
-		})
-			.then(function (response) {
-				if (response.ok) {
-					console.log("change dob ok");
-				} else {
-					throw new Error("Could not reach the API" + response.statusText);
-				}
-			});
+	var pattern =/^([0-9]{2})\-([0-9]{2})\-([0-9]{4})$/;
+	if (pattern.test(newDoB)){
+		if (newDoB != null && newDoB != "") {
+			const changeDoBApiUrl = "http://localhost:8080/api/user/dob/".concat(userGmail);
+			await fetch(changeDoBApiUrl, {
+				method: "PUT",
+				body: newDoB
+			})
+				.then(function (response) {
+					if (response.ok) {
+						console.log("change dob ok");
+					} else {
+						document.getElementById("left-message").textContent = "Ngày tháng năm sinh không hợp lệ. Vui lòng nhập lại !";
+						throw new Error("Could not reach the API" + response.statusText);
+					}
+				});
+		}
 	}
 
 	const newGender_ = document.getElementById("gender").value;
@@ -101,17 +105,17 @@ submit.onclick = async function () {
 function checkPassword(password1, password2) {
 	// If password not entered
 	if (password1 == '') {
-		document.getElementById("message").textContent = "Vui lòng nhập mật khẩu mới !";
+		document.getElementById("right-message").textContent = "Vui lòng nhập mật khẩu mới !";
 		return false;
 	}
 	// If confirm password not entered
 	if (password2 == '') {
-		document.getElementById("message").textContent = "Vui lòng nhập lại mật khẩu mới !";
+		document.getElementById("right-message").textContent = "Vui lòng nhập lại mật khẩu mới !";
 		return false;
 	}
 	// If Not same return False.    
 	if (password1 != password2) {
-		document.getElementById("message").textContent = "Mật khẩu không khớp. Vui lòng thử lại !";
+		document.getElementById("right-message").textContent = "Mật khẩu không khớp. Vui lòng thử lại !";
 		return false;
 	}
 
@@ -134,9 +138,9 @@ submitChangePassword.onclick = async function () {
 		})
 			.then(function (response) {
 				if (response.ok) {
-					document.getElementById("message").textContent = "Cập nhật mật khẩu thành công !"
+					document.getElementById("right-message").textContent = "Cập nhật mật khẩu thành công !"
 				} else {
-					document.getElementById("message").textContent = "Nhập khẩu hiện tại sai. Vui lòng kiểm tra lại !"
+					document.getElementById("right-message").textContent = "Nhập khẩu hiện tại sai. Vui lòng kiểm tra lại !"
 				}
 			});
 		document.getElementById("old-password").value = "";

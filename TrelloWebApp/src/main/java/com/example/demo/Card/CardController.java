@@ -117,6 +117,7 @@ public class CardController {
 			Card card = cards.get();
 			CardMessage cardMessage = new CardMessage("unknown","unknown", "deleteCard", card.getId(), card.getBoard().getId(), card.getCategory(), card.getTitle());
 			cardRepo.delete(card);
+			activityRepo.deleteByCardID(card.getId());
 			return new ResponseEntity<CardMessage>(cardMessage, HttpStatus.OK);
 		}
 	}

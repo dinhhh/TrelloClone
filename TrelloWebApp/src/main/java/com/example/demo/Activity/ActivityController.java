@@ -1,5 +1,6 @@
 package com.example.demo.Activity;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,27 @@ public class ActivityController {
 		}
 	}
 	
+	// assign card to a member in board
+	@PutMapping("/api/activity/assign/{boardID}/{cardID}/{sourceUserGmail}/{destUserGmail}")
+	public ResponseEntity<Activity> assignTo(@PathVariable String boardID, @PathVariable String cardID, 
+			@PathVariable String sourceUserGmail, @PathVariable String destUserGmail){
+		Optional<User> opSourceUser = userRepo.findByEmail(sourceUserGmail);
+		Optional<User> opDestUser = userRepo.findByEmail(destUserGmail);
+		
+		Long boardIDLong = Long.valueOf(boardID);
+		Optional<Board> opBoard = boardRepo.findById(boardIDLong);
+		
+		Long cardIDLong = Long.valueOf(cardID);
+		Optional<Card> opCard = cardRepo.findById(cardIDLong);
+		
+		if(opSourceUser.isEmpty() || opBoard.isEmpty() || opCard.isEmpty() || opDestUser.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			Activity activity = new Activity(boardIDLong, opSourceUser.get().getId(), opDestUser.get().getId(), " đã gán thẻ cho ", cardIDLong);
+			return new ResponseEntity<Activity>(activityRepo.save(activity), HttpStatus.OK);
+		}
+	}
+		
 	// change category of card
 	@PutMapping("/api/activity/category/{boardID}/{cardID}/{sourceUserID}")
 	public ResponseEntity<Activity> changeCategory(@PathVariable String boardID, @PathVariable String cardID, 
@@ -108,6 +130,93 @@ public class ActivityController {
 		}else {
 			Card card = cards.get();
 			return new ResponseEntity<Iterable<Activity>>(activityService.findAll(card.getId()), HttpStatus.OK);
+		}
+	}
+	
+	@GetMapping("/api/activity/notification/{userID}/{boardID}")
+	public ResponseEntity<List<Activity>> getNotification(@PathVariable String userID, @PathVariable String boardID){
+		Optional<User> users = userRepo.findById(Long.valueOf(userID));
+		Optional<Board> boards = boardRepo.findById(Long.valueOf(boardID));
+		
+		if(users.isEmpty() || boards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			List<Activity> activities = activityRepo.findNotification(users.get().getId(), boards.get().getId());
+			if(activities.isEmpty()) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}else {
+				return new ResponseEntity<List<Activity>>(activities, HttpStatus.OK);
+			}
+		}
+	}
+	
+	@PutMapping("/api/activity/description/{boardID}/{cardID}/{sourceUserID}")
+	public ResponseEntity<Activity> changeDescription(@PathVariable String boardID, @PathVariable String cardID, 
+			@PathVariable String sourceUserID){
+		Long sourceUserIDLong = Long.valueOf(sourceUserID);
+		Optional<User> opSourceUser = userRepo.findById(sourceUserIDLong);
+		
+		Long boardIDLong = Long.valueOf(boardID);
+		Optional<Board> opBoard = boardRepo.findById(boardIDLong);
+		
+		Long cardIDLong = Long.valueOf(cardID);
+		Optional<Card> opCard = cardRepo.findById(cardIDLong);
+		
+		if(opSourceUser.isEmpty() || opBoard.isEmpty() || opCard.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			Activity activity = new Activity(boardIDLong, sourceUserIDLong, sourceUserIDLong, "đã thay đổi miêu tả của thẻ", cardIDLong);
+			return new ResponseEntity<Activity>(activityRepo.save(activity), HttpStatus.OK);
+		}
+	}
+	
+	@PutMapping("/api/activity/deadline/{boardID}/{cardID}/{sourceUserID}")
+	public ResponseEntity<Activity> changeDeadline(@PathVariable String boardID, @PathVariable String cardID, 
+			@PathVariable String sourceUserID){
+		Long sourceUserIDLong = Long.valueOf(sourceUserID);
+		Optional<User> opSourceUser = userRepo.findById(sourceUserIDLong);
+		
+		Long boardIDLong = Long.valueOf(boardID);
+		Optional<Board> opBoard = boardRepo.findById(boardIDLong);
+		
+		Long cardIDLong = Long.valueOf(cardID);
+		Optional<Card> opCard = cardRepo.findById(cardIDLong);
+		
+		if(opSourceUser.isEmpty() || opBoard.isEmpty() || opCard.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			Activity activity = new Activity(boardIDLong, sourceUserIDLong, sourceUserIDLong, "đã thay đổi ngày hết hạn của thẻ", cardIDLong);
+			return new ResponseEntity<Activity>(activityRepo.save(activity), HttpStatus.OK);
+		}
+	}
+	
+	// create new card
+	@PostMapping("/api/activity/addNewMemberToBoard/{boardID}/{sourceUserGmail}/{destUserGmail}")
+	public ResponseEntity<Activity> addNewMemberToBoard(@PathVariable String boardID, @PathVariable String sourceUserGmail, 
+			@PathVariable String destUserGmail
+			){
+		Optional<User> opSourceUser = userRepo.findByEmail(sourceUserGmail);
+		Optional<User> opDestUser = userRepo.findByEmail(destUserGmail);
+		
+		Long boardIDLong = Long.valueOf(boardID);
+		Optional<Board> opBoard = boardRepo.findById(boardIDLong);
+		
+		if(opSourceUser.isEmpty() || opDestUser.isEmpty() || opBoard.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			Activity activity = new Activity(boardIDLong, opSourceUser.get().getId(), opDestUser.get().getId(), "thêm thành viên mới", (long) -1);
+			return new ResponseEntity<Activity>(activityRepo.save(activity), HttpStatus.OK);
+		}
+	}
+	
+	@GetMapping("/api/activity/findAddNewMember/{gmail}")
+	public ResponseEntity<List<Activity>> findAddNewMemberList(@PathVariable String gmail){
+		Optional<User> users = userRepo.findByEmail(gmail);
+		if (users.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		else {
+			return new ResponseEntity<List<Activity>>(activityRepo.findAddNewMember(users.get().getId()), HttpStatus.OK);
 		}
 	}
 }

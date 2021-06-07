@@ -208,3 +208,7 @@ display: flex;
 .text-center{
   text-align: center;
 }
+
+.login-button:hover{
+  color: #8f58fb;
+}

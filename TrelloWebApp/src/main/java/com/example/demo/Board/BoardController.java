@@ -11,12 +11,18 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.Card.Card;
+import com.example.demo.Card.CardRepository;
+import com.example.demo.RecentlyViewedBoard.RecentlyViewedBoard;
+import com.example.demo.RecentlyViewedBoard.RecentlyViewedBoardRepository;
 import com.example.demo.User.User;
 import com.example.demo.User.UserRepository;
 
@@ -27,6 +33,43 @@ public class BoardController {
 	
 	@Autowired
 	private UserRepository userRepo;
+	
+	@Autowired
+	private CardRepository cardRepo;
+	
+	@Autowired
+	private RecentlyViewedBoardRepository recentRepo;
+	
+	@DeleteMapping("/api/board/{boardID}")
+	public ResponseEntity<String> deleteBoard(@PathVariable String boardID){
+		Optional<Board> boards = boardRepo.findById(Long.valueOf(boardID));
+		if(boards.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			Board board = boards.get();
+			Set<Card> cards = board.getCards();
+			for(Card c : cards) {
+				cardRepo.delete(c);
+			}
+			List<RecentlyViewedBoard> recents = recentRepo.findWhereBoardIDEqual(board.getId());
+			for(RecentlyViewedBoard r : recents) {
+				recentRepo.delete(r);
+			}
+			boardRepo.delete(board);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+	}
+	
+	@GetMapping("/api/board/title/{id}")
+	public ResponseEntity<Board> getBoardTitleByID(@PathVariable String id){
+		Long boardID = Long.valueOf(id);
+		Optional<Board> opBoard = boardRepo.findById(boardID);
+		if(opBoard.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<Board>(opBoard.get(), HttpStatus.OK);
+		}
+	}
 	
 	@GetMapping("/api/board/title/user/{email}")
 	public ResponseEntity<Map<Long, String>> getBoardTitleOwner(@PathVariable String email){

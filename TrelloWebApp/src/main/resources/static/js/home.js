@@ -1,19 +1,87 @@
-
+let boardIDDelete = -1;
+var gmailOfUser = document.getElementById("gmail").textContent;
 let boardJson = {};
+let loaded = false;
+
 var notification_click = document.getElementById("notification-click")
-console.log(notification_click);
-notification_click.addEventListener('click', function () {
+notification_click.addEventListener('click', async function () {
+	if (!loaded){
+		let userName = [];
+		let userID = [];
+		let boardID = [];
+		let boardTitle = [];
+		let counter = 0;
+		await fetch("http://localhost:8080/api/activity/findAddNewMember/"
+		.concat(gmailOfUser), {
+			method : "GET"
+		})
+			.then(response => response.json())
+			.then(data => {
+				counter = Object.keys(data).length;
+				if (counter > 0){
+					for (var i = 0; i < counter; i++){
+						userID.push(data[i].sourceUser);
+						boardID.push(data[i].board);
+					}
+				}
+			})
+		for (var i = 0; i < counter; i++){
+			await fetch("http://localhost:8080/api/board/title/"
+			.concat(boardID[i].toString()), {
+				method : "GET"
+			})
+				.then(response => response.json())
+				.then(data => {
+					boardTitle.push(data.title);
+				})
+		}
+		for (var i = 0; i < counter; i++){
+			await fetch("http://localhost:8080/api/user/infor/"
+			.concat(userID[i].toString()), {
+				method : "GET"
+			})
+				.then(response => response.json())
+				.then(data => {
+					var name = data.firstName.concat(" ").concat(data.lastName);
+					userName.push(name);
+				})
+		}
+		var parentTag = document.getElementById("notification");
+		for (var i = 0; i < counter; i++){
+			var newDivTag = document.createElement('div');
+			newDivTag.setAttribute('class', 'flex-flex-start modal-user-button');
+			var content = userName[i].concat(" đã thêm bạn vào bảng ").concat(boardTitle[i]);
+			newDivTag.textContent = content;
+			console.log(content);
+			parentTag.appendChild(newDivTag);
+		}
+		loaded = true;
+	}
+
 	var modal_notification = document.getElementById("modal-notification")
 	// console.log(notification_click)
 	modal_notification.classList.toggle('open-modal-notification');
 });
 
+function handle_board(boardID) {
+	var delete_form = document.getElementById("delete-form");
+	delete_form.classList.toggle('display-none');
+	document.getElementById("delete-board-button").onclick = async function (){
+		console.log("board id = " + boardID);
+		await fetch("http://localhost:8080/api/board/".concat(boardID.toString()), {
+			method : "DELETE"
+		});
+		location.reload();
+	}
+}
+
 var avatar_click = document.getElementById("user-avatar")
 console.log(avatar_click);
-avatar_click.addEventListener('click', function () {
+avatar_click.addEventListener('click', async function () {
 	var modal_notification = document.getElementById("modal-user-info")
 	// console.log(notification_click)
 	modal_notification.classList.toggle('open-modal-user-info');
+
 });
 
 var list_item_team_click = document.getElementById("menu-extend");
@@ -36,7 +104,6 @@ function create() {
 	form_create_board.classList.toggle('display-none');
 }
 
-var gmailOfUser = document.getElementById("gmail").textContent;
 
 async function getTitle() {
 	// var path = "http://localhost:8080/board/title/";
@@ -74,7 +141,20 @@ async function getTitle() {
 					a1.setAttribute("class", "title-each-board");
 					a1.setAttribute("href", "http://localhost:8080/board/".concat(key.toString()));
 					a1.appendChild(document.createTextNode(data[key]));
+
+					const fDivTag = document.createElement('div');
+
+					const divTag = document.createElement('div');
+					divTag.setAttribute("class", "title-each-board button-delete");
+					divTag.setAttribute("onclick", `handle_board(${key})`);
+					const iTag = document.createElement("i");
+					iTag.setAttribute("class", "fas fa-trash-alt")
+					divTag.appendChild(iTag);
+
+					fDivTag.appendChild(divTag);
+
 					li1.appendChild(a1);
+					li1.appendChild(fDivTag)
 					boardJson[key] = data[key];
 					document.getElementById("owned-board").appendChild(li1);
 				}
