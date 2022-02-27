@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @SpringBootApplication
 public class TrelloWebAppApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TrelloWebAppApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(TrelloWebAppApplication.class, args);
+    }
 }
