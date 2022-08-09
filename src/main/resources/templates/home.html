@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en-US">
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+
+<head>
+  <title>Trello</title>
+  <link rel="stylesheet" href="/css/home.css">
+  <script src="https://kit.fontawesome.com/9d54f43127.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+  <!-- <div id="form-add-board" class="template-gray display-none">
+    <div>
+      <div class="add-board-form">
+        <form id="add-board" method="POST" onsubmit="return check();">
+          <input class="form-field" type="text" id="new-board-title" name="new-board-title" style="background-color: rgba(187, 187, 192, 0.479); text-decoration: none;
+          color: inherit; font-size: large; width: 100%;" placeholder="Ten bang">
+          <div style="display: flex; justify-content: space-between; padding-top: 20px;">
+            <div class="btn btn-purple" onclick="cancle()"><b>Hủy</b></div>
+            <button class="btn btn-purple" type="submit" onclick="check(event)" name="Submit" ><b>Tao bang moi</b></button>
+
+          </div>
+          <br>
+          
+          <br>
+          <span id="message"></span>
+        </form>
+    </div>
+    </div>
+   
+  </div>
+   -->
+
+  <!--delete-form-->
+  <div id="delete-form" class="message template-gray display-none">
+    <div>
+      <div class="message-form">
+        <!-- <form method="POST"> -->
+          <div>
+            <p>Bạn có muốn xóa bảng này không?</p>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding-top: 20px;">
+            <div class="btn btn-purple" onclick="handle_board()"><b>Hủy</b></div>
+            <button id="delete-board-button" class="btn btn-purple" type="submit" name="Submit"><b>xóa bảng</b></button>
+
+          </div>
+          <br>
+
+          <br>
+          <span id="delete-board-message"></span>
+        <!-- </form> -->
+      </div>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <div class="nav-left">
+          <div class="nav-box">
+            <a href="#"><i class="fas fa-home icon"></i></a>
+
+          </div>
+          <div class="nav-box">
+            <a href="#" class="board">
+              <i class="fas fa-clipboard-list icon"></i>
+              <p>Bảng</p>
+            </a>
+          </div>
+          <div>
+            <div class=" nav-box">
+              <input class="nav-box search form-field u" id="search-field" onkeyup="getStates(this.value)" type="text"
+                name="search" placeholder="Search...">
+
+              <i class="fas fa-search icon"></i>
+
+            </div>
+            <!--list search-->
+            <div class="modal-search" style="display: none;" id="div-search-result">
+              <ul class="list-search" id="search-result">
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-right">
+          <div class="nav-box">
+            <i class="fas fa-plus icon"></i>
+          </div>
+          <div class="nav-box">
+            <i class="fas fa-exclamation icon"></i>
+          </div>
+
+          <!--notification-->
+          <div>
+            <div class="notification nav-box">
+              <div id="notification-click">
+                <i class="far fa-bell icon"></i>
+              </div>
+            </div>
+            <div id="modal-notification" class="modal-notification open-modal-notification">
+              <div class="modal-user-title flex-flex-center">
+                <span>Thông báo</span>
+              </div>
+
+              <div id="notification">
+                <!-- <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Thông báo 1</a></div> -->
+
+              </div>
+
+              <div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Xem tất cả thông báo</span></div>
+              </div>
+              <!-- </div> -->
+            </div>
+          </div>
+          <!--user-->
+          <div>
+            <div class="user-info nav-box">
+              <div id="user-avatar">
+                <img class="avatar" src="" alt="#">
+              </div>
+
+
+            </div>
+            <div id="modal-user-info" class="modal-user-info open-modal-user-info">
+              <div class="modal-user-title flex-flex-center">
+                <span>Tài khoản</span>
+              </div>
+
+              <div>
+                <div class="flex-flex-start modal-user-button"><a href="/profile">Hồ sơ và hiển thị</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Hoạt động</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Thẻ</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="#">Cài đặt</a></div>
+              </div>
+
+              <div>
+                <div class="flex-flex-start modal-user-button"><a href="">Trợ giúp</a></div>
+                <div class="flex-flex-start modal-user-button"><a href="/logout">Đăng xuất</a></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="grid">
+      <div class="menu">
+        <div class="in-menu">
+          <div class="board-botton">
+            <ul>
+              <li class="button font-weight"><span>Bảng</span></li>
+              <li class="button font-weight"><span>Mẫu</span></li>
+            </ul>
+
+          </div>
+          <div>
+            <div class="add-team">
+              <text>Các không gian làm việc</text>
+              <i class="fas fa-plus"></i>
+            </div>
+            <ul>
+
+              <li id="list-iteam-team">
+
+                <div id="menu-extend" class=" button font-weight flex-space-between">
+                  <span>Team1</span>
+                  <i class="fas fa-chevron-up"></i>
+                </div>
+                <ul class="ul-extend">
+                  <li class="button buton-small">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span> &nbsp Bảng</span>
+                  </li>
+                  <li class="button buton-small">
+                    <i class="far fa-heart"></i>
+                    <span> &nbsp Điểm nổi bật</span>
+                  </li>
+                  <li class="button buton-small">
+                    <i class="fas fa-user-friends"></i>
+                    <span> &nbsp Thành viên</span>
+                  </li>
+                  <li class="button buton-small">
+                    <i class="fas fa-cog"></i>
+                    <span> &nbsp Cài đặt</span>
+                  </li>
+                </ul>
+              </li>
+              <!-- <li id="list-iteam-team">
+
+                <div id="menu-extend" class=" button font-weight flex-space-between">
+                  <span>Team1</span>
+                  <i class="fas fa-chevron-up"></i>
+                </div>
+                <ul class="ul-extend">
+                  <li class="button buton-small">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span> &nbsp Bảng</span>
+                  </li>
+                  <li class="button buton-small">
+                    <i class="far fa-heart"></i>
+                    <span> &nbsp Điểm nổi bật</span>
+                  </li>
+                  <li class="button buton-small">
+                    <i class="fas fa-user-friends"></i>
+                    <span> &nbsp Thành viên</span>
+                  </li>
+                  <li class="button buton-small">
+                    <i class="fas fa-cog"></i>
+                    <span> &nbsp Cài đặt</span>
+                  </li>
+                </ul> 
+              </li> -->
+
+            </ul>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="all-board">
+        <div class="in-all-board">
+          <div>
+            <div class="flex-flex-start font-weight detail-title">
+              <i class="far fa-clock"></i>
+              <div>
+                <span> &nbsp Đã xem gần đây</span>
+              </div>
+
+            </div>
+            <div>
+              <ul class="ul-grid" id="recently-viewed-board">
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="flex-flex-start font-weight detail-title">
+              <i class="far fa-clock"></i>
+              <div>
+                <span> &nbsp Bảng cá nhân</span>
+              </div>
+
+            </div>
+            <div class="create-new-board">
+              <!-- <div >
+                <i class="fas fa-plus icon"></i>
+              </div> -->
+              <form id="add-board" method="POST" onsubmit="return check();">
+
+                <div style="display: flex; justify-content: space-between;">
+                  <input class="form-field" type="text" id="new-board-title" name="new-board-title" style="background-color: rgba(187, 187, 192, 0.479); text-decoration: none;
+                  color: inherit; font-size: large; width: 77%;" placeholder="Ten bang">
+                  <button class="btn btn-purple" type="submit" onclick="check(event)" name="Submit"><i
+                      class="fas fa-edit"></i><b>&nbsp; Tạo bảng mới</b></button>
+
+                </div>
+                <span id="message"></span>
+              </form>
+            </div>
+            <div>
+              <ul class="ul-grid" id="owned-board">
+                <!-- change here to get JSON file -->
+                <!--board-->
+                <!-- <li class="each-board">
+                  <a href="" class="title-each-board" id="test-title">
+                    Team 1
+                  </a>
+                  <div>
+                    <div class="title-each-board button-delete" onclick="handle_board()"><i
+                        class="fas fa-trash-alt"></i></div>
+                    <script>
+                      function handle_board() {
+                        var delete_form = document.getElementById("delete-form")
+                        delete_form.classList.toggle('display-none')
+                      }
+                    </script>
+                  </div>
+
+                </li> -->      
+                <li class="each-board" style="display: none;">
+                  <a class="title-each-board" id="gmail">[[${#request.remoteUser}]]</a>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+          <div class="see-all-closed-board ">
+            <div class="with-150px button">
+              <a href="#">Xem tất cả các bảng</a>
+            </div>
+
+          </div>
+          <div>
+            <ul id="search-result">
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+
+    </div>
+  </div>
+
+
+</body>
+<script type="text/javascript" src="/js/home.js"></script>
+
+</html>

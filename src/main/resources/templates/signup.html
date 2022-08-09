@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <title>Create a Trello Account</title>
+  <link rel="stylesheet" href="/css/signup.css">
+</head>
+
+<body class="page-signup atlassian-brand" data-analytics-screen="signUpCreateAccountScreen">
+	<script type="text/javascript">
+	  function ValidatePassword() {
+	      var password = document.getElementById("password").value;
+	      var confirmPassword = document.getElementById("confirm-password").value;
+	      if (password != confirmPassword) {
+	          alert("Passwords do not match.");
+	          document.getElementById("password").focus();
+	          return false;
+	      }
+	      return true;
+	  }
+	  function ValidateEmail()
+	  {
+	    inputText = document.getElementById("email").value;
+	    var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+	    if(!inputText.match(mailformat)){
+	      alert("You have entered an invalid email address!");
+	      document.getElementById("email").focus();
+	      return false;
+	    }else{
+	      return true;
+	    }
+	  }
+	  function Validate(){
+	    return (ValidateEmail() && ValidatePassword());
+	  }
+	</script>
+
+  <header class="header">
+    <div class="container">
+      <div class="nav">
+        <a th:href="@{welcome}" class="logo">
+          <h2 class="logo">Team-13</h2>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="sign-up">
+    <div class="container">
+      <div class="sign-up-center">
+        <div id="signup-form" class="signup-form boder-gray">
+
+          <h1 class="sub-heading">Sign up for your account</h1>
+          <form th:action="@{/sign-up}" th:object="${user}" id="signup" method="POST"> 
+            <div class="sign-in-input name-user">
+              <input type="text" name="first-name" id="first-name" class="form-field u" th:field="*{firstName}" placeholder="First name" autocomplete="username email">
+              <input type="text" name="last-name" id="last-name" class="form-field u" th:field="*{lastName}" placeholder="Last name" autocomplete="username email">
+            </div>
+            <div class="sign-in-input">
+              <input type="text" name="email" id="email" class="form-field" th:field="*{email}" placeholder="Email" autocomplete="username email" required>    
+            </div>
+            <div class="sign-in-input">          
+              <input type="password" name="password" id="password" class="form-field" th:field="*{password}" placeholder="Password" autocomplete="username email" required>
+            </div>
+            <div class="sign-in-input">
+              <input type="password" name="confirm-password" id="confirm-password" class="form-field" placeholder="Confirm password" autocomplete="username email" required>
+            </div>
+            <div class="sign-in-input">
+              <input type="date" id="birthday" name="birthday" th:field="*{dateOfBirth}" class="form-field" value="Birthday">
+            </div>
+            <div class="sign-in-input">
+              <input type="radio" id="male" name="gender" value="male"><label for="male"> Male</label>
+              <input type="radio" id="female" name="gender" value="female"><label for="female"> Female</label>
+            </div>
+            <div id="confirm-tos-container" class="confirm-tos-container">
+              <p class="quiet tos"> 
+                By signing up, you confirm that you've read and accepted our <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>. 
+              </p>
+              <input type="checkbox">
+              <label class="quiet"> Yes, I am in</label>             
+            </div>
+            <div class="text-center">
+              <button id="create-new-account" type="submit" class="btn form-btn btn-purple" value="Create Account" onclick="return Validate()">
+                Create your account
+                <span class="dots"><i class="fas fa-ellipsis-h"></i></span>
+              </button>
+            </div>
+            
+          </form>
+          
+          <div align="center" id="result">
+              <p style="font-size: 80; color: #FF1C19;" th:text="${result}"></p>
+          </div>
+
+          
+          <div class="bottom-form-link  text-center">
+            <span>Already have an account?
+              <a th:href="@{sign-in}" data-analytics-link="signUpLoginLink" clas="login-button"> Log In</a>
+            </span>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+
+  	
+  <footer class="global-footer" >
+ 
+  </footer>
+</body>
+</html>
