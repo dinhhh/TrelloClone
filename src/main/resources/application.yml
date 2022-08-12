@@ -10,7 +10,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: trellowebapplication13@gmail.com
-    password: trello123@@
+    password: jgiedqzwiwobnbnt
     properties:
       mail:
         smtp:
